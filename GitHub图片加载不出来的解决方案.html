@@ -1,0 +1,39 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">GitHub图片加载不出来的解决方案</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 在<a href="https://github.com/" target="_blank">GitHub网站</a>上，经常会遇到图片加载不出来的问题，如<a href="https://github.com/kailugaji" target="_blank">下图所示</a>，用户的头像加载不出来。下面给出其中的一种解决方案。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200607102640252-733104493.png" alt="" loading="lazy" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. Windows系统修改hosts文件</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;">&nbsp; &nbsp;&nbsp;<span style="font-size: 16px;">Windows10不能修改hosts解决方案:&nbsp;<a href="https://www.cnblogs.com/lwh-note/p/9005953.html" target="_blank">https://www.cnblogs.com/lwh-note/p/9005953.html</a></span></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 用记事本打开：C:\Windows\System32\drivers\etc\hosts，在hosts文件文本末尾复制下面这段文字并保存。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200607110635349-1052746607.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"># GitHub520 Host Start
+185.199.108.154               github.githubassets.com
+199.232.68.133                camo.githubusercontent.com
+23.96.88.239                  github.map.fastly.net
+199.232.69.194                github.global.ssl.fastly.net
+140.82.114.3                  github.com
+140.82.113.5                  api.github.com
+199.232.68.133                raw.githubusercontent.com
+199.232.68.133                user-images.githubusercontent.com
+199.232.68.133                favicons.githubusercontent.com
+199.232.68.133                avatars5.githubusercontent.com
+199.232.68.133                avatars4.githubusercontent.com
+199.232.68.133                avatars3.githubusercontent.com
+199.232.68.133                avatars2.githubusercontent.com
+199.232.68.133                avatars1.githubusercontent.com
+199.232.68.133                avatars0.githubusercontent.com
+# Star me GitHub url: https://github.com/521xueweihan/GitHub520
+# GitHub520 Host End</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 激活生效</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; Windows系统：在 CMD 窗口输入：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">ipconfig /flushdns
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200607103113404-72499091.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 重新刷新GitHub界面，成功</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200607103148758-2022512990.png" alt="" loading="lazy" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] 让你&ldquo;爱&rdquo;上 GitHub，解决访问时图裂、加载慢的问题。<span class="author ml-2 flex-self-stretch"><a class="url fn" href="https://github.com/521xueweihan" rel="author" data-hovercard-type="user" data-hovercard-url="/users/521xueweihan/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self">521xueweihan</a><span class="path-divider flex-self-stretch">/<span class="mr-2 flex-self-stretch"><a href="https://github.com/521xueweihan/GitHub520" data-pjax="#js-repo-pjax-container">GitHub520</a></span></span></span></span></p>

@@ -1,0 +1,24 @@
+<h1 style="text-align: center;">Java程序：从命令行接收多个数字，求和并输出结果</h1>
+<h2>一、设计思想</h2>
+<p>&nbsp; &nbsp; 由于命令行接收的是字符串类型，因此应先将字符串类型转化为整型或其他字符型，然后利用for循环求和并输出结果</p>
+<h2>二、程序流程图</h2>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201609/1027447-20160923083929340-124163800.png" alt="" /></p>
+<h2>三、源程序代码</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">    //王荣荣 2016/9/23
+    package demo;
+    public class CommandParameter {
+    public static void main(String[] args) {
+            // TODO Auto-generated method stub
+           int sum=0;
+           System.out.println("numbers："+args.length);
+           for(String arg:args) {
+                 sum += Integer.parseInt(arg); //将字符串类型转化为整型并求和
+            }
+            System.out.println(sum);
+        }
+    }</pre>
+</div>
+<h2>四、结果截图</h2>
+<p>&nbsp; &nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201609/1027447-20160923084826121-1424984161.gif" alt="" width="659" height="528" /></p>
+<p>&nbsp;&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201609/1027447-20160923084838699-1583176758.gif" alt="" width="741" height="492" /></p>

@@ -1,0 +1,109 @@
+<h1 style="text-align: center;">&nbsp;Java程序导出成.jar文件、生成.exe可执行文件及打包成可执行安装程序</h1>
+<p>作者：凯鲁嘎吉 - 博客园</p>
+<p>http://www.cnblogs.com/kailugaji/</p>
+<p>需要准备的软件：</p>
+<p>jdk,eclipse,exe4j,Inno Setup Compiler</p>
+<h2>一、Java源程序--个人所得税</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">package math;
+import javax.swing.JOptionPane;<br />//凯鲁嘎吉 http://www.cnblogs.com/kailugaji/
+public class WRRTax {
+	public static void main( String args[] )
+	   {
+	      String money;   //输入您的收入
+	      double x,y;
+		  double tax=0;
+		  JOptionPane.showMessageDialog(null, "个人所得税计算器\n"+"制作人:"+"凯鲁嘎吉\n"+"http://www.cnblogs.com/kailugaji/\n"+"欢迎使用！");
+		  money =
+	         JOptionPane.showInputDialog( "请输入您的收入(单位：元)：" );
+	      // convert numbers from type String to type int
+		  x=Double.parseDouble(money);      
+	      y=x-3500;
+	      if(y&lt;=0)
+	    	  tax=0;
+	      else if(y&lt;=1500)
+	    	    tax=y*0.03;
+	      else if((y&gt;1500)&amp;(y&lt;=4500))
+	    	    tax=1500*0.03+(y-1500)*0.1;
+	      else if((y&gt;4500)&amp;(y&lt;=9000))
+	    	    tax=1500*0.03+3000*0.1+(y-4500)*0.2;
+	      else if((y&gt;9000)&amp;(y&lt;=35000))
+	    	    tax=1500*0.03+3000*0.1+4500*0.2+(y-9000)*0.25;
+	      else if((y&gt;35000)&amp;(y&lt;=55000))
+	    	    tax=1500*0.03+3000*0.1+4500*0.2+35000*0.25+(y-35000)*0.3;
+	      else if((y&gt;55000)&amp;(y&lt;=80000))
+	    	    tax=1500*0.03+3000*0.1+4500*0.2+35000*0.25+55000*0.3+(y-55000)*0.35;
+	    	else if(y&gt;80000)
+	    	    tax=1500*0.03+3000*0.1+4500*0.2+35000*0.25+55000*0.3+80000*0.35+(y-80000)*0.45; 
+	      JOptionPane.showMessageDialog(null, "您应缴税款为："+tax +"元！");
+	      JOptionPane.showMessageDialog(null, "谢谢使用，再见！");
+
+	   }
+}
+</pre>
+</div>
+<h2>二、将该程序导出为.jar文件</h2>
+<p>1.点击&ldquo;导出&rdquo;：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161215856-1932256336.png" alt="" width="1366" height="766" /></p>
+<p>2.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161425872-1698625112.png" alt="" /></p>
+<p>3.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161510809-518951513.png" alt="" /></p>
+<p>4.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161544215-491019724.png" alt="" /></p>
+<h2>三、制作.exe文件</h2>
+<p>1..找到安装Java运行程序的jre文件夹</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161655090-484051893.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;2.在桌面新创建一个文件夹：wrr，将jre文件夹与.jar文件一同放到wrr文件夹里</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929161802981-1778474351.png" alt="" /></p>
+<p>3.使用exe4j软件：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162029215-1044229131.png" alt="" /></p>
+<p>4.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162053669-1907463560.png" alt="" /></p>
+<p>5.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162124059-1936133712.png" alt="" /></p>
+<p>6.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162525715-1095285276.png" alt="" /></p>
+<p>7.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162605075-1591633984.png" alt="" /></p>
+<p>8.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162631981-1100098348.png" alt="" /></p>
+<p>9.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162706856-1705744139.png" alt="" /></p>
+<p>10.一路默认</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929162804606-967288307.png" alt="" /></p>
+<p>11.将整个&ldquo;wrr&rdquo;文件夹复制到别人PC上，点击kailugaji.exe文件，就可以没有安装jre文件的机子上运行了。</p>
+<p><em style="line-height: 1.5;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163144903-255537267.png" alt="" /></em></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163209262-1207979971.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163227106-1580019060.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163238684-273917855.png" alt="" /></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163252544-1488126414.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163304997-589768422.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163314200-73622057.png" alt="" /></p>
+<h2>四、打包成安装包程序，如同一个小软件，可以随时随地安装在机子上运行</h2>
+<p>1.打开Inno Setup Compiler</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163626247-800958646.png" alt="" /></p>
+<p>2.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163651590-1679648747.png" alt="" /></p>
+<p>3.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163755387-611177522.png" alt="" /></p>
+<p>4.一路确定</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929163852169-1566548468.png" alt="" /></p>
+<p>5.在刚才的&ldquo;wrr&rdquo;文件夹里生成一个Output文件夹，里面有Setup.exe文件，即成功，这样，就可以将Setup.exe安装到任何一台PC上执行了。</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164204778-584578901.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164115575-1614989696.png" alt="" /></p>
+<p>&nbsp;6.将Setup.exe文件复制到其他没有安装jre文件的PC上：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164341544-12630583.png" alt="" /></p>
+<p>7.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164404637-1138922014.png" alt="" /></p>
+<p>8.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164430294-1444622570.png" alt="" /></p>
+<p>9.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164454294-2007379301.png" alt="" /></p>
+<p>10.</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164512325-1634637778.png" alt="" /></p>
+<p>11.安装，即可使用。</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164631200-1185479170.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2017.cnblogs.com/blog/1027447/201709/1027447-20170929164551653-459903304.png" alt="" /></p>
+<p>&nbsp;</p>

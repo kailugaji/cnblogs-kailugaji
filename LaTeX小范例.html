@@ -1,0 +1,91 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">LaTeX小范例</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 这篇博客给出一个关于LaTeX论文的小范例，包含了如何插入图片并设置图片大小，如何插入复杂表格（包括合并单元格，横线位置，列宽，总表格宽度，行间隔，表格一行里面文字太多需要另起一行，表格左下角注释等等），如何单独插入公式与在文本中插入公式，如何插入参考文献，如何引用文献或公式，如何插入网址等等。（自行忽略英文语法错误，只是做一个关于LaTeX的小模板）。更多LaTeX知识，参考：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/13347708.html">LaTeX常用链接与资料</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. LaTeX</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">\documentclass{article}
+% 插入图需要加的包
+\usepackage{graphicx} 
+% 插入表格需要的包
+\usepackage{multirow}
+\usepackage{threeparttable}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}} 
+% 插入公式需要的包
+\usepackage{amsmath}
+% 引用，自己定义颜色
+\usepackage[colorlinks, linkcolor=blue, anchorcolor=green, citecolor=red]{hyperref}
+% 超链接
+\usepackage{url}
+% Author:凯鲁嘎吉 https://www.cnblogs.com/kailugaji/
+% 开始正文
+\begin{document}
+% 标题
+\title{A LaTeX Example}
+% 作者
+\author{Kailugaji}  
+\maketitle
+% 章节
+\section{Model}
+This is an equation (\ref{eq:1}) and the picture is shown in Fig. \ref{fig:1}, where $AB^2$ is xxxxx.
+% 公式
+\begin{equation}
+	\label{eq:1}
+	\begin{aligned}
+		AB^2 = BC^2 + AC^2 
+	\end{aligned}
+\end{equation}
+
+\subsection{Text}
+This is a table, which is shown in Table \ref{tab:1}, and this is a reference \cite{ref:1}. 
+% 表格
+\begin{table}
+	\begin{threeparttable}
+	\centering
+	\caption{Blogs kailugaji}
+	\setlength{\tabcolsep}{5mm}{
+		\begin{tabular}{ccccp{0.1mm}ccc}
+		\hline \noalign{\smallskip}
+		\multirow{3}[4]{*}{Blogs} &amp; \multirow{3}[4]{*}{Lists} &amp; \multicolumn{2}{c}{Class1} &amp;       &amp; \multicolumn{3}{c}{Class2} \\
+		\cline{3-4}\cline{6-8}          &amp;       &amp; \multirow{2}[2]{*}{\tabincell{c}{E1\\(f=0.4)}} &amp; \multirow{2}[2]{*}{\tabincell{c}{E2\\(f=0.5)}} &amp;       &amp; \multirow{2}[2]{*}{E3} &amp; \multicolumn{1}{c}{\multirow{2}[2]{*}{E4}} &amp; \multicolumn{1}{c}{\multirow{2}[2]{*}{E5}} \\
+		&amp;       &amp;       &amp;       &amp;       &amp;       &amp;       &amp;  \\
+		\noalign{\smallskip} \hline \noalign{\smallskip}
+		\multirow{3}[1]{*}{A} &amp; A1    &amp; 1     &amp; 3     &amp;       &amp; 2     &amp; \multirow{3}[1]{*}{--} &amp; \multirow{3}[1]{*}{--} \\
+		&amp; A2    &amp; 2     &amp; 4     &amp;       &amp; 0     &amp;       &amp;  \\
+		&amp; A3    &amp; 5     &amp; 9     &amp;       &amp; 7     &amp;       &amp;  \\
+		\noalign{\smallskip}
+		\multirow{3}[0]{*}{B} &amp; B1    &amp; \multirow{3}[0]{*}{--} &amp; \multirow{3}[0]{*}{--} &amp;       &amp; \multirow{3}[0]{*}{--} &amp; 1     &amp; 4 \\
+		&amp; B2    &amp;       &amp;       &amp;       &amp;       &amp; 2     &amp; 2 \\
+		&amp; B3    &amp;       &amp;       &amp;       &amp;       &amp; 5     &amp; 9 \\
+		\noalign{\smallskip}
+		\multirow{3}[0]{*}{C} &amp; C1    &amp; 8     &amp; 4     &amp;       &amp; 8     &amp; \multirow{3}[0]{*}{--} &amp; \multirow{3}[0]{*}{--} \\
+		&amp; C2    &amp; 3     &amp; 6     &amp;       &amp; 3     &amp;       &amp;  \\
+		&amp; C3    &amp; 2     &amp; 1     &amp;       &amp; 5     &amp;       &amp;  \\
+		\noalign{\smallskip} \hline 
+		\end{tabular}}
+		\begin{tablenotes} 
+			\item[1] xxxxxxxxx.
+			% \item[*] xxxxxxxxx.
+		\end{tablenotes} 
+		\label{tab:1}
+		\end{threeparttable}
+\end{table}
+% 图片
+\begin{figure}
+	\centering
+	\includegraphics[width=5cm]{1.png}
+	\caption{Kailugaji}
+	\label{fig:1}
+\end{figure}	
+% 参考文献
+\begin{thebibliography}{}
+\bibitem{ref:1}
+Kailugaji, Blog about LaTex, Journal, Volume, page numbers (2020), \url{https://www.cnblogs.com/kailugaji/}
+\end{thebibliography}
+\end{document}</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p style="text-align: center;"><img src="https://img2020.cnblogs.com/blog/1027447/202008/1027447-20200814114219277-1538282742.png" alt="" loading="lazy" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202008/1027447-20200814112925922-916077694.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202008/1027447-20200814112936351-1100368433.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 下载</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 源文件与PDF文件：<a href="https://files.cnblogs.com/files/kailugaji/LaTex%E8%8C%83%E4%BE%8B-%E5%87%AF%E9%B2%81%E5%98%8E%E5%90%89.rar" target="_blank">LaTex范例-凯鲁嘎吉.rar</a></span></p>

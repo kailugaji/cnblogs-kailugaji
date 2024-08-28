@@ -1,0 +1,410 @@
+<h1 style="text-align: center;">FCM算法的matlab程序</h1>
+<p><span style="font-size: 16px;">在&ldquo;<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/9920705.html">FCM算法的matlab程序（初步）</a>&rdquo;这篇文章中已经用matlab程序对iris数据库进行简单的实现，下面的程序最终的目的是求准确度。</span></p>
+<p><span style="font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</span></p>
+<h2>1.采用iris数据库</h2>
+<h3><span style="font-size: 16px;">iris_data.txt</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show('9aac952a-af9e-44c0-b7fb-457b71a41fc4')"><img id="code_img_closed_9aac952a-af9e-44c0-b7fb-457b71a41fc4" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_9aac952a-af9e-44c0-b7fb-457b71a41fc4" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('9aac952a-af9e-44c0-b7fb-457b71a41fc4',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_9aac952a-af9e-44c0-b7fb-457b71a41fc4" class="cnblogs_code_hide">
+<pre><span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.7</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.6</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.6</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3.9</span>    <span style="color: #800080;">1.7</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">4.6</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.4</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.1</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3.7</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.8</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.8</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.1</span>
+<span style="color: #800080;">4.3</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.1</span>    <span style="color: #800080;">0.1</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1.2</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">4.4</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3.9</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">1.7</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.7</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.7</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">4.6</span>    <span style="color: #800080;">3.6</span>    <span style="color: #800080;">1</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">1.7</span>    <span style="color: #800080;">0.5</span>
+<span style="color: #800080;">4.8</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.9</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">5.2</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.2</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.7</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.8</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">5.2</span>    <span style="color: #800080;">4.1</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.1</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">4.2</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">1.2</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">3.6</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.1</span>
+<span style="color: #800080;">4.4</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">4.5</span>    <span style="color: #800080;">2.3</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">4.4</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">1.3</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.6</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">1.9</span>    <span style="color: #800080;">0.4</span>
+<span style="color: #800080;">4.8</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.3</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">1.6</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">4.6</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5.3</span>    <span style="color: #800080;">3.7</span>    <span style="color: #800080;">1.5</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">1.4</span>    <span style="color: #800080;">0.2</span>
+<span style="color: #800080;">7</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">4.7</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6.9</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">4.9</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.3</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.5</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.6</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">4.7</span>    <span style="color: #800080;">1.6</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">2.4</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">6.6</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.6</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.2</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">3.9</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">2</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">5.9</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.2</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">2.2</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.7</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">3.6</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">4.4</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">4.1</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">6.2</span>    <span style="color: #800080;">2.2</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">3.9</span>    <span style="color: #800080;">1.1</span>
+<span style="color: #800080;">5.9</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">4.8</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">4.9</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.7</span>    <span style="color: #800080;">1.2</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.3</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.6</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.4</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">6.8</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.8</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5</span>    <span style="color: #800080;">1.7</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.6</span>    <span style="color: #800080;">3.5</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.4</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">1.1</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.4</span>    <span style="color: #800080;">3.7</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">3.9</span>    <span style="color: #800080;">1.2</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">1.6</span>
+<span style="color: #800080;">5.4</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.6</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">4.7</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.3</span>    <span style="color: #800080;">4.4</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.1</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.6</span>    <span style="color: #800080;">4.4</span>    <span style="color: #800080;">1.2</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.6</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.6</span>    <span style="color: #800080;">4</span>    <span style="color: #800080;">1.2</span>
+<span style="color: #800080;">5</span>    <span style="color: #800080;">2.3</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">1</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">4.2</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.2</span>    <span style="color: #800080;">1.2</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.2</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.2</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">4.3</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">5.1</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">1.1</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.1</span>    <span style="color: #800080;">1.3</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">6</span>    <span style="color: #800080;">2.5</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">1.9</span>
+<span style="color: #800080;">7.1</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.9</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.5</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.2</span>
+<span style="color: #800080;">7.6</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">6.6</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">4.9</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">4.5</span>    <span style="color: #800080;">1.7</span>
+<span style="color: #800080;">7.3</span>    <span style="color: #800080;">2.9</span>    <span style="color: #800080;">6.3</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">5.8</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">7.2</span>    <span style="color: #800080;">3.6</span>    <span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.5</span>
+<span style="color: #800080;">6.5</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">5.3</span>    <span style="color: #800080;">1.9</span>
+<span style="color: #800080;">6.8</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.5</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">5</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">2.4</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">5.3</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">6.5</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.5</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">7.7</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">6.7</span>    <span style="color: #800080;">2.2</span>
+<span style="color: #800080;">7.7</span>    <span style="color: #800080;">2.6</span>    <span style="color: #800080;">6.9</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">2.2</span>    <span style="color: #800080;">5</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6.9</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.9</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">7.7</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">6.7</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">4.9</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">7.2</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">6</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.2</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">4.8</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.9</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">7.2</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.8</span>    <span style="color: #800080;">1.6</span>
+<span style="color: #800080;">7.4</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">6.1</span>    <span style="color: #800080;">1.9</span>
+<span style="color: #800080;">7.9</span>    <span style="color: #800080;">3.8</span>    <span style="color: #800080;">6.4</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.2</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.8</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">1.5</span>
+<span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.6</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">1.4</span>
+<span style="color: #800080;">7.7</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">6.1</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.4</span>
+<span style="color: #800080;">6.4</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">5.5</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">4.8</span>    <span style="color: #800080;">1.8</span>
+<span style="color: #800080;">6.9</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">5.4</span>    <span style="color: #800080;">2.1</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">5.6</span>    <span style="color: #800080;">2.4</span>
+<span style="color: #800080;">6.9</span>    <span style="color: #800080;">3.1</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">5.8</span>    <span style="color: #800080;">2.7</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">1.9</span>
+<span style="color: #800080;">6.8</span>    <span style="color: #800080;">3.2</span>    <span style="color: #800080;">5.9</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3.3</span>    <span style="color: #800080;">5.7</span>    <span style="color: #800080;">2.5</span>
+<span style="color: #800080;">6.7</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.2</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">6.3</span>    <span style="color: #800080;">2.5</span>    <span style="color: #800080;">5</span>    <span style="color: #800080;">1.9</span>
+<span style="color: #800080;">6.5</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.2</span>    <span style="color: #800080;">2</span>
+<span style="color: #800080;">6.2</span>    <span style="color: #800080;">3.4</span>    <span style="color: #800080;">5.4</span>    <span style="color: #800080;">2.3</span>
+<span style="color: #800080;">5.9</span>    <span style="color: #800080;">3</span>    <span style="color: #800080;">5.1</span>    <span style="color: #800080;">1.8</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h3><span style="font-size: 16px;">iris_id.txt</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show('32ff76d2-adb2-43d9-8ae9-726806bb9014')"><img id="code_img_closed_32ff76d2-adb2-43d9-8ae9-726806bb9014" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_32ff76d2-adb2-43d9-8ae9-726806bb9014" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('32ff76d2-adb2-43d9-8ae9-726806bb9014',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_32ff76d2-adb2-43d9-8ae9-726806bb9014" class="cnblogs_code_hide">
+<pre><span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">0</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">1</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span>
+<span style="color: #800080;">2</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h2>2.matlab源程序</h2>
+<h3><span style="font-size: 16px;">My_FCM.m</span>&nbsp;</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function label_1=My_FCM(K)
+%输入K：聚类数
+%输出：label_1:聚的类, para_miu_new:模糊聚类中心&mu;，responsivity:模糊隶属度
+format long
+eps=1e-5;  %定义迭代终止条件的eps
+alpha=2;  %模糊加权指数，[1,+无穷)
+max_iter=100;  %最大迭代次数
+fitness=zeros(max_iter,1);
+data=dlmread('E:\www.cnblogs.comkailugaji\data\iris\iris_data.txt');
+%----------------------------------------------------------------------------------------------------
+%对data做最大-最小归一化处理
+[data_num,~]=size(data);
+X=(data-ones(data_num,1)*min(data))./(ones(data_num,1)*(max(data)-min(data)));
+[X_num,X_dim]=size(X);
+%----------------------------------------------------------------------------------------------------
+%随机初始化模糊隶属度矩阵
+responsivity=rand(X_num,K);  %初始化模糊隶属度矩阵，X_num*K
+temp=sum(responsivity,2);  %把responsivity每一行加起来，把K类加起来，N*1的矩阵
+responsivity=responsivity./(temp*ones(1,K));  %保证每行（每类）加起来为1
+% ----------------------------------------------------------------------------------------------------
+% FCM算法
+for t=1:max_iter
+    %更新聚类中心K*X_dim
+    miu_up=(responsivity'.^(alpha))*X;  %&mu;的分子部分
+    para_miu=miu_up./((sum(responsivity.^(alpha)))'*ones(1,X_dim));
+    %欧氏距离，计算（X-para_miu）^2=X^2+para_miu^2-2*para_miu*X'，矩阵大小为X_num*K
+    distant=(sum(X.*X,2))*ones(1,K)+ones(X_num,1)*(sum(para_miu.*para_miu,2))'-2*X*para_miu';
+    %目标函数值
+    fitness(t)=sum(sum(distant.*(responsivity.^(alpha))));
+    %更新隶属度矩阵X_num*K
+    R_up=distant.^(-1/(alpha-1));  %隶属度矩阵的分子部分
+    responsivity=R_up./(sum(R_up,2)*ones(1,K));
+    %[responsivity,para_miu,fitness(t)]=FuzzyCM(X,responsivity,K,alpha);
+    if t&gt;1  %改成while不行
+        if abs(fitness(t)-fitness(t-1))&lt;eps
+            break;
+        end
+    end
+end
+%iter=t;  %实际迭代次数
+[~,label_1]=max(responsivity,[],2);</pre>
+</div>
+<h3><span style="font-size: 16px;">succeed.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function accuracy=succeed(K,id)
+%输入K：聚的类，id：训练后的聚类结果，N*1的矩阵
+N=size(id,1);   %样本个数
+p=perms(1:K);   %全排列矩阵
+p_col=size(p,1);   %全排列的行数
+new_label=zeros(N,p_col);   %聚类结果的所有可能取值，N*p_col
+num=zeros(1,p_col);  %与真实聚类结果一样的个数
+real_label=dlmread('E:\www.cnblogs.comkailugaji\data\iris\iris_id.txt');
+%将训练结果全排列为N*p_col的矩阵，每一列为一种可能性
+for i=1:N
+    for j=1:p_col
+        for k=1:K
+            if id(i)==k
+                new_label(i,j)=p(j,k)-1;  %加一减一看情况
+            end
+        end
+    end
+end
+%与真实结果比对，计算精确度
+for j=1:p_col
+    for i=1:N
+        if new_label(i,j)==real_label(i)
+                num(j)=num(j)+1;
+        end
+    end
+end
+accuracy=max(num)/N;
+</pre>
+</div>
+<h3><span style="font-size: 16px;">Eg_FCM.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function ave_acc_FCM=Eg_FCM(K,max_iter)
+%输入K:聚的类，max_iter是最大迭代次数
+%输出ave_acc_FCM：迭代max_iter次之后的平均准确度
+s=0;
+for i=1:max_iter
+    label_1=My_FCM(K);
+    accuracy=succeed(K,label_1);
+    s=s+accuracy;
+end
+ave_acc_FCM=s/max_iter;
+</pre>
+</div>
+<h2>3.结果</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; ave_acc_FCM=Eg_FCM(3,50)
+ave_acc_FCM =
+   0.888666666666667</pre>
+</div>
