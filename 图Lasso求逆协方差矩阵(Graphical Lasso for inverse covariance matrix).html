@@ -1,0 +1,243 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">图Lasso求逆协方差矩阵(Graphical Lasso for inverse covariance matrix)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;图Lasso方法的基本理论</span></h2>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193824101-1819547011.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193835846-1695373726.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193844920-1357207536.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193854838-2043779266.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;坐标下降算法</span></h2>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193916153-326302787.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193923461-1290171047.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;图Lasso算法</span></h2>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193944537-484382743.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016193953281-1649358121.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. MATLAB程序</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 数据见参考文献<a href="https://files-cdn.cnblogs.com/files/kailugaji/GLasso-MATLAB.rar?t=1667201074" target="_blank">[2]</a></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.1 方法一</span></h3>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">demo.m</span></h4>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">load SP500
+data = normlization(data);
+S = cov(data);  %样本协方差
+[X, W] = glasso_1(double(S), 0.5);
+%X:sigma^(-1), W:sigma
+[~, idx] = sort(info(:,3));
+colormap gray
+imagesc(X(idx, idx) == 0)
+axis off
+
+%% Data Normalization
+function data = normlization(data)
+data = bsxfun(@minus, data, mean(data));
+data = bsxfun(@rdivide, data, std(data));
+end
+</pre>
+</div>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">glasso_1.m</span></h4>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [X, W] = glasso_1(S, lambda)
+%% Graphical Lasso - Friedman et. al, Biostatistics, 2008
+% Input:
+%   S - 样本的协方差矩阵
+%   lambda - 罚参数
+% Output:
+%   X - 精度矩阵    sigma^(-1)
+%   W - 协方差矩阵   sigma
+%%
+p = size(S,1);  %数据维度
+W = S + lambda * eye(p);  %W=S+&lambda;I
+beta = zeros(p) - lambda * eye(p);   %&beta;=-&lambda;I
+eps = 1e-4;
+finished = false(p);   %finished:p*p的逻辑0矩阵
+while true
+    for j = 1 : p
+        idx = 1 : p; idx(j) = [];
+        beta(idx, j) = lasso(W(idx, idx), S(idx, j), lambda, beta(idx, j));
+        W(idx, j) = W(idx,idx) * beta(idx, j);  %W=W*&beta;
+        W(j, idx) = W(idx, j);
+    end
+    index = (beta == 0);
+    finished(index) = (abs(W(index) - S(index)) &lt;= lambda);
+    finished(~index) = (abs(W(~index) -S(~index) + lambda * sign(beta(~index))) &lt; eps);
+    if finished
+        break;
+    end
+end
+X = zeros(p);
+for j = 1 : p
+    idx = 1 : p; idx(j) = [];
+    X(j,j) = 1 / (W(j,j) - dot(W(idx,j), beta(idx,j)));
+    X(idx, j) = -1 * X(j, j) * beta(idx,j);
+end
+% X = sparse(X);
+end
+</pre>
+</div>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">lasso.m</span></h4>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function w = lasso(A, b, lambda, w)
+% Lasso 
+p = size(A,1);
+df = A * w - b;
+eps = 1e-4;
+finished = false(1, p);
+while true
+    for j = 1 : p
+        wtmp = w(j);
+        w(j) = soft(wtmp - df(j) / A(j,j), lambda / A(j,j));
+        if w(j) ~= wtmp
+            df = df + (w(j) - wtmp) * A(:, j); % update df
+        end
+    end
+    index = (w == 0);
+    finished(index) = (abs(df(index)) &lt;= lambda);
+    finished(~index) = (abs(df(~index) + lambda * sign(w(~index))) &lt; eps);
+    if finished
+        break;
+    end
+end
+end
+%% Soft thresholding
+function x = soft(x, lambda)
+x = sign(x) * max(0, abs(x) - lambda);
+end
+</pre>
+</div>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果</span></h4>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191016194601498-1376158816.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意：罚参数lamda的设定对逆协方差的稀疏性的影响很大，可以用交叉验证方式得到。</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.2 方法二</span></h3>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">graphicalLasso.m</span></h4>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [Theta, W] = graphicalLasso(S, rho, maxIt, tol)
+% http://www.ece.ubc.ca/~xiaohuic/code/glasso/glasso.htm
+% Solve the graphical Lasso
+% minimize_{Theta &gt; 0} tr(S*Theta) - logdet(Theta) + rho * ||Theta||_1
+% Ref: Friedman et al. (2007) Sparse inverse covariance estimation with the
+% graphical lasso. Biostatistics.
+% Note: This function needs to call an algorithm that solves the Lasso
+% problem. Here, we choose to use to the function *lassoShooting* (shooting
+% algorithm) for this purpose. However, any Lasso algorithm in the
+% penelized form will work.
+%
+% Input:
+% S -- sample covariance matrix
+% rho --  regularization parameter
+% maxIt -- maximum number of iterations
+% tol -- convergence tolerance level
+%
+% Output:
+% Theta -- inverse covariance matrix estimate
+% W -- regularized covariance matrix estimate, W = Theta^-1
+
+p = size(S,1);
+
+if nargin &lt; 4, tol = 1e-6; end
+if nargin &lt; 3, maxIt = 1e2; end
+
+% Initialization
+W = S + rho * eye(p);   % diagonal of W remains unchanged
+W_old = W;
+i = 0;
+
+% Graphical Lasso loop
+while i &lt; maxIt,
+    i = i+1;
+    for j = p:-1:1,
+        jminus = setdiff(1:p,j);
+        [V D] = eig(W(jminus,jminus));
+        d = diag(D);
+        X = V * diag(sqrt(d)) * V'; % W_11^(1/2)
+        Y = V * diag(1./sqrt(d)) * V' * S(jminus,j);    % W_11^(-1/2) * s_12
+        b = lassoShooting(X, Y, rho, maxIt, tol);
+        W(jminus,j) = W(jminus,jminus) * b;
+        W(j,jminus) = W(jminus,j)';
+    end
+    % Stop criterion
+    if norm(W-W_old,1) &lt; tol, 
+        break; 
+    end
+    W_old = W;
+end
+if i == maxIt,
+    fprintf('%s\n', 'Maximum number of iteration reached, glasso may not converge.');
+end
+
+Theta = W^-1;
+
+% Shooting algorithm for Lasso (unstandardized version)
+function b = lassoShooting(X, Y, lambda, maxIt, tol),
+
+if nargin &lt; 4, tol = 1e-6; end
+if nargin &lt; 3, maxIt = 1e2; end
+
+% Initialization
+[n,p] = size(X);
+if p &gt; n,
+    b = zeros(p,1); % From the null model, if p &gt; n
+else
+    b = X \ Y;  % From the OLS estimate, if p &lt;= n
+end
+b_old = b;
+i = 0;
+
+% Precompute X'X and X'Y
+XTX = X'*X;
+XTY = X'*Y;
+
+% Shooting loop
+while i &lt; maxIt,
+    i = i+1;
+    for j = 1:p,
+        jminus = setdiff(1:p,j);
+        S0 = XTX(j,jminus)*b(jminus) - XTY(j);  % S0 = X(:,j)'*(X(:,jminus)*b(jminus)-Y)
+        if S0 &gt; lambda,
+            b(j) = (lambda-S0) / norm(X(:,j),2)^2;
+        elseif S0 &lt; -lambda,
+            b(j) = -(lambda+S0) / norm(X(:,j),2)^2;
+        else
+            b(j) = 0;
+        end
+    end
+    delta = norm(b-b_old,1);    % Norm change during successive iterations
+    if delta &lt; tol, break; end
+    b_old = b;
+end
+if i == maxIt,
+    fprintf('%s\n', 'Maximum number of iteration reached, shooting may not converge.');
+end</pre>
+</div>
+<h4><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果</span></h4>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A=[5.9436    0.0676    0.5844   -0.0143
+    0.0676    0.5347   -0.0797   -0.0115
+    0.5844   -0.0797    6.3648   -0.1302
+   -0.0143   -0.0115   -0.1302    0.2389
+];
+&gt;&gt; [Theta, W] = graphicalLasso(A, 1e-4)
+
+Theta =
+
+    0.1701   -0.0238   -0.0159    0.0003
+   -0.0238    1.8792    0.0278    0.1034
+   -0.0159    0.0278    0.1607    0.0879
+    0.0003    0.1034    0.0879    4.2369
+
+
+W =
+
+    5.9437    0.0675    0.5843   -0.0142
+    0.0675    0.5348   -0.0796   -0.0114
+    0.5843   -0.0796    6.3649   -0.1301
+   -0.0142   -0.0114   -0.1301    0.2390</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 补充：近端梯度下降(Proximal Gradient Descent, PGD)求解Lasso问题</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191018094133799-973746142.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191018094213912-1727662353.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-family: 'comic sans ms', sans-serif;">6. 参考文献</span></span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;林祝莹. <a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CMFD&amp;dbname=CMFD201701&amp;filename=1016764838.nh&amp;uid=WEEvREcwSlJHSldRa1FhcTdWa2FjR2EzU1N4Qm1sdkhEczBadVFSSzgyST0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4IQMovwHtwkF4VYPoHbKxJw!!&amp;v=MTIzMThSOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVJMT2VaK2RvRmlEbFVML01WRjI2R0xTK0d0blBwNUViUEk=" target="_blank">图Lasso及相关方法的研究与应用</a>[D].燕山大学,2016.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;<a href="https://files-cdn.cnblogs.com/files/kailugaji/GLasso-MATLAB.rar?t=1667201074" target="_blank">Graphical Lasso for sparse inverse covariance selection</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3] 周志华. 机器学习[M]. 清华大学出版社, 2016.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;<a href="http://statweb.stanford.edu/~tibs/glasso/index.html" target="_blank">Graphical lasso in R and Matlab</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[5]&nbsp;<a href="http://www.ece.ubc.ca/~xiaohuic/code/glasso/glasso.htm" target="_blank">Graphical Lasso</a></span></p>

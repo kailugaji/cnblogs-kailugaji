@@ -1,0 +1,29 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">生成对抗网络(GAN与W-GAN)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 通过阅读《神经网络与深度学习》，了解生成对抗网络(Generative Adversarial Networks，GAN)的来龙去脉，并介绍GAN与Wasserstein GAN。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 基础知识</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">KL散度 (Kullback&ndash;Leibler Divergence)、JS散度 (Jensen&ndash;Shannon Divergence)、推土机距离 (Wasserstein Distance, or Earth-Mover&rsquo;s Distance)以及Lipschitz连续函数.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929143656271-1333321340.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2 id="1632897237855"><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;Vanilla GAN (标准GAN/原始GAN)</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929143735727-1807426898.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">判别网络，生成网络，以及总体目标函数</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929143743114-1925071885.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">最小化交叉熵就是极大似然估计，使其期望最大化。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Vanilla GAN训练过程</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929143750422-240948301.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Vanilla GAN进一步分析&mdash;&mdash;梯度消失，分布不重叠时，JS散度恒为log2</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929143829772-40603520.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210930090648859-1616871741.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Vanilla GAN进一步分析&mdash;&mdash;逆向KL散度导致模型坍塌</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210930082002154-51990910.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;Wasserstein GAN</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210930082029952-108406497.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210930082041240-1287471200.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210930082054965-1217592435.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">拓展：由生成对抗网络联想到假设检验中的两类错误</span></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">生成器：支持原假设，$p_{data}=p_{\theta}$，生成的图像越真实越好；</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">判别器：支持备择假设，$p_{data} \neq p_{\theta}$，越能判别出假图像越好。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">假设检验会出现两类错误，本来图像是真实的，原假设是正确的，但是却拒绝原假设，认为图像是假的，这是第一类错误；本来图像是假的，原假设是错误的，却接受原假设，认为图像是真实的，这是第二类错误。统计学告诉我们这两类错误都无法避免，也无法同时使两者出现的概率都最小，一类错误的减少必然会使另一类错误增加。一种折中的方案是，只限制犯第一类错误的概率，这就是Fisher显著性检验。对于GAN来说，生成器生成了一些重复但是很安全的样本，缺乏多样性。</span></p>
+<h2 id="1632897373854"><span style="font-family: 'comic sans ms', sans-serif;">4. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] 邱锡鹏，神经网络与深度学习，机械工业出版社，<a href="https://nndl.github.io/" target="_blank">https://nndl.github.io/</a>, 2020.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;Lilian Weng,&nbsp;From GAN to WGAN, ariXiv,&nbsp;<a href="https://arxiv.org/pdf/1904.08994.pdf" target="_blank">https://arxiv.org/pdf/1904.08994.pdf</a>, 2019.&nbsp;</span></p>

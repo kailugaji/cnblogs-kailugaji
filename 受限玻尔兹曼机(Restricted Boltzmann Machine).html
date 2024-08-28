@@ -1,0 +1,120 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">受限玻尔兹曼机(Restricted Boltzmann Machine)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927093952840-964388865.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094001752-1069632928.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;1. 生成模型</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094022931-481404711.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094033715-962056140.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094041579-1223156528.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094049201-1366293473.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094127382-2091258894.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;2. 参数学习</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094145427-1745419216.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094154626-837203283.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;3.&nbsp;对比散度学习算法</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 由于受限玻尔兹曼机的特殊结构,因此可以使用一种比吉布斯采样更有效 的学习算法,即对比散度(Contrastive Divergence)对比散度算法仅需k步吉布斯采样。为了提高效率,对比散度算法用一个训练样本作为可观测向量的初始值。然后,交替对可观测向量和隐藏向量进行吉布斯采样,不需要等到收敛,只需要k步就足够了。这就是CD-k 算法。通常,k = 1就可以学得很好。对比散度的流程如算法12.1所示。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927094225439-1901435207.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;4. MATLAB程序解读</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">% maxepoch  -- 最大迭代次数maximum number of epochs
+% numhid    -- 隐含层神经元数number of hidden units 
+% batchdata -- 分批后的训练数据集the data that is divided into batches (numcases numdims numbatches)
+% restart   -- 如果从第1层开始学习，就置restart为1set to 1 if learning starts from beginning 
+
+%作用：训练RBM，利用1步CD算法 直接调用权值迭代公式不使用反向传播 
+%可见的、二元的、随机的像素通过对称加权连接连接到隐藏的、二元的、随机的特征检测器
+epsilonw      = 0.1;   % Learning rate for weights 权重学习率 alpha
+epsilonvb     = 0.1;   % Learning rate for biases of visible units 可视层偏置学习率 alpha
+epsilonhb     = 0.1;   % Learning rate for biases of hidden units 隐藏层偏置学习率 alpha
+weightcost  = 0.0002;   %权衰减，用于防止出现过拟合
+initialmomentum  = 0.5; %动量项学习率，用于克服收敛速度和算法的不稳定性之间的矛盾
+finalmomentum    = 0.9;
+
+[numcases numdims numbatches]=size(batchdata);%[numcases numdims numbatches]＝[每批中的样本数 每个样本的维数 训练样本批数]
+
+if restart ==1  %是否为重新开始即从头训练
+  restart=0;
+  epoch=1;
+
+% Initializing symmetric weights and biases. 初始化权重和两层偏置
+  vishid     = 0.1*randn(numdims, numhid);% 连接权值Wij 784*1000
+  hidbiases  = zeros(1,numhid);% 隐含层偏置项bi
+  visbiases  = zeros(1,numdims);% 可视化层偏置项aj
+
+  poshidprobs = zeros(numcases,numhid); %样本数*隐藏层NN数，隐藏层输出p(h1|v0)对应每个样本有一个输出 100*1000
+  neghidprobs = zeros(numcases,numhid);  %重构数据驱动的隐藏层
+  posprods    = zeros(numdims,numhid);  % 表示p(h1|v0)*v0，用于更新Wij即&lt;vihj&gt;data 784*1000
+  negprods    = zeros(numdims,numhid);  %&lt;vihj&gt;recon 
+  vishidinc  = zeros(numdims,numhid);  % 权值更新的增量 &Delta;W
+  hidbiasinc = zeros(1,numhid);  % 隐含层偏置项更新的增量 1*1000 &Delta;b
+  visbiasinc = zeros(1,numdims);  % 可视化层偏置项更新的增量 1*784 &Delta;a
+  batchposhidprobs=zeros(numcases,numhid,numbatches);  % 整个数据隐含层的输出  每批样本数*隐含层维度*批数
+end
+
+for epoch = epoch:maxepoch  %每个迭代周期
+ fprintf(1,'epoch %d\r',epoch); 
+ errsum=0;
+ for batch = 1:numbatches  %每一批样本
+ fprintf(1,'epoch %d batch %d\r',epoch,batch); 
+%%CD-1
+%%%%%%%%% START POSITIVE PHASE 正向梯度%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  data = batchdata(:,:,batch);  %data里是100个图片数据
+  poshidprobs = 1./(1 + exp(-data*vishid - repmat(hidbiases,numcases,1)));  %隐藏层输出p(h=1|v0)=sigmod函数=1/(1+exp(-wx-b)) 根据这个分布采集一个隐变量h
+  batchposhidprobs(:,:,batch)=poshidprobs;  %将输出存入一个三位数组
+  posprods    = data' * poshidprobs;  %p(h|v0)*v0 更新权重时会使用到 计算正向梯度vh'
+  poshidact   = sum(poshidprobs);  %隐藏层中神经元概率和，在更新隐藏层偏置时会使用到
+  posvisact = sum(data);  %可视层中神经元概率和，在更新可视层偏置时会使用到
+%%%%%%%%% END OF POSITIVE PHASE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%gibbs采样
+  poshidstates = poshidprobs &gt; rand(numcases,numhid);  %将隐藏层输出01化表示，大于随机概率的置1，小于随机概率的置0，gibbs抽样,设定状态 
+
+%%%%%%%%% START NEGATIVE PHASE 反向梯度%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  negdata = 1./(1 + exp(-poshidstates*vishid' - repmat(visbiases,numcases,1)));  %01化表示之后算vt=p(vt|ht-1)重构的数据 p(v=1|h)=sigmod(W*h+a)  采集重构的可见变量v'
+  neghidprobs = 1./(1 + exp(-negdata*vishid - repmat(hidbiases,numcases,1)));    %ht=p(h|vt)使用重构数据隐藏层的输出 p(h=1|v)=sigmod(W'*v+b) 采样一个h'  
+  negprods  = negdata'*neghidprobs;  %计算反向梯度v'h';
+  neghidact = sum(neghidprobs);
+  negvisact = sum(negdata); 
+%%%%%%%%% END OF NEGATIVE PHASE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%更新参数
+  err= sum(sum( (data-negdata).^2 ));  %整批数据的误差 ||v-v'||^2
+  errsum = err + errsum;
+
+   if epoch&gt;5  %迭代次数不同调整冲量
+     momentum=finalmomentum;
+   else
+     momentum=initialmomentum;
+   end
+
+%%%%%%%%% UPDATE WEIGHTS AND BIASES 更新权重和偏置%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+    vishidinc = momentum*vishidinc + ...
+                epsilonw*( (posprods-negprods)/numcases - weightcost*vishid); %权重的增量 &Delta;W=alpha*(vh'-v'h')
+    visbiasinc = momentum*visbiasinc + (epsilonvb/numcases)*(posvisact-negvisact);  %可视层增量 &Delta;a=alpha*(v-v')
+    hidbiasinc = momentum*hidbiasinc + (epsilonhb/numcases)*(poshidact-neghidact);  %隐含层增量 &Delta;b=alpha*(h-h')
+
+    vishid = vishid + vishidinc; %a=a+&Delta;a
+    visbiases = visbiases + visbiasinc; %W=W+&Delta;W
+    hidbiases = hidbiases + hidbiasinc;  %b=b+&Delta;b
+%%%%%%%%%%%%%%%% END OF UPDATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  end
+  fprintf(1, 'epoch %4i error %6.1f  \n', epoch, errsum); 
+end
+</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;5. 玻尔兹曼机与受限玻尔兹曼机</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100222794-450928894.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100231297-30935747.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100239748-2022575483.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100247203-982263616.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100254915-1534804427.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201909/1027447-20190927100301396-1938794652.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;6. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;邱锡鹏,&nbsp;<a href="https://nndl.github.io/" target="_blank">神经网络与深度学习</a>[M]. 2019.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;Salakhutdinov R, Hinton G. <a href="http://proceedings.mlr.press/v5/salakhutdinov09a/salakhutdinov09a.pdf" target="_blank">Deep boltzmann machines</a>[C]//Artificial intelligence and statistics. 2009: 448-455.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3] Hinton,&nbsp;<a href="http://www.cs.toronto.edu/~hinton/MatlabForSciencePaper.html" target="_blank">Training a deep autoencoder or a classifier&nbsp;</a></span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://www.cs.toronto.edu/~hinton/MatlabForSciencePaper.html" target="_blank">on MNIST digits</a>. 2006.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;Hinton G E.&nbsp;<a href="http://www.cs.utoronto.ca/~hinton/absps/nccd.pdf" target="_blank">Training products of experts by minimizing contrastive divergence</a>[J]. Neural computation, 2002, 14(8): 1771-1800.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[5]&nbsp;Hinton G E. <a href="https://www.cs.toronto.edu/~hinton/absps/guideTR.pdf" target="_blank">A practical guide to training restricted Boltzmann machines</a>[M]//Neural networks: Tricks of the trade. Springer, Berlin, Heidelberg, 2012: 599-619.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[6]&nbsp;</span><a href="https://blog.csdn.net/weixin_42398658/article/details/84279293" target="_blank"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">深度学习 --- 受限玻尔兹曼机详解(RBM)</span></a></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[7]&nbsp;<a href="https://blog.csdn.net/itplus/article/details/19408143" target="_blank">受限玻尔兹曼机（RBM）学习笔记（六）对比散度算法</a></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">[8]&nbsp;<a href="https://blog.csdn.net/zouxy09/article/details/8775524" target="_blank">Deep Learning（深度学习）学习笔记整理系列之（四）</a></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">[9]&nbsp;<a href="http://deeplearning.net/tutorial/rbm.html#id1" target="_blank">Restricted Boltzmann Machines (RBM)</a></span></p>

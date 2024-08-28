@@ -1,0 +1,48 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">随机傅里叶特征(Random Fourier Features)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉&nbsp;-&nbsp;博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 基本知识</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.1 傅里叶变换与逆傅里叶变换</span></h3>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229153921787-1096547602.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+</blockquote>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.2 平移不变性核</span></h3>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229154113568-345297132.png" alt="" /></span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;具有平移不变性的核有：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229154145957-1935735219.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+</blockquote>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.3&nbsp;Bochner定理</span></h3>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229154237236-210791258.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+</blockquote>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 介绍</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 随机傅里叶特征方法是一种近似核函数的方法，旨在找到一个低阶的映射函数z(x)，将D维原始数据映射到d维随机特征空间中，随机特征空间中两个特征的内积约等于核函数，即z(x)&rsquo;z(y)&asymp;k(x,y)=k(x-y)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229153753621-1971817514.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">算法具体流程：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202105/1027447-20210522094609551-2140394601.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注：我的表述与算法流程中的不一样，我的表述是z：从D-&gt;d维。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 具体推导</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 给定一个平移不变性的核，怎样找到这样的映射z(x)呢？</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202004/1027447-20200416170335793-569831849.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px;">（1）平移不变性</span></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（2）傅里叶变换与逆傅里叶变换</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（3）w~p(w)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（4）e<sup>-i</sup><sup>&theta;</sup>=cos(&theta;)-i*sin(&theta;)，只取实部</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（5）具体推导过程</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229154639155-1868665462.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（6）蒙特卡洛方法</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 结论</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 至此，找到随机映射z(x)，使得原始数据x映射到d维随机特征空间中。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2018.cnblogs.com/blog/1027447/202002/1027447-20200229154956689-994199641.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">我的理解：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 原先支持向量机(SVM)通过核函数将样本从原始空间映射到一个更高维的特征空间，使得样本在这个特征空间内线性可分，而问题是这个映射函数没法显式地求出具体表达式，这个特征空间维度不确定，可能很高，甚至是无穷维，为了避免计算映射函数，于是用两个样本在特征空间的内积等于它们在原始样本空间通过函数k(xi,xj)计算的结果来进行计算，这样就不用直接去计算高维甚至无穷维特征空间中的内积。但是当训练样本个数很大时，用SVM求解时间复杂度很高。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 现在是找一个映射函数z来近似原先的映射函数，找到的映射函数z有显式的表达式，z的维度是可以人为控制的，是已知的，这个映射函数与原先的SVM的映射函数相比，维度要低，并且在新的特征空间中训练线性学习器，计算复杂度也比原先的低，在大规模数据集上可以有效提高计算效率。但是随机特征空间维度d的选择是一个值得思考的问题，实验表明，随着随机特征维度的增加，结果越好，这是因为高维度的随机特征能够更好地近似核函数，但维度升高也会导致时间复杂度增加，因此如何在保证结果较好的情况下，又不会使时间复杂度很高，如何选择d，能对我们的结果有利，是一个值得研究的问题。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; <span style="color: #ff0000;">文献截图中的-j就是我这里的i。</span></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;Rahimi and B. Recht, &ldquo;<a href="http://papers.nips.cc/paper/3182-random-features-for-large-scale-kernel-machines.pdf" target="_blank">Random features for large-scale kernel machines</a>,&rdquo; in Advances in Neural Information Processing Systems 20, pp. 1177&ndash;1184, Curran Associates, Inc., 2008. </span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;代码：<a href="https://github.com/kma32527/Random-Fourier-Features" target="_blank">https://github.com/kma32527/Random-Fourier-Features</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;Random Fourier Features&nbsp; <a href="http://gregorygundersen.com/blog/2019/12/23/random-fourier-features/">http://gregorygundersen.com/blog/2019/12/23/random-fourier-features</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3]&nbsp;Karris S T. Signals and systems with MATLAB computing and Simulink modeling[M]. Orchard publications, 2007.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;王迎旭. 基于随机特征的多核分布式协同模糊聚类算法研究[D].济南大学,2019.</span></p>
