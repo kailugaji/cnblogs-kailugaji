@@ -1,0 +1,36 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：绘制条形图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">用MATLAB绘制条形图，自定义条形图的颜色、图例位置、横坐标名称、显示条形图上面的数字，并保存图片到指定位置。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. demo.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+Y=[0.6	0.7	0.75
+0.9	0.91	0.92
+0.9	0.92	0.95
+0.84	0.86	0.87];
+figure
+X=1:4;
+h=bar(X,Y);
+% 设置条形图颜色
+set(h(1),'FaceColor',[1,1,0])
+set(h(2),'FaceColor',[0,0.9,0.3])
+set(h(3),'FaceColor',[1,0,0.3])
+ylim([0,1]);
+ylabel('Accuracy');
+xlabel('Datasets');
+legend('Method 1','Method 2','Method 3', 'FontSize',8,'FontName','Times New Roman', 'Location', 'northwest'); %修改图例
+set(gca,'xtick',1:4);
+set(gca,'XTickLabel',{'dataset 1','dataset 2','dataset 3','dataset 4'},'FontSize',12,'FontName','Times New Roman'); %修改横坐标名称、字体
+Y_1=roundn(Y,-2);
+for i = 1:length(X)
+    text(X(i)-0.25,Y_1(i,1),num2str(Y_1(i,1)),'HorizontalAlignment','center','VerticalAlignment','bottom','FontSize',8,'FontName','Times New Roman');
+    text(X(i),Y_1(i,2),num2str(Y_1(i,2)),'HorizontalAlignment','center','VerticalAlignment','bottom','FontSize',8,'FontName','Times New Roman');
+    text(X(i)+0.25,Y_1(i,3),num2str(Y_1(i,3)),'HorizontalAlignment','center','VerticalAlignment','bottom','FontSize',8,'FontName','Times New Roman');
+end
+saveas(gcf,sprintf('条形图.jpg'),'bmp'); %保存图片
+</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191119142233168-231040869.jpg" alt="" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">折线图作图见：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11840069.html">MATLAB作图</a></span></p>

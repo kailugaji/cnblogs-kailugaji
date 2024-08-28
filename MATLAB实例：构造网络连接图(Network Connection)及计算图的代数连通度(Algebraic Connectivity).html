@@ -1,0 +1,135 @@
+<h1 style="text-align: center;"><span style="font-family: verdana, geneva;">MATLAB实例：构造网络连接图(Network Connection)及计算图的代数连通度(Algebraic Connectivity)</span></h1>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: verdana, geneva;">1. 图的代数连通度(Algebraic Connectivity)</span></h2>
+<blockquote>
+<p><span style="font-family: verdana, geneva; font-size: 16px; color: #000080;">图的代数连通度：Laplace图谱的次小特征值。</span></p>
+</blockquote>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191030153335215-1786706180.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: verdana, geneva;">2. 网络连接图(</span>Network Connection<span style="font-family: verdana, geneva;">)的构造</span></h2>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="font-family: verdana, geneva; font-size: 16px;">随机生成一个具有50个节点的传感器网络。节点随机放置在3.5 x 3.5方形区域内，通信距离为0.8。如下图所示，共有159条边，其代数连通度为：0.3007。</span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201910/1027447-20191030150429096-133467160.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: verdana, geneva;">3. MATLAB程序</span></h2>
+<h3><span style="font-family: verdana, geneva;">demo_Create_Network_Connection.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">%创建无向图 网络连接图 Network Connection.
+clc;
+close all;
+clear;
+
+Conf.Square = 3.5;  %方形区域的边长
+Conf.NodeNumber = 50;  %节点个数
+Conf.CommDist = 0.8;  %最大通信距离
+
+is_create_network = 1;
+if is_create_network == 1
+    [ Network, Dists ] = CreateNetworksFunc(Conf);
+    save Network_1.mat Network
+else
+    load Network_1.mat
+end
+
+nodenum = size(Network.Nodes.loc,1);  %节点个数
+lap_matrix = zeros(nodenum);  %节点数*节点数 图的Laplace矩阵：diag(d1,d2,...dn)-邻接矩阵，di为节点i的度
+for i=1:nodenum
+    idx = Network.Nodes.neighbors{i};  %邻接节点的id
+    lap_matrix(i,idx) = -1;   %负的邻接矩阵
+    lap_matrix(i,i) = length(idx);  %对角线元素为节点的度
+end
+eig_val = eig(lap_matrix);  %lap_matrix的特征值
+eig_val = sort(eig_val,'ascend');  %从小到大排序，最小特征值为0
+algeb_conn = eig_val(2) % algebraic connectivity 代数连通度：lap_matrix的第二小特征值&gt;0，连通图
+avg_deg = sum(diag(lap_matrix))/nodenum   % average values 节点度的均值
+
+DrawNetworks(Network);
+% DrawNetworks(Network, Dists); %把所有的边的长度（通信距离）都标出来了
+print(gcf,'-dpng','Network_1.png');  %保存图片
+</pre>
+</div>
+<h3><span style="font-family: verdana, geneva;">CreateNetworksFunc.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [ Network, Dists ] = CreateNetworksFunc(Conf)
+%  创建无向图 网络连接图 Network Connection.
+    num = Conf.NodeNumber;  %节点个数
+    square = Conf.Square;  %方形区域的边长
+    maxDist = Conf.CommDist;  %最大通信距离
+   
+    loc = square*rand(num,2) - square/2;  %num*2的随机数 节点坐标     
+    Dists = Euclid_Dist(loc(:,1),loc(:,2));  %节点数*节点数，对角线元素为0
+    
+    % without self-loop 不存在节点自己到自己的路径，对角线上的元素为无穷大
+    Dists = Dists + 10*maxDist*eye(num);
+    
+    Neighbors = cell(num,1);
+    maxDegree = 0; %节点的最大度，与节点相邻的最大边数
+    edges = 0;  %图的总边的个数，无向图的度/2
+    for i=1:num
+        Neighbors{i} = find(Dists(i,:)&lt;=maxDist);  %找邻接节点的id
+        if length(Neighbors{i}) &gt; maxDegree
+            maxDegree = length(Neighbors{i});  %节点的最大度
+        end
+        edges = edges + length(Neighbors{i});
+    end
+   
+    Nodes.loc = loc;
+    Nodes.neighbors = Neighbors;
+    
+    Network.maxDegree = maxDegree;
+    Network.edges = edges/2; %% undirected graph
+    Network.Conf = Conf;
+    Network.Nodes = Nodes;
+end
+
+function dist = Euclid_Dist(X,Y)
+% 求两两节点之间的距离，输出[节点*节点]的矩阵，距离矩阵
+    len = length(X);
+    xx = repmat(X,1,len); %节点数*节点数
+    yy = repmat(Y,1,len);    
+    dist = sqrt((xx-xx').^2+(yy-yy').^2);  %节点数*节点数
+end
+</pre>
+</div>
+<h3><span style="font-family: verdana, geneva;">DrawNetworks.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function fig = DrawNetworks( Network )
+%画无向图 网络连接图 Network Connection.
+% function fig = DrawNetworks( Network, Dists )  %把所有的边的长度（通信距离）都标出来了
+
+num = Network.Conf.NodeNumber;  %节点个数
+loc = Network.Nodes.loc;  %节点坐标
+square = Network.Conf.Square;  %方形区域的边长
+Neighbors = Network.Nodes.neighbors;  %邻接节点的id
+
+fig = figure;
+plot(loc(:,1),loc(:,2),'ro','MarkerSize',8,'LineWidth',2);  %节点是红色圆圈
+side=ceil(square/2);
+axis([-side,side,-side,side]);   
+for i=1:num
+    for k = 1:length(Neighbors{i})
+        j = Neighbors{i}(k);
+%             c = num2str(Dists(i,j),'%.2f');
+%             text((loc(i,1) + loc(j,1))/2,(loc(i,2) + loc(j,2))/2,c,'Fontsize',10);  %把所有的边的长度（通信距离）都标出来了
+%             hold on;
+        line([loc(i,1),loc(j,1)],[loc(i,2),loc(j,2)],'LineWidth',0.8,'Color','b'); %线是蓝色
+    end
+end
+set(gcf, 'Color', 'w'); %白色
+end</pre>
+</div>
+<h2>4. 连通度与代数连通度</h2>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">&nbsp; &nbsp; 图的连通度侧重的是图的结构性质，而代数连通度侧重的是矩阵的代数性质。</span></p>
+<ul>
+<li><span style="font-family: verdana, geneva; font-size: 16px;"><strong>图的代数连通度</strong>：</span></li>
+</ul>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;图的Laplace矩阵的次小特征值。</span></p>
+<ul>
+<li><span style="font-family: verdana, geneva; font-size: 16px;"><strong>点连通度</strong>：</span></li>
+</ul>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;一个具有N个点的图G中，在去掉任意K&minus;1个顶点后(1&lt;=K&lt;=N)所得的子图仍然连通，去掉K个顶点后不连通，则称G是K连通图，K称作图G的点连通度，记作K(G)。</span></p>
+<ul>
+<li><span style="font-family: verdana, geneva; font-size: 16px;"><strong>边连通度</strong>：</span></li>
+</ul>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;一个具有N条边的图G中，在去掉任意K&minus;1条边后(1&lt;=K&lt;=N)所得的子图仍然连通，去掉K条边后不连通，则称G是K连通图，K称作图G的边连通度，记作K(G)。</span></p>
+<h2><span style="font-family: verdana, geneva;">5. 参考文献</span></h2>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">[1] Hua J, Li C. <a href="https://huajh.github.io/papers/dvb_hua2016tsp.pdf" target="_blank">Distributed variational Bayesian algorithms over sensor networks</a>[J]. IEEE Transactions on Signal Processing, 2015, 64(3): 783-798.</span></p>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">[2]&nbsp;肖恩利, 束金龙, 闻人凯. <a href="http://www.doc88.com/p-995525736851.html" target="_blank">图的代数连通度及其点连通度</a>[J]. 华东师范大学学报(自然科学版), 2003, 2003(4):1-4.</span></p>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">[3] Junhao Hua.&nbsp;<a href="https://github.com/huajh/dVB" target="_blank">Distributed Variational Bayesian Algorithms</a>. Github, 2017.</span></p>

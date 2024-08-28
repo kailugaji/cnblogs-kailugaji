@@ -1,0 +1,149 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：非线性方程数值解法(迭代解)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 很久之前写过一篇关于&ldquo;<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/6920975.html">MATLAB用二分法、不动点迭代法及Newton迭代（切线）法求非线性方程的根</a>&rdquo;，本博文相当于之前这一篇的延续与拓展，介绍四种求解一元非线性方程的数值解法(迭代解)，包括：牛顿迭代法，Halley迭代法，Householder迭代法以及预测校正牛顿-哈雷迭代法(Predictor-Corrector Newton-Halley，PCNH)，具体参考文献[1]，来源于这篇文章：THREE-STEP ITERATIVE METHOD WITH EIGHTEENTH ORDER CONVERGENCE FOR SOLVING NONLINEAR EQUATIONS。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 迭代更新公式</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202105/1027447-20210501210047842-941279997.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. MATLAB程序</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">newton.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function [x1, k]=newton(t1,esp,m)
+syms x;
+fun=x^3+4*(x^2)-10;
+for k=1:m
+    if abs(subs(diff(fun,'x'),x,t1))&lt;esp
+        x1=t1;
+        break;
+    else 
+        if subs(diff(fun,'x',2),x,t1)==0
+            break;
+            disp('解题失败！')
+        else
+            t0=t1;
+            t1=t0-subs(fun,x,t0)/subs(diff(fun,'x'),x,t0);
+            if abs(t1-t0)&lt;esp
+                x1=t1;
+                break;
+            end
+        end
+    end
+end
+% x1=vpa(x1,15);
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">halley.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function [x1, k]=halley(t1,esp,m) 
+syms x;
+fun=x^3+4*(x^2)-10;
+for k=1:m 
+    if abs(subs(diff(fun,'x'),x,t1))&lt;esp
+        x1=t1;
+        break; 
+    else 
+        if subs(diff(fun,'x',2),x,t1)==0 
+            break;
+            disp('解题失败！')
+        else
+            t0=t1;     
+            t1=t0-(2*subs(fun,x,t0)*subs(diff(fun,'x'), x, t0))/(2*(subs(diff(fun,'x'), x, t0))^2-subs(fun, x, t0)*subs(diff(fun,'x',2),x,t0));           
+            if abs(t1-t0)&lt;esp
+                x1=t1;
+                break;
+            end
+        end
+    end
+end
+% x1=vpa(x1,15);
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">householder.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function [x1, k]=householder(t1,esp,m) 
+syms x;
+fun=x^3+4*(x^2)-10;
+for k=1:m 
+    if abs(subs(diff(fun,'x'),x,t1))&lt;esp
+        x1=t1;
+        break; 
+    else 
+        if subs(diff(fun,'x',2),x,t1)==0 
+            break;
+            disp('解题失败！')
+        else
+            t0=t1;         
+            t1=t0-(subs(fun, x, t0))/(subs(diff(fun,'x'),x,t0))-(((subs(fun, x, t0))^2)*subs(diff(fun,'x',2),x,t0))/(2*(subs(diff(fun,'x',2),x,t0))^3);
+            if abs(t1-t0)&lt;esp
+                x1=t1;
+                break;
+            end
+        end
+    end
+end
+% x1=vpa(x1,15);
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">PCNH.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function [x1, k]=PCNH(t1,esp,m) 
+syms x;
+fun=x^3+4*(x^2)-10;
+for k=1:m 
+    if abs(subs(diff(fun,'x'),x,t1))&lt;esp
+        x1=t1;
+        break; 
+    else 
+        if subs(diff(fun,'x',2),x,t1)==0 
+            break;
+            disp('解题失败！')
+        else
+            t0=t1;
+            w=t0-subs(fun,x,t0)/subs(diff(fun,'x'),x,t0);           
+            y=w-(2*subs(fun,x,w)*subs(diff(fun,'x'), x, w))/(2*(subs(diff(fun,'x'), x, w))^2-subs(fun, x, w)*subs(diff(fun,'x',2),x,w));           
+            t1=y-(subs(fun, x, y))/(subs(diff(fun,'x'),x,y))-(((subs(fun, x, y))^2)*subs(diff(fun,'x',2),x,y))/(2*(subs(diff(fun,'x',2),x,y))^3);
+            if abs(t1-t0)&lt;esp
+                x1=t1;
+                break;
+            end
+        end
+    end
+end
+% x1=vpa(x1,15);
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">clear
+clc
+% Input: 初始值，迭代终止条件，最大迭代次数
+[x1, k1]=newton(1,1e-4,20); % 牛顿迭代法
+[x2, k2]=halley(1,1e-4,20); % Halley迭代法
+[x3, k3]=householder(1,1e-4,20); % Householder迭代法
+[x4, k4]=PCNH(1,1e-4,20); % 预测校正牛顿-哈雷迭代法(PCNH)
+fprintf('牛顿迭代法求解得到的方程的根为：%.15f, 实际迭代次数为：%d次\n', x1, k1);
+fprintf('Halley迭代法求解得到的方程的根为：%.15f, 实际迭代次数为：%d次\n', x2, k2);
+fprintf('Householder迭代法求解得到的方程的根为：%.15f, 实际迭代次数为：%d次\n', x3, k3);
+fprintf('预测校正牛顿-哈雷迭代法(PCNH)求解得到的方程的根为：%.15f, 实际迭代次数为：%d次\n', x4, k4);
+
+%% 函数图像
+x=-5:0.01:5;
+y=x.^3+4.*(x.^2)-10;
+y_0=zeros(length(x));
+plot(x, y, 'r-', x, y_0, 'b-');
+xlabel('x');
+ylabel('f(x)');
+title('f(x)=x^3+4{x^2}-10');
+saveas(gcf,sprintf('函数图像.jpg'),'bmp'); %保存图片</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 数值结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">求解$f(x)=x^3+4{x^2}-10=0$方程在$x_0=1$附近的根。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">牛顿迭代法求解得到的方程的根为：1.365230013435367, 实际迭代次数为：4次
+Halley迭代法求解得到的方程的根为：1.365230013414097, 实际迭代次数为：3次
+Householder迭代法求解得到的方程的根为：1.365230013391664, 实际迭代次数为：3次
+预测校正牛顿-哈雷迭代法(PCNH)求解得到的方程的根为：1.365230013414097, 实际迭代次数为：2次
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">函数图像：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202105/1027447-20210501211831366-1824573547.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;&nbsp;Bahgat, Mohamed &amp; Hafiz, Mohammad. (2014). <a href="https://ijpam.eu/contents/2014-93-1/7/7.pdf" target="_blank">THREE-STEP ITERATIVE METHOD WITH EIGHTEENTH ORDER CONVERGENCE FOR SOLVING NONLINEAR EQUATIONS</a>. International Journal of Pure and Applied Mathematics. 93.</span></p>

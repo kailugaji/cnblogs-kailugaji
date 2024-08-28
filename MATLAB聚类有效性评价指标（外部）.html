@@ -1,0 +1,134 @@
+<h1 style="text-align: center;">MATLAB聚类有效性评价指标（外部）</h1>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></strong></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>更多内容，请看：<a href="https://www.cnblogs.com/kailugaji/tag/MATLAB/" target="_blank">MATLAB</a>、<a href="https://www.cnblogs.com/kailugaji/tag/%E8%81%9A%E7%B1%BB/" target="_blank">聚类</a>、<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11926253.html">MATLAB聚类有效性评价指标（外部 成对度量）</a>、</strong></span><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><a href="https://www.cnblogs.com/kailugaji/category/1579450.html" rel="" target="">MATLAB: Clustering Algorithms</a></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif; color: #ff0000;">前提：数据的真实标签已知！</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 归一化互信息(Normalized Mutual information)</span></h2>
+<h3>定义</h3>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201906/1027447-20190611153223104-852258194.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3>程序</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function MIhat = nmi(A, B)
+%NMI Normalized mutual information
+% A, B: 1*N;
+if length(A) ~= length(B)
+    error('length( A ) must == length( B)');
+end
+N = length(A);
+A_id = unique(A);
+K_A = length(A_id);
+B_id = unique(B);
+K_B = length(B_id);
+% Mutual information
+A_occur = double (repmat( A, K_A, 1) == repmat( A_id', 1, N ));
+B_occur = double (repmat( B, K_B, 1) == repmat( B_id', 1, N ));
+AB_occur = A_occur * B_occur';
+P_A= sum(A_occur') / N;
+P_B = sum(B_occur') / N;
+P_AB = AB_occur / N;
+MImatrix = P_AB .* log(P_AB ./(P_A' * P_B)+eps);
+MI = sum(MImatrix(:));
+% Entropies
+H_A = -sum(P_A .* log(P_A + eps),2);
+H_B= -sum(P_B .* log(P_B + eps),2);
+%Normalized Mutual information
+MIhat = MI / sqrt(H_A*H_B);　</pre>
+</div>
+<h3>结果</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A = [1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3];
+&gt;&gt; B = [1 2 1 1 1 1 1 2 2 2 2 3 1 1 3 3 3];
+&gt;&gt; MIhat = nmi(A, B)
+
+MIhat =
+
+    0.3646</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. Rand统计量(Rand index)</span></h2>
+<h3>定义</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201906/1027447-20190611153143209-1410347836.png" alt="" /></p>
+<h3>程序</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [AR,RI,MI,HI]=RandIndex(c1,c2)
+%RANDINDEX - calculates Rand Indices to compare two partitions
+% ARI=RANDINDEX(c1,c2), where c1,c2 are vectors listing the 
+% class membership, returns the "Hubert &amp; Arabie adjusted Rand index".
+% [AR,RI,MI,HI]=RANDINDEX(c1,c2) returns the adjusted Rand index, 
+% the unadjusted Rand index, "Mirkin's" index and "Hubert's" index.
+
+if nargin &lt; 2 || min(size(c1)) &gt; 1 || min(size(c2)) &gt; 1
+   error('RandIndex: Requires two vector arguments')
+   return
+end
+
+C=Contingency(c1,c2);	%form contingency matrix
+
+n=sum(sum(C));
+nis=sum(sum(C,2).^2);		%sum of squares of sums of rows
+njs=sum(sum(C,1).^2);		%sum of squares of sums of columns
+
+t1=nchoosek(n,2);		%total number of pairs of entities
+t2=sum(sum(C.^2));	%sum over rows &amp; columnns of nij^2
+t3=.5*(nis+njs);
+
+%Expected index (for adjustment)
+nc=(n*(n^2+1)-(n+1)*nis-(n+1)*njs+2*(nis*njs)/n)/(2*(n-1));
+
+A=t1+t2-t3;		%no. agreements
+D=  -t2+t3;		%no. disagreements
+
+if t1==nc
+   AR=0;			%avoid division by zero; if k=1, define Rand = 0
+else
+   AR=(A-nc)/(t1-nc);		%adjusted Rand - Hubert &amp; Arabie 1985
+end
+
+RI=A/t1;			%Rand 1971		%Probability of agreement
+MI=D/t1;			%Mirkin 1970	%p(disagreement)
+HI=(A-D)/t1;	%Hubert 1977	%p(agree)-p(disagree)
+
+function Cont=Contingency(Mem1,Mem2)
+
+if nargin &lt; 2 || min(size(Mem1)) &gt; 1 || min(size(Mem2)) &gt; 1
+   error('Contingency: Requires two vector arguments')
+   return
+end
+
+Cont=zeros(max(Mem1),max(Mem2));
+
+for i = 1:length(Mem1)
+   Cont(Mem1(i),Mem2(i))=Cont(Mem1(i),Mem2(i))+1;
+end
+</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">程序中包含了四种聚类度量方法：Adjusted Rand index、Rand index、Mirkin index、Hubert index。</span></p>
+<h3>结果</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A = [1 1 1 1 1 1 2 2 2 2 2 2 3 3 3 3 3];
+&gt;&gt; B = [1 2 1 1 1 1 1 2 2 2 2 3 1 1 3 3 3];
+&gt;&gt; [AR,RI,MI,HI]=RandIndex(A,B)
+
+AR =
+
+    0.2429
+
+
+RI =
+
+    0.6765
+
+
+MI =
+
+    0.3235
+
+
+HI =
+
+    0.3529</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p id="title" class="add_font_color_emphasize add_margin_5"><a href="http://www.mathworks.com/matlabcentral/fileexchange/13916" target="_blank"><span id="titleText">(simple) Tool for estimating the number of clusters</span></a></p>
+<p class="add_font_color_emphasize add_margin_5"><a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/ziqiao/archive/2011/12/13/2286273.html">Mutual information and Normalized Mutual information 互信息和标准化互信息</a></p>
+<p><a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html" target="_blank">Evaluation of clustering</a></p>
+<p>&nbsp;</p>

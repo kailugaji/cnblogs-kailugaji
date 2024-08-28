@@ -1,0 +1,104 @@
+<h1 style="text-align: center;">MATLAB常微分方程数值解</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<h2>1.一阶常微分方程初值问题</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201901/1027447-20190116182320957-732382746.png" alt="" width="217" height="73" /></p>
+<h2>2.欧拉法</h2>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201901/1027447-20190116182435417-2109658203.png" alt="" width="258" height="84" /></p>
+<h2>3.改进的欧拉法</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201901/1027447-20190116182501140-856782644.png" alt="" width="336" height="168" /></p>
+<h2>4.四阶龙格库塔方法</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201901/1027447-20190116182543502-1058260672.png" alt="" width="418" height="245" /></p>
+<h2>5.例题</h2>
+<p><span style="font-size: 16px;">用欧拉法，改进的欧拉法及4阶经典Runge-Kutta方法在不同步长下计算初值问题。步长分别为0.2,0.4,1.0.</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201901/1027447-20190116182225563-817612910.png" alt="" width="268" height="106" /></p>
+<p><span style="font-size: 16px;">matlab程序：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function z=f(x,y)
+z=-y*(1+x*y);
+</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function R_K(h)
+%欧拉法
+y=1;
+fprintf('欧拉法：x=%f, y=%f\n',0,1);
+for i=1:1/h
+    x=(i-1)*h;
+    K=f(x,y);
+    y=y+h*K;
+    fprintf('欧拉法：x=%f, y=%f\n',x+h,y);
+end
+fprintf('\n');
+%改进的欧拉法
+y=1;
+fprintf('改进的欧拉法：x=%f, y=%f\n',0,1);
+for i=1:1/h
+    x=(i-1)*h;
+    K1=f(x,y);
+    K2=f(x+h,y+h*K1);
+    y=y+(h/2)*(K1+K2);
+    fprintf('改进的欧拉法：x=%f, y=%f\n',x+h,y);
+end
+fprintf('\n');
+ %龙格库塔方法
+ y=1;
+fprintf('龙格库塔法：x=%f, y=%f\n',0,1);
+for i=1:1/h
+    x=(i-1)*h;
+    K1=f(x,y);
+    K2=f(x+h/2,y+(h/2)*K1);
+    K3=f(x+h/2,y+(h/2)*K2);
+    K4=f(x+h,y+h*K3);
+    y=y+(h/6)*(K1+2*K2+2*K3+K4);
+    fprintf('龙格库塔法：x=%f, y=%f\n',x+h,y);
+end
+</pre>
+</div>
+<p><span style="font-size: 16px;">结果：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; R_K(0.2)
+欧拉法：x=0.000000, y=1.000000
+欧拉法：x=0.200000, y=0.800000
+欧拉法：x=0.400000, y=0.614400
+欧拉法：x=0.600000, y=0.461321
+欧拉法：x=0.800000, y=0.343519
+欧拉法：x=1.000000, y=0.255934
+
+改进的欧拉法：x=0.000000, y=1.000000
+改进的欧拉法：x=0.200000, y=0.807200
+改进的欧拉法：x=0.400000, y=0.636118
+改进的欧拉法：x=0.600000, y=0.495044
+改进的欧拉法：x=0.800000, y=0.383419
+改进的欧拉法：x=1.000000, y=0.296974
+
+龙格库塔法：x=0.000000, y=1.000000
+龙格库塔法：x=0.200000, y=0.804636
+龙格库塔法：x=0.400000, y=0.631465
+龙格库塔法：x=0.600000, y=0.489198
+龙格库塔法：x=0.800000, y=0.377225
+龙格库塔法：x=1.000000, y=0.291009
+&gt;&gt; R_K(0.4)
+欧拉法：x=0.000000, y=1.000000
+欧拉法：x=0.400000, y=0.600000
+欧拉法：x=0.800000, y=0.302400
+
+改进的欧拉法：x=0.000000, y=1.000000
+改进的欧拉法：x=0.400000, y=0.651200
+改进的欧拉法：x=0.800000, y=0.405782
+
+龙格库塔法：x=0.000000, y=1.000000
+龙格库塔法：x=0.400000, y=0.631625
+龙格库塔法：x=0.800000, y=0.377556
+&gt;&gt; R_K(1)
+欧拉法：x=0.000000, y=1.000000
+欧拉法：x=1.000000, y=0.000000
+
+改进的欧拉法：x=0.000000, y=1.000000
+改进的欧拉法：x=1.000000, y=0.500000
+
+龙格库塔法：x=0.000000, y=1.000000
+龙格库塔法：x=1.000000, y=0.303395
+</pre>
+</div>
+<p><span style="font-size: 16px;">注意：在步长h为0.4时，要将for i=1:1/h改为for i=1:0.8/h。</span></p>
+<p>&nbsp;</p>

@@ -1,0 +1,83 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：对称双随机矩阵</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px; color: #333399;">双随机矩阵（doubly stochastic matrix）：元素属于[0,1]，行和为1，且列和为1。</span></p>
+</blockquote>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function A=doubly_stochastic(n)
+%产生 n 阶双随机矩阵 A
+A(1,1)=rand;
+for i=2:n-1
+    d=1-sum(A(1,1:i-1));
+    A(1,i)=d*rand;
+end
+for i=2:n-1
+    d=1-sum(A(1:i-1,1));
+    A(i,1)=d*rand;
+end
+for i=2:n-1
+    for j=2:n-1
+        d1=1-sum(A(i,1:j-1));
+        d2=1-sum(A(1:i-1,j));
+        d=min([d1 d2]);
+        A(i,j)=d*rand;
+    end
+end
+for i=1:n-1
+    A(n,i)=1-sum(A(1:n-1,i));
+end
+for i=1:n
+    A(i,n)=1-sum(A(i,1:n-1));
+end
+if A(n,n)&lt;0
+    A=1/n*ones(n);
+end
+%对称化A
+A=(A'+A)/2;
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #ff0000;">注</span>：程序最后一行如果去掉，则为双随机矩阵，加上最后一行，保证矩阵为对称阵。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A=doubly_stochastic(5)
+
+A =
+
+    0.3260    0.2105    0.3017    0.1032    0.0585
+    0.2105    0.1132    0.4114    0.1341    0.1308
+    0.3017    0.4114    0.0023    0.1947    0.0899
+    0.1032    0.1341    0.1947    0.3641    0.2039
+    0.0585    0.1308    0.0899    0.2039    0.5169
+
+&gt;&gt; sum(A, 1)
+
+ans =
+
+     1     1     1     1     1
+
+&gt;&gt; sum(A, 2)
+
+ans =
+
+     1
+     1
+     1
+     1
+     1
+
+&gt;&gt; A'==A
+
+ans =
+
+  5&times;5 logical 数组
+
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+   1   1   1   1   1
+</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">参考</span></h2>
+<p><a href="https://zhidao.baidu.com/question/51001699.html" target="_blank"><span class="ask-title" style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">如何用Matlab产生双随机矩阵</span></a></p>

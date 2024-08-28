@@ -1,0 +1,31 @@
+<p>凯鲁嘎吉 - 博客园</p>
+<p>http://www.cnblogs.com/kailugaji/</p>
+<p><span style="font-family: 宋体;">&nbsp; &nbsp; 定积分解决的是一维连续量求和的问题，而解决多维连续量的求和问题就要用到重积分了。重积分是建立在定积分的基础上的，它的基本思想也是将重积分化为定积分来计算，其中关键是积分限的确定，这也是重积分的难点所在。正是因为重积分从计算上来说仍是使用的定积分的方法，</span>MATLAB<span style="font-family: 宋体;">系统并没有提供专门的命令函数来处理重积分，因此在我们确定了积分限后仍是使用</span><span style="font-family: 'Times New Roman';">int()</span><span style="font-family: 宋体;">命令来处理重积分问题。有些积分区间形状比较复杂，为了方便表达积分的上下限常常把比较复杂的区间分割成若干个相对简单的区间，然后对不同的区间分别积分，最后把各个积分结果相加起来。</span></p>
+<p><span style="font-family: 宋体;">计算<img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180113221956707-1774249290.png" alt="" /></span></p>
+<p>其中，</p>
+<p><img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180113222014597-1548934265.png" alt="" /></p>
+<p><img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180113222022738-604024940.png" alt="" /></p>
+<p><img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180113222031301-948344761.png" alt="" /></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;">wrr.m:
+
+function tt=wrr(r,v,c,b,y,w)
+syms u t
+p=-(r/c)^v;
+g=exp(p);
+h=(b/y)*(t/y)^(b-1);
+hu=(b/y)*(u/y)^(b-1);
+f=int(g*hu,u,0,t);
+tt=int(t*g*h*exp(-f),t,0,w);
+tt=vpa(tt,10);
+
+//结果为：
+&gt;&gt; clear
+&gt;&gt; tt=wrr(0.5,0.787,0.033,1.097,0.241,2)
+ 
+tt =
+ 
+0.002183207532
+</pre>
+</div>
+<p>对于二元函数的符号积分，可以先转化成逐次积分形式，利用int函数进行求解。　　</p>

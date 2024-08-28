@@ -1,0 +1,65 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：聚类网络连接图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 本文给出一个简单实例，先生成2维高斯数据，得到数据之后，用模糊C均值(FCM)算法对数据进行聚类，得到聚类中心，然后绘制每一类数据到聚类中心的网络连接图。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 程序</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">generate_data.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function data=generate_data()
+%前两列是数据，最后一列是类标签
+%%
+%数据规模
+N=100;
+%混合比例
+para_pi=[0.33, 0.33, 0.34];
+%第一类数据
+mul=[0 -1]; % 均值
+S1=[1 0;0 1]; % 协方差
+data1=mvnrnd(mul, S1, para_pi(1)*N); % 产生高斯分布数据
+%第二类数据
+mu2=[2 2];
+S2=[1 0;0 1];
+data2=mvnrnd(mu2,S2,para_pi(2)*N);
+%第三类数据
+mu3=[-2 2];
+S3=[1 0;0 1];
+data3=mvnrnd(mu3,S3,para_pi(3)*N);
+%显示数据
+plot(data1(:,1),data1(:, 2),'b.');
+hold on;
+plot(data2(:,1),data2(:,2),'r.');
+plot(data3(:,1),data3(:,2),'g.');
+data = [data1, ones(para_pi(1)*N,1); data2, 2*ones(para_pi(2)*N,1); data3, 3*ones(para_pi(3)*N,1)];</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">plot_fcm_2D.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function plot_fcm_2D(data, K)
+[center,U] = fcm(data,K);
+index=cell(K, 1);
+for k=1:K
+    index{k}=find(U(k,:)==max(U));
+    plot(data(index{k},1),data(index{k},2),'ro');
+    hold on;
+end
+plot((center(:, 1)),(center(:, 2)),'*', 'MarkerSize',10,'color','k');
+for k=1:K
+    for i=1:length(index{k})
+        line([data(index{k}(i),1),center(k,1)],[data(index{k}(i),2),center(k,2)],'LineWidth',0.8,'Color','b'); 
+    end
+end</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo_fcm.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">data=generate_data();
+data=data(:, 1:2);
+K=3;
+plot_fcm_2D(data, K);
+string=['demo_figure_', num2str(K), '.jpg'];
+saveas(gcf,sprintf(string),'bmp'); %保存图片</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">K=2</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200314154648653-425879668.png" alt="" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">K=3</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200314154700263-564197922.png" alt="" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">K=4</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200314154709804-1823742494.png" alt="" /></p>

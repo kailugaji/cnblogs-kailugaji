@@ -1,0 +1,29 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MathType公式编辑器过期（失效，联网无法使用）的解决方案</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">目前遇到这种情况，MathType联网后显示证书失效，需要重新认证或者购买。或者是MathType成了精简版，只剩两行了。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">解决方案，分为两步：1. 先禁止MathType联网，2. 再删除注册表多余信息</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 禁止MathType联网</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">打开&ldquo;控制面板-&gt;系统和安全-&gt;Windows Defender 防火墙-&gt;(左边)高级设置-&gt;(左边)出站规则-&gt;(右边)新建规则&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514163959808-516395595.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">选择&ldquo;程序&rdquo;，点击&ldquo;下一步&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164059723-542783667.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">添加&ldquo;此程序路径&rdquo;，找到MathType所在路径，点击&ldquo;下一步&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164145248-1828177945.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">选择&ldquo;阻止连接&rdquo;，点击&ldquo;下一步&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164255020-470724059.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">选择&ldquo;域，专用，公用&rdquo;，点击&ldquo;下一步&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164342359-1721484482.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">随便起个名字，比如&ldquo;MathType&rdquo;，点击&ldquo;完成&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164419519-612749981.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">这样MathType就禁止联网了</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164500779-2013887341.png" alt="" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 删除注册表多余信息</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">键盘&ldquo;Win+R&rdquo;，打开&ldquo;regedit.exe&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164659904-1759593641.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">打开路径：计算机\HKEY_CURRENT_USER\Software\Install Options</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164812804-474946976.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">删除第二个信息&ldquo;Option6.9&rdquo;即可</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164927164-1643847244.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">现在，就可以愉快地使用MathType了</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200514164958573-736228254.png" alt="" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">当然，我们还是支持正版，如果有能力，建议购买官方软件。</span></p>

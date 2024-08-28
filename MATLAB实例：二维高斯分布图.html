@@ -1,0 +1,83 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：二维高斯分布图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">更多请看：<a href="https://www.cnblogs.com/kailugaji/category/1594478.html" target="_blank">随笔分类 - MATLAB作图</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题描述：用MATLAB在一张图上同时画出二维高斯散点图与分布图。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">数据来源：<a href="https://www.cnblogs.com/kailugaji/p/10861064.html" target="_blank">MATLAB高斯混合数据的生成</a>&nbsp;将二维数据保存为gauss_data.txt。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">前期工作：</span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.cnblogs.com/kailugaji/p/10861064.html" target="_blank">MATLAB高斯混合数据的生成</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.cnblogs.com/kailugaji/p/13191720.html" target="_blank">MATLAB实例：二维散点图 </a>- 凯鲁嘎吉 - 博客园&nbsp;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.cnblogs.com/kailugaji/p/12344504.html" target="_blank">MATLAB实例：二元高斯分布图</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></li>
+</ul>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">clear
+clc
+% Author:  凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+%% 加载数据
+data_load=dlmread('./gauss_data.txt');
+% 每一类
+data_1=data_load(data_load(:, end)==1, :);
+data_2=data_load(data_load(:, end)==2, :);
+data_3=data_load(data_load(:, end)==3, :);
+data_4=data_load(data_load(:, end)==4, :);
+data_5=data_load(data_load(:, end)==5, :);
+%% 空间坐标范围
+x1=-8:0.1:8;
+x2=-10:0.1:8;
+[X1, X2]=meshgrid(x1, x2);
+X=[X1(:) X2(:)];
+
+%第一类数据
+mu1=[0 0]; % 均值
+S1=[1 0;0 1]; % 协方差
+%第二类数据
+mu2=[4 4];
+S2=[2 -1;-1 2];
+%第三类数据
+mu3=[-4 4];
+S3=[2 1;1 2];
+%第四类数据
+mu4=[-4 -4];
+S4=[2 -1;-1 2];
+%第五类数据
+mu5=[4 -4];
+S5=[2 1;1 2];
+
+%% 高斯概率密度函数
+% 分量1
+y_1=mvnpdf(X, mu1, S1);
+y_1=reshape(y_1, length(x2), length(x1));
+% 分量2
+y_2=mvnpdf(X, mu2, S2);
+y_2=reshape(y_2, length(x2), length(x1));
+% 分量3
+y_3=mvnpdf(X, mu3, S3);
+y_3=reshape(y_3, length(x2), length(x1));
+% 分量4
+y_4=mvnpdf(X, mu4, S4);
+y_4=reshape(y_4, length(x2), length(x1));
+% 分量5
+y_5=mvnpdf(X, mu5, S5);
+y_5=reshape(y_5, length(x2), length(x1));
+%% 作图
+figure(1)
+contour(x1, x2, y_1);
+hold on
+contour(x1, x2, y_2);
+contour(x1, x2, y_3);
+contour(x1, x2, y_4);
+contour(x1, x2, y_5);
+xlabel('X');
+ylabel('Y');
+plot(data_1(:, 1), data_1(:, 2), 'b.', 'MarkerSize',10 );
+hold on
+plot(data_2(:, 1), data_2(:, 2), 'r^', 'MarkerSize',4, 'MarkerFaceColor','r');
+plot(data_3(:, 1), data_3(:, 2), 'ko', 'MarkerSize',4, 'MarkerFaceColor','g');
+plot(data_4(:, 1), data_4(:, 2), 'rp', 'MarkerSize',4, 'MarkerFaceColor','y');
+plot(data_5(:, 1), data_5(:, 2), 'mh', 'MarkerSize',4, 'MarkerFaceColor','m');
+saveas(gcf,sprintf('2D_Gauss_PDF.jpg'),'bmp'); %保存图片
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202011/1027447-20201115184931794-1109168984.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>

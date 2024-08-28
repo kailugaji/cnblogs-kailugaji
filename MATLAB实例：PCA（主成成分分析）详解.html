@@ -1,0 +1,149 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：PCA（主成成分分析）详解</span></h1>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'times new roman', times;">1. 主成成分分析</span></h2>
+<p><span style="font-family: 'times new roman', times;"><img src="https://img2020.cnblogs.com/blog/1027447/202011/1027447-20201130090310278-330558462.png" alt="" loading="lazy" /></span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108100449832-1345673864.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108100511140-1209767548.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108100542177-122945457.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108095528268-1247063401.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108100613260-690285088.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2>2. MATLAB解释</h2>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">详细信息请看：<a href="https://ww2.mathworks.cn/help/stats/pca.html?searchHighlight=pca&amp;s_tid=doc_srchtitle" target="_blank">Principal component analysis of raw data - mathworks</a></span></p>
+<p align="left"><strong><span style="font-family: 'times new roman', times; font-size: 16px;">[coeff,score,latent,tsquared,explained,mu] =&nbsp;pca(X)</span></strong></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>coeff&nbsp;=&nbsp;pca(X)</strong>&nbsp;returns the principal component coefficients, also known as loadings, for the&nbsp;n-by-p&nbsp;data matrix&nbsp;X. Rows of&nbsp;X&nbsp;correspond to observations and columns correspond to variables.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">The coefficient matrix is&nbsp;p-by-p.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">Each column of&nbsp;coeff&nbsp;contains coefficients for one principal component, and the columns are in descending order of component variance.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">By default,&nbsp;pca&nbsp;centers the data and uses the singular value decomposition (SVD) algorithm.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>coeff&nbsp;=&nbsp;pca(X,Name,Value)</strong>&nbsp;returns any of the output arguments in the previous syntaxes using additional options for computation and handling of special data types, specified by one or more&nbsp;Name,Value&nbsp;pair arguments.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">For example, you can specify the number of principal components&nbsp;pca&nbsp;returns or an algorithm other than SVD to use.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>[coeff,score,latent] =&nbsp;pca(___)</strong>&nbsp;also returns the principal component scores in&nbsp;score&nbsp;and the principal component variances in&nbsp;latent.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">You can use any of the input arguments in the previous syntaxes.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">Principal component scores are the representations of&nbsp;X&nbsp;in the principal component space. Rows of&nbsp;score&nbsp;correspond to observations, and columns correspond to components.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;">The principal component variances are the eigenvalues of the covariance matrix of&nbsp;X.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>[coeff,score,latent,tsquared] =&nbsp;pca(___)&nbsp;</strong>also returns the Hotelling's T-squared statistic for each observation in&nbsp;X.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>[coeff,score,latent,tsquared,explained,mu] =&nbsp;pca(___)</strong>&nbsp;also returns&nbsp;explained, the percentage of the total variance explained by each principal component and&nbsp;mu, the estimated mean of each variable in&nbsp;X.</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>coeff</strong>:&nbsp;X矩阵所对应的协方差矩阵的所有特征向量组成的矩阵，即变换矩阵或投影矩阵，coeff每列代表一个特征值所对应的特征向量，列的排列方式对应着特征值从大到小排序。</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>source</strong>:&nbsp;表示原数据在各主成分向量上的投影。但注意：是原数据经过中心化后在主成分向量上的投影。</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>latent</strong>:&nbsp;是一个列向量，主成分方差，也就是各特征向量对应的特征值，按照从大到小进行排列。</span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><strong>tsquared</strong>:&nbsp;X中每个观察值的Hotelling的T平方统计量。<span><span>Hotelling的T平方统计量（T-Squared Statistic</span></span><span>）是每个观察值的标准化分数的平方和，以列向量的形式返回。</span></span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><span><span><strong>explained</strong>:&nbsp;由每个主成分解释的总方差的百分比，每一个主成分所贡献的比例。explained = 100*latent/sum(latent)。</span></span></span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><span><span><strong>mu</strong>:&nbsp;每个变量X的估计平均值。</span></span></span></p>
+<h2 align="left"><span style="font-family: 'times new roman', times;">3. MATLAB程序</span></h2>
+<h3 align="left"><span style="font-family: 'times new roman', times;">3.1 方法一：指定降维后低维空间的维度k</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [data_PCA, COEFF, sum_explained]=pca_demo_1(data,k)
+% k:前k个主成分
+data=zscore(data);  %归一化数据
+[COEFF,SCORE,latent,tsquared,explained,mu]=pca(data);
+latent1=100*latent/sum(latent);%将latent特征值总和统一为100，便于观察贡献率
+data= bsxfun(@minus,data,mean(data,1));
+data_PCA=data*COEFF(:,1:k);
+pareto(latent1);%调用matla画图 pareto仅绘制累积分布的前95%，因此y中的部分元素并未显示
+xlabel('Principal Component');
+ylabel('Variance Explained (%)');
+% 图中的线表示的累积变量解释程度
+print(gcf,'-dpng','PCA.png');
+sum_explained=sum(explained(1:k));</pre>
+</div>
+<h3 align="left"><span style="font-family: 'times new roman', times;">3.2&nbsp;方法二：指定贡献率percent_threshold</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [data_PCA, COEFF, sum_explained, n]=pca_demo_2(data)
+%用percent_threshold决定保留xx%的贡献率
+percent_threshold=95;   %百分比阈值，用于决定保留的主成分个数；
+data=zscore(data);  %归一化数据
+[COEFF,SCORE,latent,tsquared,explained,mu]=pca(data);
+latent1=100*latent/sum(latent);%将latent特征值总和统一为100，便于观察贡献率
+A=length(latent1);
+percents=0;                          %累积百分比
+for n=1:A
+    percents=percents+latent1(n);
+    if percents&gt;percent_threshold
+        break;
+    end
+end
+data= bsxfun(@minus,data,mean(data,1));
+data_PCA=data*COEFF(:,1:n);
+pareto(latent1);%调用matla画图 pareto仅绘制累积分布的前95%，因此y中的部分元素并未显示
+xlabel('Principal Component');
+ylabel('Variance Explained (%)');
+% 图中的线表示的累积变量解释程度
+print(gcf,'-dpng','PCA.png');
+sum_explained=sum(explained(1:n));</pre>
+</div>
+<h2 align="left"><span style="font-family: 'times new roman', times;">4. 结果</span></h2>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><span><span>数据来源于MATLAB自带的数据集hald</span></span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; load hald
+&gt;&gt; [data_PCA, COEFF, sum_explained]=pca_demo_1(ingredients,2)
+
+data_PCA =
+
+  -1.467237802258083  -1.903035708425560
+  -2.135828746398875  -0.238353702721984
+   1.129870473833422  -0.183877154192583
+  -0.659895489750766  -1.576774209965747
+   0.358764556470351  -0.483537878558994
+   0.966639639692207  -0.169944028103651
+   0.930705117077330   2.134816511997477
+  -2.232137996884836   0.691670682875924
+  -0.351515595975561   1.432245069443404
+   1.662543014130206  -1.828096643220118
+  -1.640179952926685   1.295112751426928
+   1.692594091826333   0.392248821530480
+   1.745678691164958   0.437525487914425
+
+
+COEFF =
+
+   0.475955172748970  -0.508979384806410   0.675500187964285   0.241052184051094
+   0.563870242191994   0.413931487136985  -0.314420442819292   0.641756074427213
+  -0.394066533909303   0.604969078471439   0.637691091806566   0.268466110294533
+  -0.547931191260863  -0.451235109330016  -0.195420962611708   0.676734019481284
+
+
+sum_explained =
+
+  95.294252628439153
+
+&gt;&gt; [data_PCA, COEFF, sum_explained, n]=pca_demo_2(ingredients)
+
+data_PCA =
+
+  -1.467237802258083  -1.903035708425560
+  -2.135828746398875  -0.238353702721984
+   1.129870473833422  -0.183877154192583
+  -0.659895489750766  -1.576774209965747
+   0.358764556470351  -0.483537878558994
+   0.966639639692207  -0.169944028103651
+   0.930705117077330   2.134816511997477
+  -2.232137996884836   0.691670682875924
+  -0.351515595975561   1.432245069443404
+   1.662543014130206  -1.828096643220118
+  -1.640179952926685   1.295112751426928
+   1.692594091826333   0.392248821530480
+   1.745678691164958   0.437525487914425
+
+
+COEFF =
+
+   0.475955172748970  -0.508979384806410   0.675500187964285   0.241052184051094
+   0.563870242191994   0.413931487136985  -0.314420442819292   0.641756074427213
+  -0.394066533909303   0.604969078471439   0.637691091806566   0.268466110294533
+  -0.547931191260863  -0.451235109330016  -0.195420962611708   0.676734019481284
+
+
+sum_explained =
+
+  95.294252628439153
+
+
+n =
+
+     2
+</pre>
+</div>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200108095946937-63188577.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2 align="left"><span style="font-family: 'times new roman', times;">5. 参考</span></h2>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><span><span>[1] 周志华,《机器学习》.</span></span></span></p>
+<p align="left"><span style="font-family: 'times new roman', times; font-size: 16px;"><span><span>[2]&nbsp;<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11594507.html">MATLAB实例：PCA降维</a></span></span></span></p>

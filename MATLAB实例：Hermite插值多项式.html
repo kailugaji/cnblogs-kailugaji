@@ -1,0 +1,73 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：Hermite插值多项式</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题描述：清华大学出版社李庆扬《数值分析》第五版教材P49习题14：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">求次数小于等于3的多项式P(x)，使其满足条件&nbsp;<em>P(0)=0, P&rsquo;(0)=1, P(1)=1, P&rsquo;(1)=2</em></span></p>
+</blockquote>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. MATLAB程序</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Hermite_kailugaji.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">function f = Hermite_kailugaji(t,y,y_1,t0)
+%t y为坐标向量 y_1为一阶导的值 t0为插值点的t坐标|| f0为t0对应的值
+syms x;
+f = 0.0;
+
+if(length(t) == length(y))
+    if(length(y) == length(y_1))
+        n = length(t);
+    else
+        disp('y和y的导数的维数不相等！');
+        return;
+    end
+else
+    disp('x和y的维数不相等！');
+    return;
+end
+
+for i=1:n
+    h = 1.0;
+    a = 0.0;
+    for j=1:n
+        if( j ~= i)
+            h = h*(x-t(j))^2/((t(i)-t(j))^2);
+            a = a + 1/(t(i)-t(j));
+        end
+    end
+    
+    f = f + h*((t(i)-x)*(2*a*y(i)-y_1(i))+y(i));
+
+    
+    if(i==n)
+        if(nargin == 4)
+            f = subs(f,'x',t0);
+        else
+            f = vpa(f,6);
+        end
+    end
+end
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">clear
+clc
+% 求次数小于等于3的多项式P(x)，使其满足条件
+% P(0)=0, P&rsquo;(0)=1, P(1)=1, P&rsquo;(1)=2
+x=[0 1];
+y=[0 1];
+y_1=[1 2];
+%x, y为坐标向量, y_1为一阶导的值, x0为插值点的x坐标|| f0为x0对应的值
+f=Hermite_kailugaji(x,y,y_1);
+f=collect(f); % Matlab 合并同类项，将多项式化为一般式
+fprintf('Hermite插值多项式为: y=%s\n', f);
+f=Hermite_kailugaji(x,y,y_1,2);
+fprintf('在x=2处的Hermite插值为: %f\n', f);
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Hermite插值多项式为: y=x^3 - 1.0*x^2 + 1.0*x
+在x=2处的Hermite插值为: 6.000000
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">提示：MATLAB多项式整理小技巧：collect()是化为一般式，factor()是因式分解，合并同类项。</span></p>

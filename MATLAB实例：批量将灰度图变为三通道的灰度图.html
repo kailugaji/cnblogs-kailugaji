@@ -1,0 +1,33 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：批量将灰度图变为三通道的灰度图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">数据来源：图片数据：<a href="https://files-cdn.cnblogs.com/files/kailugaji/9757.rar" target="_blank">9757.rar</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">相关参考：<a href="https://www.cnblogs.com/kailugaji/p/11801649.html" target="_blank">MATLAB实例：将批量的图片保存为.mat文件</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">前提：MATLAB程序和9757文件夹在同一目录下，同时，在该目录下新建一个名为&ldquo;results&rdquo;的文件夹。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202012/1027447-20201210190635460-2060113658.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">clear
+clc
+% MATLAB 批量将灰度图变为三通道的灰度图
+% Author：kailugaji https://www.cnblogs.com/kailugaji/
+% 数据来源：https://www.cnblogs.com/kailugaji/p/11801649.html
+N=128;
+for i=1:N
+    I=imread(['.\9757\9757_', int2str(i), '.bmp']);
+    original(i, 1:2)=size(I);
+    I3(:, :, 1)=I;
+    I3(:, :, 2)=I;
+    I3(:, :, 3)=I;
+    imshow(I3);
+    imwrite(I3, ['.\results\', int2str(i), '.bmp']);
+    new(i, 1:3)=size(I3);
+end
+
+% 举个例子，看看结果
+j=1;
+B=imread(['.\results\', int2str(j), '.bmp']);
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202012/1027447-20201210190018247-714938979.png" alt="" width="1169" height="613" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202012/1027447-20201210190119593-1922663493.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>

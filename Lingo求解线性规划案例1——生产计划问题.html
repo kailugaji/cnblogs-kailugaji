@@ -1,0 +1,281 @@
+<p>&nbsp; &nbsp;凯鲁嘎吉 - 博客园</p>
+<p><em id="__mceDel">http://www.cnblogs.com/kailugaji/</em></p>
+<p><em>说明：</em></p>
+<p><em>Lingo版本：</em></p>
+<p><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180106212533253-706741416.png" alt="" /></em></p>
+<p>&nbsp;</p>
+<p><strong>&nbsp; 某工厂明年根据合同，每个季度末向销售公司提供产品，有关信息如下表。若当季生产的产品过多，季末有积余，则一个季度每积压一吨产品需支付存贮费O.2万元。现该厂考虑明年的最佳生产方案，使该厂在完成合同的情况下，全年的生产费用最低。试建立模型。</strong></p>
+<table>
+<tbody>
+<tr>
+<td valign="top" width="91">
+<p align="center"><span style="font-size: 14px;"><strong>季度j</strong></span></p>
+</td>
+<td valign="top" width="154">
+<p align="center"><span style="font-size: 14px;"><strong>生产能力</strong><strong><em>a</em></strong><strong><em><sub>j</sub></em></strong><strong>(</strong><strong>吨</strong><strong>)</strong></span></p>
+</td>
+<td valign="top" width="203">
+<p align="center"><span style="font-size: 14px;"><strong>生产成本</strong><strong><em>d</em></strong><strong><em><sub>j</sub></em></strong><strong>&nbsp;(</strong><strong>万元／吨</strong><strong>)</strong></span></p>
+</td>
+<td valign="top" width="126">
+<p align="center"><span style="font-size: 14px;"><strong>需求量</strong><strong><em>b</em></strong><strong><em><sub>j</sub></em></strong><strong>(</strong><strong>吨</strong><strong>)</strong></span></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="91">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;1</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="154">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;30</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="203">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;15</strong><strong>．</strong><strong>O</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="126">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;20</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="91">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;2</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="154">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;40</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="203">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;14</strong><strong>.</strong><strong>O</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="126">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;20</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="91">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;3</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="154">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;20</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="203">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;15</strong><strong>．</strong><strong>3</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="126">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;30</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="91">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;4</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="154">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;10</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="203">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;14</strong><strong>．</strong><strong>8</strong></span></p>
+<p><span style="font-size: 14px;"><strong>&nbsp;</strong></span></p>
+</td>
+<td valign="top" width="126">
+<p><span style="font-size: 14px;"><strong>&nbsp;&nbsp;&nbsp;&nbsp;10</strong></span></p>
+<p><span style="font-size: 14px;">&nbsp;</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>解：现在我们对本问题定义</strong><strong>三种不同形式的决策变量</strong><strong>，</strong><strong>从而从不同的途径来构建模型。</strong></p>
+<p><strong>(1)设工厂第j季度生产产品</strong><strong><em>x</em></strong><strong><sub>j</sub></strong><strong>吨。</strong></p>
+<p><strong>首先，</strong><strong>考虑约束条件</strong><strong>：</strong></p>
+<p><strong><span style="font-family: 宋体;">第一季度末工厂需交货</span>20吨；</strong><strong>故应有</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>&ge;20；</strong></p>
+<p><strong><span style="font-family: 宋体;">第一季度末交货后积余</span>(</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>-20)吨；</strong></p>
+<p><strong><span style="font-family: 宋体;">第二季度末工厂需交货</span>20吨，</strong><strong>故应有</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>-20+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>&ge;20；</strong><strong>类似地，应有</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>-40+</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>&ge;30；</strong></p>
+<p><strong>第四季度末供货后工厂不能积压产品，</strong><strong>故应有</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>-70+</strong><strong><em>&nbsp;x</em></strong><strong><sub>4</sub></strong><strong>=10；</strong></p>
+<p><strong><span style="font-family: 宋体;">又考虑到工厂每个季度的生产能力，故应有</span>0&le;</strong><strong><em>x</em></strong><strong><sub>j</sub></strong><strong>&le;</strong><strong><em>a</em></strong><strong><sub>j</sub></strong><strong>。</strong></p>
+<p><strong>其次，考虑目标函数：</strong></p>
+<p><strong><span style="font-family: 宋体;">第一季度工厂的生产费用为</span>15.0</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>，</strong></p>
+<p><strong><span style="font-family: 宋体;">第二季度工厂的费用包括生产费用</span>14</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong><span style="font-family: 宋体;">及积压产品的存贮费</span>0.2(</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>-20)；</strong></p>
+<p><strong><span style="font-family: 宋体;">类似地，第三季度费用为</span>15.3</strong><strong><em>x</em></strong><strong><sub>3</sub></strong><strong>+0.2(</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>-40)，</strong></p>
+<p><strong><span style="font-family: 宋体;">第四季度费用为</span>14.8</strong><strong><em>x</em></strong><strong><sub>4</sub></strong><strong>+0.2(</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>-70)。</strong></p>
+<p><strong>工厂一年的费用即为这四个季度费用之和。</strong></p>
+<p><strong>整理后，得下列线性规划模型：</strong></p>
+<p><strong>M</strong><strong>in </strong><strong><em>f &nbsp;</em></strong><strong>=15</strong><strong>.</strong><strong>6</strong><strong><em>&nbsp;x</em></strong><strong><sub>1</sub></strong><strong>+14</strong><strong>.</strong><strong>4</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>+15</strong><strong>.</strong><strong>5</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>+14</strong><strong>.</strong><strong>8</strong><strong><em>&nbsp;x</em></strong><strong><sub>4</sub></strong><strong>-</strong><strong>26</strong></p>
+<p><strong>s.t．</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong><strong>&ge;40</strong></p>
+<p><strong><em>&nbsp; &nbsp; &nbsp; &nbsp; x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>&nbsp;&nbsp;&nbsp;</strong><strong>&ge;70</strong></p>
+<p><strong><em>&nbsp; &nbsp; &nbsp; &nbsp; x</em></strong><strong><sub>1</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>2</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>3</sub></strong><strong>+</strong><strong><em>&nbsp;x</em></strong><strong><sub>4</sub></strong><strong>=80</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;20&le;</strong><strong><em>x</em></strong><strong><sub>1</sub></strong><strong>&le;30 </strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&le;</strong><strong><em>x</em></strong><strong><sub>2</sub></strong><strong>&le;40 </strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&le;</strong><strong><em>x</em></strong><strong><sub>3</sub></strong><strong>&le;20 </strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&le;</strong><strong><em>x</em></strong><strong><sub>4</sub></strong><strong>&le;10&nbsp;</strong></p>
+<p><strong>Lingo程序：</strong></p>
+<div class="cnblogs_code">
+<pre>min=15.6*x1+14.4*x2+15.5*x3+14.8*x4-26<span style="color: #000000;">;
+x1</span>&gt;=20<span style="color: #000000;">;
+x1</span>&lt;=30<span style="color: #000000;">;
+x1</span>+x2&gt;=40<span style="color: #000000;">;
+x2</span>&lt;=40<span style="color: #000000;">;
+x1</span>+x2+x3&gt;=70<span style="color: #000000;">;
+x3</span>&lt;=20<span style="color: #000000;">;
+x1</span>+x2+x3+x4=80<span style="color: #000000;">;
+x4</span>&lt;=10<span style="color: #000000;">;
+end</span></pre>
+</div>
+<p>结果为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Global optimal solution found.
+  Objective value:                              </span>1165.000<span style="color: #000000;">
+  Infeasibilities:                              </span>0.000000<span style="color: #000000;">
+  Total solver iterations:                             0
+
+
+                       Variable           Value        Reduced Cost
+                             X1        </span>20.00000            0.000000<span style="color: #000000;">
+                             X2        </span>40.00000            0.000000<span style="color: #000000;">
+                             X3        </span>10.00000            0.000000<span style="color: #000000;">
+                             X4        </span>10.00000            0.000000<span style="color: #000000;">
+
+                            Row    Slack </span><span style="color: #0000ff;">or</span><span style="color: #000000;"> Surplus      Dual Price
+                              </span>1        1165.000           -1.000000
+                              2        0.000000          -0.1000000
+                              3        10.00000            0.000000
+                              4        20.00000            0.000000
+                              5        0.000000            1.100000
+                              6        0.000000            0.000000
+                              7        10.00000            0.000000
+                              8        0.000000           -15.50000
+                              9        0.000000           0.7000000</pre>
+</div>
+<p><strong>(2)设第j季度工厂生产的产品为</strong><strong><em>x</em></strong><strong><sub>j</sub></strong><strong>吨，</strong><strong><span style="font-family: 宋体;">第</span>j季度初存贮的产品为</strong><strong><em>y</em></strong><strong><sub>j</sub></strong><strong><span style="font-family: 宋体;">吨</span>(显然，</strong><strong><em>y</em></strong><strong><sub>1</sub></strong><strong><span style="font-family: 宋体;">＝</span>0)。</strong></p>
+<p><strong>因为每季度初的存贮量为上季度存贮量、生产量之和与上季度的需求量之差，又考虑到第四季度末存贮量为零，故有；</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;x1-20=y2， &nbsp;&nbsp;&nbsp;</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;y2+x2-20=y3，</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;y3+x3-30=y4， &nbsp;&nbsp;</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;y4+x4=10；</strong></p>
+<p><strong><span style="font-family: 宋体;">同时，每季度的生产量不能超过生产能力：</span>xj&le;aj；而工厂四个季度的总费用由每季的生产费用与存贮费用组成，于是得线性规划：</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;</strong><strong>min</strong><strong><em>f</em></strong><strong>=</strong><strong>15.Ox1+O.2y2+14x2+O.2y3+15.3x3+O.2y4+14.8x4</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;s．t． &nbsp;x1-y2=20</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;y2+x2-y3＝20</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;y3+x3-y4=30</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;y4+x4=10</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0&le;x1&le;30 &nbsp;&nbsp;0&le;x2&le;40</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0&le;x3&le;20 &nbsp;&nbsp;0&le;x4&le;10</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;0&le;yj &nbsp;&nbsp;&nbsp;j=2,3,4</strong></p>
+<p><strong>Lingo程序：</strong></p>
+<div class="cnblogs_code">
+<pre>min=15*x1+14*x2+15.3*x3+14.8*x4+0.2*y2+0.2*y3+0.2*<span style="color: #000000;">y4;
+x1</span>-y2=20<span style="color: #000000;">;
+x2</span>+y2-y3=20<span style="color: #000000;">;
+y3</span>+x3-y4=30<span style="color: #000000;">;
+y4</span>+x4=10<span style="color: #000000;">;
+x1</span>&lt;30<span style="color: #000000;">;
+x2</span>&lt;40<span style="color: #000000;">;
+x3</span>&lt;20<span style="color: #000000;">;
+x4</span>&lt;10<span style="color: #000000;">;
+end</span></pre>
+</div>
+<p>结果为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Global optimal solution found.
+  Objective value:                              </span>1165.000<span style="color: #000000;">
+  Infeasibilities:                              </span>0.000000<span style="color: #000000;">
+  Total solver iterations:                             0
+
+
+                       Variable           Value        Reduced Cost
+                             X1        </span>20.00000            0.000000<span style="color: #000000;">
+                             X2        </span>40.00000            0.000000<span style="color: #000000;">
+                             X3        </span>10.00000            0.000000<span style="color: #000000;">
+                             X4        </span>10.00000            0.000000<span style="color: #000000;">
+                             Y2        </span>0.000000           0.1000000<span style="color: #000000;">
+                             Y3        </span>20.00000            0.000000<span style="color: #000000;">
+                             Y4        </span>0.000000           0.7000000<span style="color: #000000;">
+
+                            Row    Slack </span><span style="color: #0000ff;">or</span><span style="color: #000000;"> Surplus      Dual Price
+                              </span>1        1165.000           -1.000000
+                              2        0.000000           -15.00000
+                              3        0.000000           -15.10000
+                              4        0.000000           -15.30000
+                              5        0.000000           -14.80000
+                              6        10.00000            0.000000
+                              7        0.000000            1.100000
+                              8        10.00000            0.000000
+                              9        0.000000            0.000000</pre>
+</div>
+<p><strong>(3)设第i季度生产而用于第j季度末交货的产品数量为xij吨。</strong></p>
+<p><strong>根据合同要求，必须有：</strong></p>
+<p><strong>x11=20， &nbsp;&nbsp;&nbsp;</strong></p>
+<p><strong>x12+x22=20，</strong></p>
+<p><strong>x13+x23+x33=30， &nbsp;&nbsp;</strong></p>
+<p><strong>x14+x24+x34+x44=10。</strong></p>
+<p><strong><span style="font-family: 宋体;">又每季度生产而用于当季和以后各季交货的产品数不可能超过该季度工厂的生产能力，故应有。</span></strong></p>
+<p><strong>&nbsp;&nbsp;</strong><strong>X</strong><strong>11+x12+x13+x14&le;30，</strong></p>
+<p><strong>&nbsp;&nbsp;x22+x23+x24&le;40， &nbsp;&nbsp;&nbsp;</strong></p>
+<p><strong>&nbsp;&nbsp;x33+x34&le;20，</strong></p>
+<p><strong>&nbsp; x44&le;10。</strong></p>
+<p><strong><span style="font-family: 宋体;">第</span>i季度生产的用于第j季度交货的每吨产品的费用cij=dj+0.2(j-i)，</strong><strong>于是，有线性规划模型。</strong></p>
+<p><strong>minf=15.0x11+15.2x12+15.4x13+15.6x14</strong><strong>+14x22+14.2x23+14.4x24</strong><strong>+15.3x33+15.5x34</strong><strong>+14.8x44</strong></p>
+<p><strong>&nbsp;s.t. x11=20</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x12+x22=20</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x13+x23+x33=30</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x14+x24+x34+x44=10</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x11+x12+x13+x14&le;30</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x22+x23+x24&le;40</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x33+x34&le;20</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp;x44&le;10</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xij&ge;0， &nbsp;i=1，&hellip;，4;j=1，&hellip;，4，j&ge;i。</strong></p>
+<p><strong>Lingo程序为：</strong></p>
+<div class="cnblogs_code">
+<pre>min=15*x11+15.2*x12+15.4*x13+15.6*x14+14*x22+14.2*x23+14.4*x24+15.3*x33+15.5*x34+14.8*<span style="color: #000000;">x44;
+x11</span>=20<span style="color: #000000;">;
+x12</span>+x22=20<span style="color: #000000;">;
+x13</span>+x23+x33=30<span style="color: #000000;">;
+x14</span>+x24+x34+x44=10<span style="color: #000000;">;
+x11</span>+x12+x13+x14&lt;30<span style="color: #000000;">;
+x22</span>+x23+x24&lt;40<span style="color: #000000;">;
+x33</span>+x34&lt;20<span style="color: #000000;">;
+x44</span>&lt;10<span style="color: #000000;">;
+end</span></pre>
+</div>
+<p>结果为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Global optimal solution found.
+  Objective value:                              </span>1165.000<span style="color: #000000;">
+  Infeasibilities:                              </span>0.000000<span style="color: #000000;">
+  Total solver iterations:                             </span>4<span style="color: #000000;">
+
+
+                       Variable           Value        Reduced Cost
+                            X11        </span>20.00000            0.000000<span style="color: #000000;">
+                            X12        </span>0.000000           0.1000000<span style="color: #000000;">
+                            X13        </span>0.000000           0.1000000<span style="color: #000000;">
+                            X14        </span>0.000000           0.1000000<span style="color: #000000;">
+                            X22        </span>20.00000            0.000000<span style="color: #000000;">
+                            X23        </span>20.00000            0.000000<span style="color: #000000;">
+                            X24        </span>0.000000            0.000000<span style="color: #000000;">
+                            X33        </span>10.00000            0.000000<span style="color: #000000;">
+                            X34        </span>0.000000            0.000000<span style="color: #000000;">
+                            X44        </span>10.00000            0.000000<span style="color: #000000;">
+
+                            Row    Slack </span><span style="color: #0000ff;">or</span><span style="color: #000000;"> Surplus      Dual Price
+                              </span>1        1165.000           -1.000000
+                              2        0.000000           -15.00000
+                              3        0.000000           -15.10000
+                              4        0.000000           -15.30000
+                              5        0.000000           -15.50000
+                              6        10.00000            0.000000
+                              7        0.000000            1.100000
+                              8        10.00000            0.000000
+                              9        0.000000           0.7000000</pre>
+</div>
+<p>&nbsp;</p>

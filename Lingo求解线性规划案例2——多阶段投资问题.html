@@ -1,0 +1,68 @@
+<p><strong>&nbsp;</strong>凯鲁嘎吉 - 博客园</p>
+<p><em id="__mceDel">http://www.cnblogs.com/kailugaji/</em></p>
+<p><strong><span style="font-family: 宋体;">某公司现有资金</span>30万元可用于投资，5年内有下列方案可供采纳：</strong></p>
+<p><strong>&nbsp;&nbsp;1号方案：在年初投资1元，2年后可收回1.3元； </strong></p>
+<p><strong>&nbsp;&nbsp;2号方案；在年初投资1元，3年后可收回1.45元；</strong></p>
+<p><strong>&nbsp;&nbsp;3号方案：仅在第1年年初有一次投资机会。每投资1元，4年后可收回1.65元；</strong></p>
+<p><strong>&nbsp;4号方案：仅在第2年年初有一次投资机会。每投资1元，4年后可收回1.7元；</strong></p>
+<p><strong>&nbsp;&nbsp;5号方案。在年初存入银行1元，下一年初可得1.1元。</strong></p>
+<p><strong>&nbsp;&nbsp;<span style="font-family: 宋体;">每年年初投资所得收益及银行利息也可用作安排。</span></strong></p>
+<p><strong><span style="font-family: 宋体;">问该公司在</span>5年内怎样使用资金，才能在第6年年初拥有最多资金?</strong></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-family: 宋体;">解</span>:设</strong><strong><em>x</em></strong><strong><em><sub>ij</sub></em></strong><strong>为</strong><strong><em>i</em></strong><strong>号方案在第</strong><strong><em>j</em></strong><strong>年年初所使用的资金数。</strong></p>
+<p><strong><span style="font-family: 宋体;">显然，对于</span>3号及4号方案，仅有</strong><strong><em>x</em></strong><strong><em><sub>31</sub></em></strong><strong>和</strong><strong><em>x</em></strong><strong><em><sub>42</sub></em></strong><strong>。此外，不考虑</strong><strong><em>x</em></strong><strong><em><sub>15</sub></em></strong><strong>，</strong><strong><em>x</em></strong><strong><em><sub>24</sub></em></strong><strong>，</strong><strong><em>x</em></strong><strong><em><sub>25</sub></em></strong><strong>，因为其相应投资方案回收期超过我们所讨论的期限。</strong></p>
+<p><strong><span style="font-family: 宋体;">我们将各年的决策变量</span>(表中虚线起点)及其相应效益(表中虚线终点)列表。</strong></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180106205536206-1265242627.png" alt="" /></p>
+<p><strong><span style="font-family: 宋体;">显然，第</span>j年年初可使用的资金之和应等于第j年年初所引用的决策变量之和。于是，根据表所示的各种因果关系，我们不难建立如下模型：</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;maxf=1.7x42+1.45x23+1.3x14+1.1x55</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;s.t. &nbsp;x11+x21+x31+x51=300000</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x12+x22+x42+x52=1.1x51</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x13+x23+x53=1.3x11+1.1x52</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x14+x54=1.45x21+1.3x12+1.1x53</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x55=1.65x31+1.45x22+1.3x13+1.1x54</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x1j&ge;O， &nbsp;j=1,2,3,4</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x2j&ge;O， &nbsp;j=1，2，3；</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x31&ge;0， &nbsp;x42&ge;0， &nbsp;x5i&ge;0，i=1，&hellip;，5</strong></p>
+<p><strong>Lingo程序：</strong></p>
+<div class="cnblogs_code">
+<pre>max=1.7*x42+1.45*x23+1.3*x14+1.1*<span style="color: #000000;">x55;
+x11</span>+x21+x31+x51=300000<span style="color: #000000;">;
+x12</span>+x22+x42+x52=1.1*<span style="color: #000000;">x51;
+x13</span>+x23+x53=1.1*x52+1.3*<span style="color: #000000;">x11;
+x14</span>+x54=1.1*x53+1.3*x12+1.45*<span style="color: #000000;">x21;
+x55</span>=1.1*x54+1.3*x13+1.45*x22+1.65*<span style="color: #000000;">x31;
+end</span></pre>
+</div>
+<p>结果为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Global optimal solution found.
+  Objective value:                              </span>565500.0<span style="color: #000000;">
+  Infeasibilities:                              </span>0.000000<span style="color: #000000;">
+  Total solver iterations:                             0
+
+
+                       Variable           Value        Reduced Cost
+                            X42        </span>0.000000           0.1363636E-01<span style="color: #000000;">
+                            X23        </span>0.000000            0.000000<span style="color: #000000;">
+                            X14        </span>435000.0            0.000000<span style="color: #000000;">
+                            X55        </span>0.000000            0.000000<span style="color: #000000;">
+                            X11        </span>0.000000            0.000000<span style="color: #000000;">
+                            X21        </span>300000.0            0.000000<span style="color: #000000;">
+                            X31        </span>0.000000           0.7000000E-01<span style="color: #000000;">
+                            X51        </span>0.000000            0.000000<span style="color: #000000;">
+                            X12        </span>0.000000           0.2363636E-01<span style="color: #000000;">
+                            X22        </span>0.000000           0.1186364<span style="color: #000000;">
+                            X52        </span>0.000000           0.1186364<span style="color: #000000;">
+                            X13        </span>0.000000           0.2000000E-01<span style="color: #000000;">
+                            X53        </span>0.000000           0.2000000E-01<span style="color: #000000;">
+                            X54        </span>0.000000           0.9000000E-01<span style="color: #000000;">
+
+                            Row    Slack </span><span style="color: #0000ff;">or</span><span style="color: #000000;"> Surplus      Dual Price
+                              </span>1        565500.0            1.000000
+                              2        0.000000            1.885000
+                              3        0.000000            1.713636
+                              4        0.000000            1.450000
+                              5        0.000000            1.300000
+                              6        0.000000            1.100000</pre>
+</div>
+<p>&nbsp;</p>

@@ -1,0 +1,48 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：将批量的图片保存为.mat文件</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">一、彩色图片</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图片数据：<a href="https://files-cdn.cnblogs.com/files/kailugaji/horse.rar" target="_blank">horse.rar</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191105211226411-1191914932.png" alt="" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;"><span>1. MATLAB程序</span></span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clc; clear all;
+num = 17;
+for i = 1 : num
+    IM = imread(sprintf('E:\\将批量的图片保存为mat\\horse\\horse%03d.jpg', i));
+    eval(sprintf('IM%d = IM;', i));
+end
+str = 'save data.mat';  %保存为data.mat文件，里面有批量的图片数据.mat
+for i = 1 : num
+    str = sprintf('%s IM%d ', str, i);
+end
+eval(str);%相当于是将str的内容当做语句来执行
+</pre>
+</div>
+<h3>2. 结果</h3>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">在当前目录下出现一个文件&ldquo;data.mat&rdquo;，加载data，里面保存了17个马的数据信息。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191105210655112-1962077163.png" alt="" /></p>
+<h3>3. 参考文献</h3>
+<p class="postTitle"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/xiaopanlyu/p/4723443.html">MATLAB将批量的图片保存为mat文件</a></span></p>
+<h2 class="postTitle"><span style="font-family: 'comic sans ms', sans-serif;">二、灰度图片</span></h2>
+<p class="postTitle"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">将大小一致的灰度图批量合并到一个.mat文件中，并保存到指定路径中。</span></p>
+<p class="postTitle"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图片数据：<a href="https://files-cdn.cnblogs.com/files/kailugaji/9757.rar" target="_blank">9757.rar</a></span></p>
+<p class="postTitle"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191106111745078-122439153.png" alt="" /></span></p>
+<h3 class="postTitle"><span style="font-family: 'comic sans ms', sans-serif;">1. MATLAB程序</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clc; clear all;
+filename='9757';
+Datalist=dir(['E:\将批量的图片保存为mat\',filename,'\*']);
+Datalist=Datalist(3:end);
+for i = 1 : length(Datalist)
+    NRD(:,:,i) = imread(sprintf(['E:\\将批量的图片保存为mat\\',filename,'\\',filename,'_%d.bmp'], i));
+end
+% for i = 1 : length(Datalist)
+%     NRD(:,:,i) = (NRD(:,:,i)~=0);
+% end
+% NRD=uint8(NRD);
+save(['E:\',filename,'.mat'],'NRD') %保存到指定路径
+</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h3>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">在E盘目录下出现一个文件&ldquo;9757.mat&rdquo;，里面的数据命名为NRD。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191106100051110-1803659203.png" alt="" /></p>

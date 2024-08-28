@@ -1,0 +1,67 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：不动点迭代法求一元函数方程的根</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 之前写过一篇博客：<a href="https://www.cnblogs.com/kailugaji/p/6920975.html" target="_blank">MATLAB用二分法、不动点迭代法及Newton迭代（切线）法求非线性方程的根 - 凯鲁嘎吉 - 博客园</a> ，后来发现这篇博客中的不动点迭代法程序有问题，实际上是用牛顿迭代法求解的。这里，重新写了不动点迭代法的MATLAB程序，并绘制出函数图，直观理解方程的根。</span></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题描述：</span></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 求方程</span></p>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">$f(x)={{x}^{3}}-x-1=0$</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 在${{x}_{0}}=1.5$附近的根${{x}^{*}}$</span></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">解：</span></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 将上述方程改为如下形式：</span></p>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">$x=\sqrt[3]{x+1}$</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 据此建立迭代公式</span></p>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">${{x}_{k+1}}=\sqrt[3]{{{x}_{k}}+1},\text{&nbsp; }k=0,1,2,\cdots .$</span></p>
+<h2 style="text-align: left;" align="center"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+% Author：凯鲁嘎吉 https://www.cnblogs.com/kailugaji/
+% f(x)=x^3-x-1;
+% x=(x+1)^(1/3);
+x=1.5; % 初始值
+esp=1e-6; % 迭代终止条件
+N=100; % 最大迭代次数
+y=zeros(N, 1); % 暂存x变量的空间
+for t=1:N
+    x=fun(x);
+    y(t)=x;
+    fprintf('第 %d 次, x=%f\n', t, x);
+    if t&gt;1 
+        if abs(y(t)-y(t-1))&lt;esp
+            break;
+        end
+    end
+end
+
+% 画出函数曲线
+xx=0:0.01:3;
+yy=xx.^3-xx-1;
+figure(1)
+plot(xx, real(yy));
+hold on
+z=0*ones(1, length(xx));
+plot(xx, z, 'r');
+xlabel('x');
+ylabel('y');
+title('y=x^3-x-1');
+saveas(gcf,sprintf('不动点迭代法.jpg'),'bmp'); 
+
+
+function x=fun(x)
+x=(x+1).^(1./3);  % x的迭代函数
+end
+</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">第 1 次, x=1.357209
+第 2 次, x=1.330861
+第 3 次, x=1.325884
+第 4 次, x=1.324939
+第 5 次, x=1.324760
+第 6 次, x=1.324726
+第 7 次, x=1.324719
+第 8 次, x=1.324718
+第 9 次, x=1.324718
+</pre>
+</div>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201017194644151-1205683606.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>

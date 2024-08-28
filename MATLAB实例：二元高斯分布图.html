@@ -1,0 +1,54 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：二元高斯分布图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉&nbsp;-&nbsp;博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2>1. MATLAB程序</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">%% demo Multivariate Normal Distribution
+clear
+clc
+
+%% 空间坐标范围
+x1=-5:0.2:5;
+x2=-5:0.2:5;
+[X1, X2]=meshgrid(x1, x2);
+X=[X1(:) X2(:)];
+
+%% 高斯分布参数
+% 分量1
+miu_1=[1 1]; % 均值
+Sigma_1=[2 -2;-2 3]; % 协方差
+% 分量2
+miu_2=[0 -2]; % 均值
+Sigma_2=[5 0.5;0.5 1]; % 协方差
+
+%% 高斯概率密度函数
+% 分量1
+y_1=mvnpdf(X, miu_1, Sigma_1);
+y_1=reshape(y_1, length(x2), length(x1));
+% 分量2
+y_2=mvnpdf(X, miu_2, Sigma_2);
+y_2=reshape(y_2, length(x2), length(x1));
+
+%% 2D密度图
+figure(1);
+contour(x1, x2, y_1);
+hold on
+contour(x1, x2, y_2);
+xlabel('x1');
+ylabel('x2');
+saveas(gcf,sprintf('Gauss_2D.jpg'),'bmp');
+
+%% 3D密度图
+figure(2);
+surf(x1, x2, y_1);
+hold on
+surf(x1, x2, y_2);
+xlabel('x1');
+ylabel('x2');
+zlabel('Probability Density');
+saveas(gcf,sprintf('Gauss_3D.jpg'),'bmp');
+</pre>
+</div>
+<h2>2. 结果</h2>
+<p><img src="https://img2018.cnblogs.com/common/1027447/202002/1027447-20200222105153672-1787204086.jpg" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/common/1027447/202002/1027447-20200222105207432-1153131447.jpg" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考：<a href="https://ww2.mathworks.cn/help/stats/multivariate-normal-distribution.html" target="_blank">Multivariate Normal Distribution</a></span></p>

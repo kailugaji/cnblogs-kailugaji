@@ -1,0 +1,243 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：绘制折线图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">条形图的绘制见：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11889173.html">MATLAB实例：绘制条形图</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">用MATLAB将几组不同的数据展示在同一张图片中，并设置图例、横纵坐标范围与名称、重新自定义横坐标刻度，并保存图片到指定位置。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. demo_1.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+x=1:10;
+y_1=[0.7 0.7 0.75 0.77 0.78 0.78 0.78 0.78 0.78 0.78];
+y_2=[0.8 0.8 0.8 0.82 0.85 0.86 0.87 0.87 0.87 0.87];
+y_3=[0.9 0.94 0.95 0.95 0.98 0.98 0.99 0.99 0.99 0.99];
+y_4=[0.93 0.93 0.94 0.94 0.96 0.96 0.97 0.97 0.97 0.97];
+y_5=[0.8 0.85 0.85 0.87 0.87 0.87 0.89 0.89 0.89 0.89];
+plot(x, y_1, '-ro', x, y_2, '-b+', x, y_3, '-kx', x, y_4, '-gs', x, y_5, '-m^');
+hold on
+ylim([0.68 1.05]); %设置纵坐标范围
+xlabel('x'); %横坐标名称
+ylabel('y');
+legend('y_1','y_2','y_3','y_4','y_5','Orientation','horizon', 'Box','off', 'Location','Best'); %图例的设置
+% legend({'y_1','y_2','y_3','y_4','y_5'}, 'Box','off', 'Location','north', 'NumColumns',3);  
+set(gca,'xtick',1:10);
+set(gca,'xticklabel',{'2010','2011','2012','2013','2014','2015','2016','2017','2018','2019'}); %指定横坐标刻度
+saveas(gcf,sprintf('demo_figure.jpg'),'bmp'); %保存图片</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191112100231629-2097742588.jpg" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. demo_2.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+x=1:10;
+y_1=[0.7 0.7 0.75 0.77 0.78 0.78 0.78 0.78 0.78 0.78];
+y_2=[0.8 0.8 0.8 0.82 0.85 0.86 0.87 0.87 0.87 0.87];
+y_3=[0.9 0.94 0.95 0.95 0.98 0.98 0.99 0.99 0.99 0.99];
+y_4=[0.93 0.93 0.94 0.94 0.96 0.96 0.97 0.97 0.97 0.97];
+y_5=[0.8 0.85 0.85 0.87 0.87 0.87 0.89 0.89 0.89 0.89];
+plot(x, y_1, '-ok', x, y_2,  '-.bd', x, y_3, '--*r', x, y_4, '-^g', x, y_5, '--sm', 'LineWidth',1.3, 'MarkerSize',7, 'MarkerFaceColor','y');
+hold on
+ylim([0.68 1]); %设置纵坐标范围
+xlabel('x'); %横坐标名称
+ylabel('y');
+legend('y_1','y_2','y_3','y_4','y_5', 'Box','off', 'Location','northoutside', 'NumColumns',5, 'FontName','Times New Roman', 'FontSize',11); %图例的设置
+set(gca,'xtick',1:10);
+set(gca,'xticklabel',{'2010','2011','2012','2013','2014','2015','2016','2017','2018','2019'}); %指定横坐标刻度
+saveas(gcf,sprintf('demo_figure.jpg'),'bmp'); %保存图片</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 结果</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191120104527561-1185367887.jpg" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 作图常用符号</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191112101012336-795597146.png" alt="" /></p>
+<table class="table table-condensed" style="height: 523px; width: 594px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p style="text-align: center;"><span style="font-family: 'times new roman', times; font-size: 15px;">颜色名称</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">短名称</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">RGB 三元组</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">十六进制颜色代码</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">外观</span></p>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'red'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'r'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[1 0 0]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#FF0000'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769499" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_red_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'green'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'g'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[0 1 0]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#00FF00'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769517" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_green_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'blue'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'b'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[0 0 1]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#0000FF'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769535" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_blue_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'cyan'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'c'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[0 1 1]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#00FFFF'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769554" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_cyan_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'magenta'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'m'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[1 0 1]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#FF00FF'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769572" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_magenta_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'yellow'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'y'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[1 1 0]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#FFFF00'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769590" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_yellow_zh_CN.png" alt="" width="159" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'black'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'k'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[0 0 0]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#000000'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769608" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_black_zh_CN.png" alt="" width="160" height="27" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'white'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'w'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">[1 1 1]</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'#FFFFFF'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<div id="d117e769626" class="mediaobject">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><img src="https://ww2.mathworks.cn/help/matlab/ref/hg_white_zh_CN.png" alt="" width="160" height="28" /></span></p>
+</div>
+</td>
+</tr>
+<tr align="center" valign="middle">
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;"><code class="literal">'none'</code></span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">不适用</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">不适用</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">不适用</span></p>
+</td>
+<td align="center" valign="middle">
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">无颜色</span></p>
+</td>
+</tr>
+</thead>
+</table>
+<p style="text-align: left;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作图常用符号参考：</span><a style="font-family: 'comic sans ms', sans-serif; font-size: 16px;" href="https://blog.csdn.net/sinat_21026543/article/details/80215281" target="_blank">Matlab画图常用的符号和颜色</a></p>
+<p style="text-align: left;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Legend的用法参考：<a href="https://ww2.mathworks.cn/help/matlab/ref/legend.html?s_tid=doc_ta" target="_blank">Matlab中legend的用法</a></span></p>

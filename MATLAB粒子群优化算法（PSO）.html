@@ -1,0 +1,110 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB粒子群优化算法（PSO）</span></h1>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2>一、介绍</h2>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">粒子群优化算法（Particle Swarm Optimization Algorithm）是一种群智能算法，为了寻求全局最优。群体迭代，粒子在解空间追随最优的粒子进行搜索。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">粒子群算法的思想源于对鸟群捕食行为的研究，模拟鸟集群飞行觅食的行为，鸟之间通过集体的协作使群体达到最优目的，是一种基于Swarm Intelligence的优化方法。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">马良教授在他的著作《蚁群优化算法》一书的前言中写到：&ldquo;自然界的蚁群、鸟群、鱼群、羊群、牛群、蜂群等，其实时时刻刻都在给予我们以某种启示，只不过我们常常忽略了大自然对我们的最大恩赐！&rdquo;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">设想这样一个场景：一群鸟在随机搜索食物，已知</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（1）在这块区域里只有一块食物;&nbsp;&nbsp;</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（2）所有的鸟都不知道食物在哪里;&nbsp;&nbsp;</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">（3）但它们能感受到当前的位置离食物还有多远.&nbsp;&nbsp;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">那么:找到食物的最优策略是什么呢？&nbsp;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">搜寻目前离食物最近的鸟的周围区域，根据自己飞行的经验判断食物的所在。</span></li>
+</ul>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190709212153251-766717660.gif" alt="" /></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">PSO的基础: 信息的社会共享&nbsp;</span></li>
+</ul>
+<h2>二、算法思路</h2>
+<ol>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">每个寻优的问题解都被想像成一只鸟，称为&ldquo;粒子&rdquo;。所有粒子都在一个D维空间进行搜索。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">所有的粒子都由一个fitness function 确定适应值以判断目前的位置好坏。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">每一个粒子必须赋予记忆功能，能记住所搜寻到的最佳位置。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">每一个粒子还有一个速度以决定飞行的距离和方向。这个速度根据它本身的飞行经验以及同伴的飞行经验进行动态调整。</span></li>
+</ol>
+<h2>三、算法流程与伪代码</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190709205727027-814199873.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190709210125370-96748927.png" alt="" /></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">c1: weight of local information</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">c2: weight of global information</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">p: particle's position</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">v: path direction</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">rand: random variable, 0&lt;rand&lt;1</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">number of particles: 10~50</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">c1+c2=4</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">v=v+c1*rand*(pbest-p)+c2*rand*(gbest-p);中右边第一项v: inertia,&nbsp;c1*rand*(pbest-p): personal influence,&nbsp;c2*rand*(gbest-p): social influence.</span></li>
+</ul>
+<h2>四、MATLAB程序</h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">粒子群优化算法求解函数y=x+x*sin(x)在[-10, 10]的最大值.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pso.m</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [best_x, best_y]=pso()
+%find the max value of a function
+%Author: kailugaji https://www.cnblogs.com/kailugaji/
+posMax=10;posMin=-10;  %range of feasible solution
+x=posMin:0.1:posMax;
+y=my_fun(x);  %object function
+plot(x,y);hold on; %plot function
+popsize=30;  %number of particles
+max_iter=100;  %maximum number of iterations
+position=rand(popsize,1);
+position=position*20-ones(popsize,1)*10;   %particle's position
+vMax=1;vMin=-1;  %range of velocity
+velosity=2*rand(popsize,1)-1;  %path direction
+pbest=position;  %current optimum
+gbest=position(1);  %global optimum
+wBegin=1;wEnd=0.05;
+c1=2;  %weight of local information
+c2=2;  %weight of global information
+for i=1:max_iter
+    position_new=position+velosity;  %change direction of each particle
+    velosity_new=(wEnd+(wBegin-wEnd)*(100-i)/100).*velosity+c1*rand().*(position-pbest.*ones(popsize,1))+c2*rand().*(position-gbest.*ones(popsize,1));  %inertia+personal influence+social influence
+    for j=1:popsize
+        if(position_new(j)&gt;posMax)
+            position_new(j)=posMax;
+        end
+        if(position_new(j)&lt;posMin)
+            position_new(j)=posMin;
+        end
+        if(velosity_new(j)&gt;vMax)
+            velosity_new(j)=vMax;
+        end
+        if(velosity_new(j)&lt;vMin)
+            velosity_new(j)=vMin;
+        end
+         if(my_fun(position_new(j))&gt;my_fun(pbest(j)))
+            pbest(j)=position_new(j);
+        end
+        if(my_fun(position_new(j))&gt;my_fun(gbest))
+            gbest=position_new(j);
+        end
+    end
+    position=position_new;
+    velosity=velosity_new;
+end
+plot(gbest,my_fun(gbest),'or');
+best_x=gbest;
+best_y=my_fun(gbest);
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">my_fun.m</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function y=my_fun(x)
+y=x+x.*sin(x);</pre>
+</div>
+<h2>五、实验结果</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; [best_x, best_y]=pso()
+best_x =
+    8.0051
+best_y =
+   15.9190
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190709210757779-211489521.png" alt="" /></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">当x=8.0051时，粒子群优化算法终止迭代，此时获得的最大值为y=15.9190。</span></p>
+<h2>六、参考文献</h2>
+<ul>
+<li><span style="font-size: 16px;"><a href="https://wenku.baidu.com/view/e920ac483968011ca3009189.html" target="_blank">粒子群优化算法</a></span></li>
+<li class="Post-Title"><span style="font-size: 16px;"><a href="https://zhuanlan.zhihu.com/p/63956652" target="_blank"><span style="font-family: 'comic sans ms', sans-serif;">优化 | 粒子群算法介绍</span></a></span></li>
+</ul>

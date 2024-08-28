@@ -1,0 +1,27 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：二维散点图</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">更多请看：<a href="https://www.cnblogs.com/kailugaji/category/1594478.html" target="_blank">随笔分类 - MATLAB作图</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 用MATLAB实现简单的散点图的绘制，可以自行设置点的形状与颜色，可以去掉坐标轴边框。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 数据来源：<a href="https://www.cnblogs.com/kailugaji/p/10861064.html" target="_blank">MATLAB高斯混合数据的生成</a>&nbsp;将二维数据保存为gauss.txt。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. demo.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">% data_load: https://www.cnblogs.com/kailugaji/p/10861064.html
+% data_load: 前两列是二维数据，最后一列是类标签
+data_load=dlmread('.\gauss.txt');
+figure(1)
+plot(data_load(data_load(:, end)==1, 1), data_load(data_load(:, end)==1, 2), 'b.', 'MarkerSize',12 );
+hold on
+plot(data_load(data_load(:, end)==2, 1), data_load(data_load(:, end)==2, 2), 'r^', 'MarkerSize',6, 'MarkerFaceColor','r');
+plot(data_load(data_load(:, end)==3, 1), data_load(data_load(:, end)==3, 2), 'ko', 'MarkerSize',6, 'MarkerFaceColor','g');
+plot(data_load(data_load(:, end)==4, 1), data_load(data_load(:, end)==4, 2), 'rp', 'MarkerSize',6, 'MarkerFaceColor','y');
+plot(data_load(data_load(:, end)==5, 1), data_load(data_load(:, end)==5, 2), 'mh', 'MarkerSize',6, 'MarkerFaceColor','m');
+ylabel('X');
+xlabel('Y');
+% set(gca,'Visible','off') %去掉横纵坐标边框
+saveas(gcf,sprintf('demo_2D.jpg'),'bmp'); %保存图片
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200625142258136-404642103.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">去掉边框后：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202006/1027447-20200625142307062-918128356.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>

@@ -1,0 +1,44 @@
+<h1 style="text-align: center;"><span style="font-family: 宋体;">MATLAB三维作图&mdash;&mdash;隐函数</span></h1>
+<p><span style="font-family: 宋体;">作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</span></p>
+<p><span style="font-family: 宋体;">对于三维隐函数，没有显式表达式，无法通过</span>Matlab<span style="font-family: 宋体;">现成的</span><span style="font-family: Calibri;">3-D</span><span style="font-family: 宋体;">画图函数 </span><span style="font-family: Calibri;">surf </span><span style="font-family: 宋体;">或 </span><span style="font-family: Calibri;">mesh</span><span style="font-family: 宋体;">画图。可以通过三种办法解决：</span></p>
+<h2><span>1. Mupad符号引擎里提供了三维隐函数画图函数</span></h2>
+<p><span style="font-family: 宋体;">在</span>matlab<span style="font-family: 宋体;">里开启</span><span style="font-family: Calibri;">Mupad</span><span style="font-family: 宋体;">的方法是：在</span><span style="font-family: Calibri;">command window </span><span style="font-family: 宋体;">里输入 </span><span style="font-family: Calibri;">mupad </span><span style="font-family: 宋体;">来启动一个</span><span style="font-family: Calibri;">notebook</span><span style="font-family: 宋体;">。</span></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165550238-206997696.png" alt="" /></p>
+<p><span style="font-family: 宋体;">在启动的</span>notebook<span style="font-family: 宋体;">里再输入如下代码：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">plot(plot::Implicit3d(((x^2/4)+(y^2/9)+(z^2/1))^2=2*x, x = -0.5..4, y = -4..4, z = -1.5..1.5), Scaling = Constrained)</pre>
+</div>
+<p><span style="font-family: 宋体;">从</span>xoy<span style="font-family: 宋体;">面看：</span></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165601535-1965948998.png" alt="" /></p>
+<p><span style="font-family: 宋体;">从</span>yoz<span style="font-family: 宋体;">面看：</span></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165611004-2095839859.png" alt="" /></p>
+<p><span style="font-family: 宋体;">从</span>xoy<span style="font-family: 宋体;">面看：</span></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165619535-480317702.png" alt="" /></p>
+<p>((x^2/4)+(y^2/9)+(z^2/1))^2=2*x的图像：</p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165631254-701997721.png" alt="" /></p>
+<p><span style="font-family: 宋体;">例</span>2<span style="font-family: 宋体;">：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">plot(plot::Implicit3d((x^2 + (9/4)*y^2 + z^2 - 1)^3 - x^2*z^3 - (9/80)*y^2*z^3, x = -1.5..1.5, y = -1.5..1.5, z = -1.5..1.5), Scaling = Constrained)</pre>
+</div>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165641176-1303411881.png" alt="" /></p>
+<h2><span>2.再给一种只调用matlab的方法</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">figure
+[x,y,z] = meshgrid(-0.5:0.05:4,-4:0.05:4,-1.5:0.05:1.5);
+v =((x.^2/4)+(y.^2/9)+(z.^2/1)).^2-2.*x;
+p = patch(isosurface(x,y,z,v,0),'FaceColor','r','EdgeColor','none');
+isonormals(x,y,z,v,p)
+view(3)
+camlight
+lighting gouraud
+axis equal tight
+grid on</pre>
+</div>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165653113-31227625.png" alt="" /></p>
+<h2><span>3.先求解z，在画图</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; z=solve('((x^2/4)+(y^2/9)+(z^2/1))^2-2*x','z')
+ezmesh(z(1))</pre>
+</div>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170509165704472-1835369045.png" alt="" /></p>
+<p>&nbsp;</p>

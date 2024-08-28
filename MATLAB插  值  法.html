@@ -1,0 +1,152 @@
+<h1 style="text-align: center;">MATLAB插 &nbsp;值 &nbsp;法</h1>
+<p>作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</p>
+<h2>一、实验目的</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111715649-1827845924.png" alt="" /></p>
+<h2>二、实验原理</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111734071-373743296.png" alt="" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111740164-1275481895.png" alt="" /></p>
+<h2>三、实验程序</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111800789-1290473754.png" alt="" /></p>
+<h2>四、实验内容</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111831008-239312362.png" alt="" width="540" height="66" /></p>
+<h2>五、解答</h2>
+<h3>1. 程序</h3>
+<p>（1）Lagrange插值多项式</p>
+<div class="cnblogs_code">
+<pre>function [C, L,L1,l]=<span style="color: #000000;">lagran1(X,Y)
+</span>%<span style="color: #000000;">输出C为插值多项式的系数，L为插值多项式，L1为l的系数，l为小l
+</span>%输入数据表X=[];Y=<span style="color: #000000;">[];行向量
+m</span>=length(X); L=<span style="color: #000000;">ones(m,m);
+</span><span style="color: #0000ff;">for</span> k=1<span style="color: #000000;">: m
+    V</span>=1<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> i=1<span style="color: #000000;">:m
+     </span><span style="color: #0000ff;">if</span> k~=<span style="color: #000000;">i
+        V</span>=conv(V,poly(X(i)))/(X(k)-<span style="color: #000000;">X(i));
+     end
+    end
+L1(k,:)</span>=V; l(k,:)=<span style="color: #000000;">poly2sym (V);
+end
+C</span>=Y*L1;L=Y*l;</pre>
+</div>
+<p><span style="font-family: 宋体;">（</span>2）Newton插值多项式</p>
+<div class="cnblogs_code">
+<pre>function [A,C,L,wcgs,Cw]=<span style="color: #000000;"> newploy(X,Y)
+n</span>=length(X); A=zeros(n,n); A(:,1)=Y<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+q=1.0; c1=1.0<span style="color: #000000;">;
+</span><span style="color: #0000ff;">for</span>  j=2<span style="color: #000000;">:n
+   </span><span style="color: #0000ff;">for</span> i=<span style="color: #000000;">j:n
+       A(i,j)</span>=(A(i,j-1)- A(i-1,j-1))/(X(i)-X(i-j+1<span style="color: #000000;">));
+   end
+   b</span>=poly(X(j-1));q1=conv(q,b); c1=c1*j;  q=<span style="color: #000000;">q1;
+end
+C</span>=A(n,n); b=poly(X(n)); q1=<span style="color: #000000;">conv(q1,b);     
+</span><span style="color: #0000ff;">for</span> k=(n-1):-1:1<span style="color: #000000;">
+  C</span>=conv(C,poly(X(k))); d=length(C); C(d)=C(d)+<span style="color: #000000;">A(k,k);
+end
+L(k,:)</span>=poly2sym(C); Q=<span style="color: #000000;">poly2sym(q1);
+syms M
+wcgs</span>=M*Q/c1; Cw=q1/c1;</pre>
+</div>
+<h3>2. 运算结果</h3>
+<div class="cnblogs_code">
+<pre>（1<span style="color: #000000;">）
+</span>&gt;&gt; X=[0:0.4:2<span style="color: #000000;">];
+</span>&gt;&gt; Y=X.^4<span style="color: #000000;">;
+</span>&gt;&gt; [C, L,L1,l]=<span style="color: #000000;">lagran1(X,Y)
+
+C </span>=
+
+    0.0000    1.0000         0   -0.0000<span style="color: #000000;">         0         0
+
+ 
+L </span>=<span style="color: #000000;">
+ 
+x</span>^4<span style="color: #000000;">
+ 
+
+L1 </span>=
+
+   -0.8138    4.8828  -11.0677   11.7188   -5.7083    1.0000
+    4.0690  -22.7865   46.2240  -40.1042   12.5000<span style="color: #000000;">         0
+   </span>-8.1380   42.3177  -76.8229   55.7292  -12.5000<span style="color: #000000;">         0
+    </span>8.1380  -39.0625   63.8021  -40.6250    8.3333<span style="color: #000000;">         0
+   </span>-4.0690   17.9036  -26.6927   15.8854   -3.1250<span style="color: #000000;">         0
+    </span>0.8138   -3.2552    4.5573   -2.6042    0.5000<span style="color: #000000;">         0
+
+ 
+l </span>=
+ 
+ - (625*x^5)/768 + (625*x^4)/128 - (2125*x^3)/192 + (375*x^2)/32 - (137*x)/24 + 1<span style="color: #000000;">
+      (</span>3125*x^5)/768 - (4375*x^4)/192 + (8875*x^3)/192 - (1925*x^2)/48 + (25*x)/2
+     - (3125*x^5)/384 + (8125*x^4)/192 - (7375*x^3)/96 + (2675*x^2)/48 - (25*x)/2<span style="color: #000000;">
+           (</span>3125*x^5)/384 - (625*x^4)/16 + (6125*x^3)/96 - (325*x^2)/8 + (25*x)/3
+    - (3125*x^5)/768 + (6875*x^4)/384 - (5125*x^3)/192 + (1525*x^2)/96 - (25*x)/8<span style="color: #000000;">
+               (</span>625*x^5)/768 - (625*x^4)/192 + (875*x^3)/192 - (125*x^2)/48 + x/2<span style="color: #000000;">
+(</span>2<span style="color: #000000;">)
+</span>&gt;&gt; X=[0:0.4:2<span style="color: #000000;">];
+</span>&gt;&gt; Y=X.^4<span style="color: #000000;">;
+</span>&gt;&gt; [A,C,L,wcgs,Cw]=<span style="color: #000000;"> newploy(X,Y)
+
+A </span>=<span style="color: #000000;">
+
+         0         0         0         0         0         0
+    </span>0.0256    0.0640<span style="color: #000000;">         0         0         0         0
+    </span>0.4096    0.9600    1.1200<span style="color: #000000;">         0         0         0
+    </span>2.0736    4.1600    4.0000    2.4000<span style="color: #000000;">         0         0
+    </span>6.5536   11.2000    8.8000    4.0000    1.0000<span style="color: #000000;">         0
+   </span>16.0000   23.6160   15.5200    5.6000    1.0000    0.0000<span style="color: #000000;">
+
+
+C </span>=
+
+    0.0000    1.0000    0.0000   -0.0000    0.0000<span style="color: #000000;">         0
+
+ 
+L </span>=<span style="color: #000000;">
+ 
+(</span>57*x^5)/18014398509481984 + x^4 + (209*x^3)/9007199254740992 - (525*x^2)/36028797018963968 + (213*x)/72057594037927936<span style="color: #000000;">
+ 
+ 
+wcgs </span>=
+ 
+-(M*(- x^6 + 6*x^5 - (68*x^4)/5 + (72*x^3)/5 - (4384*x^2)/625 + (768*x)/625))/720<span style="color: #000000;">
+ 
+
+Cw </span>=
+
+    0.0014   -0.0083    0.0189   -0.0200    0.0097   -0.0017         0</pre>
+</div>
+<h3>3. 拓展</h3>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112055602-2108408474.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre>function [y,R]=<span style="color: #000000;">lagran2(X,Y,x,M)
+</span>%输入X=[];Y=[];行向量，x预测点，可以一个，也可以为矩阵x=<span style="color: #000000;">[];M为x的个数，
+n</span>=length(X); m=<span style="color: #000000;">length(x);
+</span><span style="color: #0000ff;">for</span> i=1<span style="color: #000000;">:m
+   z</span>=x(i);s=0.0<span style="color: #000000;">;
+   </span><span style="color: #0000ff;">for</span> k=1<span style="color: #000000;">:n
+       p</span>=1.0; q1=1.0; c1=1.0<span style="color: #000000;">;
+     </span><span style="color: #0000ff;">for</span> j=1<span style="color: #000000;">:n
+         </span><span style="color: #0000ff;">if</span> j~=<span style="color: #000000;">k
+            p</span>=p*(z-X(j))/(X(k)-<span style="color: #000000;">X(j));
+         end
+         q1</span>=abs(q1*(z-X(j)));c1=c1*<span style="color: #000000;">j;
+     end
+     s</span>=p*Y(k)+<span style="color: #000000;">s;
+   end
+   y(i)</span>=<span style="color: #000000;">s;
+end
+R</span>=M*q1/c1;</pre>
+</div>
+<p><span style="font-family: 宋体;">在</span>MATLAB工作窗口输入程序</p>
+<p>&gt;&gt; x=2*pi/9; M=1; X=[pi/6 ,pi/4, pi/3];</p>
+<p>Y=[0.5,0.7071,0.8660]; [y,R]=lagran2(X,Y,x,M)</p>
+<p>运行后输出插值<em>y</em>及其误差限<em>R</em>为</p>
+<p>&nbsp;&nbsp;&nbsp;y =</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;0.6434</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>R =</p>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;8.8610e-04</p>

@@ -1,0 +1,232 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB程序：ELM极速学习机</span></h1>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">来源：Extreme Learning Machines</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://www.ntu.edu.sg/home/egbhuang/elm_codes.html" target="_blank">http://www.ntu.edu.sg/home/egbhuang/elm_codes.html</a></span></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px; color: #ff0000;">更新：只做科普，别做学术。</span></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2004年南洋理工大学黄广斌提出了ELM算法。极限学习机（ELM Extreme Learning Machine)是一种快速的的单隐层神经网络（SLFN）训练算法。<strong>该算法的特点是在网络参数的确定过程中,隐层节点参数随机选取,在训练过程中无需调节，只需要设置隐含层神经元的个数，便可以获得唯一的最优解;而网络的外权（即输出权值）是通过最小化平方损失函数得到的最小二乘解</strong><strong>（最终化归成求解一个矩阵的 Moore-Penrose 广义逆</strong><strong>问题）</strong><strong>.这样网络参数的确定过程中无需任何迭代步骤,从而大大降低了网络参数的调节时间。与传统的训练方法相比，该方法具有学习速度快、泛化性能好等优点。</strong></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><strong>&nbsp; 参考：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/12146663.html">Extreme Learning Machine</a></strong></span></p>
+<p><strong><img src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507122103765-2069800672.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></strong></p>
+<p>&nbsp;</p>
+<p><strong><img src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507122006678-1177636094.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;ELM的MATLAB算法：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('f35c4d45-4393-43ff-b319-e13f2173028e')"><img src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" id="code_img_closed_f35c4d45-4393-43ff-b319-e13f2173028e" class="code_img_closed" /><img src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" id="code_img_opened_f35c4d45-4393-43ff-b319-e13f2173028e" class="code_img_opened" style="display: none;" />
+<div id="cnblogs_code_open_f35c4d45-4393-43ff-b319-e13f2173028e" class="cnblogs_code_hide">
+<pre><span style="color: #008080;">  1</span> function [TrainingTime, TestingTime, TrainingAccuracy, TestingAccuracy] =<span style="color: #000000;"> elm(TrainingData_File, TestingData_File, Elm_Type, NumberofHiddenNeurons, ActivationFunction)
+</span><span style="color: #008080;">  2</span> 
+<span style="color: #008080;">  3</span> %<span style="color: #000000;"> Usage: elm(TrainingData_File, TestingData_File, Elm_Type, NumberofHiddenNeurons, ActivationFunction)
+</span><span style="color: #008080;">  4</span> % OR:    [TrainingTime, TestingTime, TrainingAccuracy, TestingAccuracy] =<span style="color: #000000;"> elm(TrainingData_File, TestingData_File, Elm_Type, NumberofHiddenNeurons, ActivationFunction)
+</span><span style="color: #008080;">  5</span> %
+<span style="color: #008080;">  6</span> %<span style="color: #000000;"> Input:
+</span><span style="color: #008080;">  7</span> % TrainingData_File     - Filename of training data <span style="color: #0000ff;">set</span>
+<span style="color: #008080;">  8</span> % TestingData_File      - Filename of testing data <span style="color: #0000ff;">set</span>
+<span style="color: #008080;">  9</span> % Elm_Type              - <span style="color: #800080;">0</span> <span style="color: #0000ff;">for</span> regression; <span style="color: #800080;">1</span> <span style="color: #0000ff;">for</span> (both binary and multi-<span style="color: #000000;">classes) classification
+</span><span style="color: #008080;"> 10</span> % NumberofHiddenNeurons -<span style="color: #000000;"> Number of hidden neurons assigned to the ELM
+</span><span style="color: #008080;"> 11</span> % ActivationFunction    -<span style="color: #000000;"> Type of activation function:
+</span><span style="color: #008080;"> 12</span> %                           <span style="color: #800000;">'</span><span style="color: #800000;">sig</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> Sigmoidal function
+</span><span style="color: #008080;"> 13</span> %                           <span style="color: #800000;">'</span><span style="color: #800000;">sin</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> Sine function
+</span><span style="color: #008080;"> 14</span> %                           <span style="color: #800000;">'</span><span style="color: #800000;">hardlim</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> Hardlim function
+</span><span style="color: #008080;"> 15</span> %                           <span style="color: #800000;">'</span><span style="color: #800000;">tribas</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span><span style="color: #000000;"> Triangular basis function
+</span><span style="color: #008080;"> 16</span> %                           <span style="color: #800000;">'</span><span style="color: #800000;">radbas</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">for</span> Radial basis function (<span style="color: #0000ff;">for</span><span style="color: #000000;"> additive type of SLFNs instead of RBF type of SLFNs)
+</span><span style="color: #008080;"> 17</span> %
+<span style="color: #008080;"> 18</span> %<span style="color: #000000;"> Output: 
+</span><span style="color: #008080;"> 19</span> % TrainingTime          -<span style="color: #000000;"> Time (seconds) spent on training ELM
+</span><span style="color: #008080;"> 20</span> % TestingTime           -<span style="color: #000000;"> Time (seconds) spent on predicting ALL testing data
+</span><span style="color: #008080;"> 21</span> % TrainingAccuracy      -<span style="color: #000000;"> Training accuracy: 
+</span><span style="color: #008080;"> 22</span> %                           RMSE <span style="color: #0000ff;">for</span> regression or correct classification rate <span style="color: #0000ff;">for</span><span style="color: #000000;"> classification
+</span><span style="color: #008080;"> 23</span> % TestingAccuracy       -<span style="color: #000000;"> Testing accuracy: 
+</span><span style="color: #008080;"> 24</span> %                           RMSE <span style="color: #0000ff;">for</span> regression or correct classification rate <span style="color: #0000ff;">for</span><span style="color: #000000;"> classification
+</span><span style="color: #008080;"> 25</span> %
+<span style="color: #008080;"> 26</span> % MULTI-<span style="color: #000000;">CLASSE CLASSIFICATION: NUMBER OF OUTPUT NEURONS WILL BE AUTOMATICALLY SET EQUAL TO NUMBER OF CLASSES
+</span><span style="color: #008080;"> 27</span> % FOR EXAMPLE, <span style="color: #0000ff;">if</span> there are <span style="color: #800080;">7</span> classes <span style="color: #0000ff;">in</span> all, there will have <span style="color: #800080;">7</span><span style="color: #000000;"> output
+</span><span style="color: #008080;"> 28</span> % neurons; neuron <span style="color: #800080;">5</span> has the highest output means input belongs to <span style="color: #800080;">5</span>-th <span style="color: #0000ff;">class</span>
+<span style="color: #008080;"> 29</span> %
+<span style="color: #008080;"> 30</span> % Sample1 regression: [TrainingTime, TestingTime, TrainingAccuracy, TestingAccuracy] = elm(<span style="color: #800000;">'</span><span style="color: #800000;">sinc_train</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sinc_test</span><span style="color: #800000;">'</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">20</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sig</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 31</span> % Sample2 classification: elm(<span style="color: #800000;">'</span><span style="color: #800000;">diabetes_train</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">diabetes_test</span><span style="color: #800000;">'</span>, <span style="color: #800080;">1</span>, <span style="color: #800080;">20</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sig</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 32</span> %
+<span style="color: #008080;"> 33</span>     %%%%    Authors:    MR QIN-YU ZHU AND DR GUANG-<span style="color: #000000;">BIN HUANG
+</span><span style="color: #008080;"> 34</span>     %%%%<span style="color: #000000;">    NANYANG TECHNOLOGICAL UNIVERSITY, SINGAPORE
+</span><span style="color: #008080;"> 35</span>     %%%%<span style="color: #000000;">    EMAIL:      EGBHUANG@NTU.EDU.SG; GBHUANG@IEEE.ORG
+</span><span style="color: #008080;"> 36</span>     %%%%    WEBSITE:    http:<span style="color: #008000;">//</span><span style="color: #008000;">www.ntu.edu.sg/eee/icis/cv/egbhuang.htm</span>
+<span style="color: #008080;"> 37</span>     %%%%    DATE:       APRIL <span style="color: #800080;">2004</span>
+<span style="color: #008080;"> 38</span> 
+<span style="color: #008080;"> 39</span> %%%%%%%%%%%<span style="color: #000000;"> Macro definition
+</span><span style="color: #008080;"> 40</span> REGRESSION=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 41</span> CLASSIFIER=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 42</span> 
+<span style="color: #008080;"> 43</span> %%%%%%%%%%%<span style="color: #000000;"> Load training dataset
+</span><span style="color: #008080;"> 44</span> train_data=<span style="color: #000000;">load(TrainingData_File);
+</span><span style="color: #008080;"> 45</span> T=train_data(:,<span style="color: #800080;">1</span>)<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+<span style="color: #008080;"> 46</span> P=train_data(:,<span style="color: #800080;">2</span>:size(train_data,<span style="color: #800080;">2</span>))<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+<span style="color: #008080;"> 47</span> clear train_data;                                   %<span style="color: #000000;">   Release raw training data array
+</span><span style="color: #008080;"> 48</span> 
+<span style="color: #008080;"> 49</span> %%%%%%%%%%%<span style="color: #000000;"> Load testing dataset
+</span><span style="color: #008080;"> 50</span> test_data=<span style="color: #000000;">load(TestingData_File);
+</span><span style="color: #008080;"> 51</span> TV.T=test_data(:,<span style="color: #800080;">1</span>)<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+<span style="color: #008080;"> 52</span> TV.P=test_data(:,<span style="color: #800080;">2</span>:size(test_data,<span style="color: #800080;">2</span>))<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+<span style="color: #008080;"> 53</span> clear test_data;                                    %<span style="color: #000000;">   Release raw testing data array
+</span><span style="color: #008080;"> 54</span> 
+<span style="color: #008080;"> 55</span> NumberofTrainingData=size(P,<span style="color: #800080;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 56</span> NumberofTestingData=size(TV.P,<span style="color: #800080;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 57</span> NumberofInputNeurons=size(P,<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 58</span> 
+<span style="color: #008080;"> 59</span> <span style="color: #0000ff;">if</span> Elm_Type~=<span style="color: #000000;">REGRESSION
+</span><span style="color: #008080;"> 60</span>     %%%%%%%%%%%%<span style="color: #000000;"> Preprocessing the data of classification
+</span><span style="color: #008080;"> 61</span>     sorted_target=sort(cat(<span style="color: #800080;">2</span>,T,TV.T),<span style="color: #800080;">2</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 62</span>     label=zeros(<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span>);                               %   Find and save <span style="color: #0000ff;">in</span> <span style="color: #800000;">'</span><span style="color: #800000;">label</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">class</span> label <span style="color: #0000ff;">from</span><span style="color: #000000;"> training and testing data sets
+</span><span style="color: #008080;"> 63</span>     label(<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span>)=sorted_target(<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 64</span>     j=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 65</span>     <span style="color: #0000ff;">for</span> i = <span style="color: #800080;">2</span>:(NumberofTrainingData+<span style="color: #000000;">NumberofTestingData)
+</span><span style="color: #008080;"> 66</span>         <span style="color: #0000ff;">if</span> sorted_target(<span style="color: #800080;">1</span>,i) ~= label(<span style="color: #800080;">1</span><span style="color: #000000;">,j)
+</span><span style="color: #008080;"> 67</span>             j=j+<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 68</span>             label(<span style="color: #800080;">1</span>,j) = sorted_target(<span style="color: #800080;">1</span><span style="color: #000000;">,i);
+</span><span style="color: #008080;"> 69</span> <span style="color: #000000;">        end
+</span><span style="color: #008080;"> 70</span> <span style="color: #000000;">    end
+</span><span style="color: #008080;"> 71</span>     number_class=<span style="color: #000000;">j;
+</span><span style="color: #008080;"> 72</span>     NumberofOutputNeurons=<span style="color: #000000;">number_class;
+</span><span style="color: #008080;"> 73</span>        
+<span style="color: #008080;"> 74</span>     %%%%%%%%%%<span style="color: #000000;"> Processing the targets of training
+</span><span style="color: #008080;"> 75</span>     temp_T=<span style="color: #000000;">zeros(NumberofOutputNeurons, NumberofTrainingData);
+</span><span style="color: #008080;"> 76</span>     <span style="color: #0000ff;">for</span> i = <span style="color: #800080;">1</span><span style="color: #000000;">:NumberofTrainingData
+</span><span style="color: #008080;"> 77</span>         <span style="color: #0000ff;">for</span> j = <span style="color: #800080;">1</span><span style="color: #000000;">:number_class
+</span><span style="color: #008080;"> 78</span>             <span style="color: #0000ff;">if</span> label(<span style="color: #800080;">1</span>,j) == T(<span style="color: #800080;">1</span><span style="color: #000000;">,i)
+</span><span style="color: #008080;"> 79</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">; 
+</span><span style="color: #008080;"> 80</span> <span style="color: #000000;">            end
+</span><span style="color: #008080;"> 81</span> <span style="color: #000000;">        end
+</span><span style="color: #008080;"> 82</span>         temp_T(j,i)=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 83</span> <span style="color: #000000;">    end
+</span><span style="color: #008080;"> 84</span>     T=temp_T*<span style="color: #800080;">2</span>-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 85</span> 
+<span style="color: #008080;"> 86</span>     %%%%%%%%%%<span style="color: #000000;"> Processing the targets of testing
+</span><span style="color: #008080;"> 87</span>     temp_TV_T=<span style="color: #000000;">zeros(NumberofOutputNeurons, NumberofTestingData);
+</span><span style="color: #008080;"> 88</span>     <span style="color: #0000ff;">for</span> i = <span style="color: #800080;">1</span><span style="color: #000000;">:NumberofTestingData
+</span><span style="color: #008080;"> 89</span>         <span style="color: #0000ff;">for</span> j = <span style="color: #800080;">1</span><span style="color: #000000;">:number_class
+</span><span style="color: #008080;"> 90</span>             <span style="color: #0000ff;">if</span> label(<span style="color: #800080;">1</span>,j) == TV.T(<span style="color: #800080;">1</span><span style="color: #000000;">,i)
+</span><span style="color: #008080;"> 91</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">; 
+</span><span style="color: #008080;"> 92</span> <span style="color: #000000;">            end
+</span><span style="color: #008080;"> 93</span> <span style="color: #000000;">        end
+</span><span style="color: #008080;"> 94</span>         temp_TV_T(j,i)=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 95</span> <span style="color: #000000;">    end
+</span><span style="color: #008080;"> 96</span>     TV.T=temp_TV_T*<span style="color: #800080;">2</span>-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 97</span> 
+<span style="color: #008080;"> 98</span> end                                                 %   end <span style="color: #0000ff;">if</span><span style="color: #000000;"> of Elm_Type
+</span><span style="color: #008080;"> 99</span> 
+<span style="color: #008080;">100</span> %%%%%%%%%%% Calculate weights &amp;<span style="color: #000000;"> biases
+</span><span style="color: #008080;">101</span> start_time_train=<span style="color: #000000;">cputime;
+</span><span style="color: #008080;">102</span> 
+<span style="color: #008080;">103</span> %%%%%%%%%%%<span style="color: #000000;"> Random generate input weights InputWeight (w_i) and biases BiasofHiddenNeurons (b_i) of hidden neurons
+</span><span style="color: #008080;">104</span> InputWeight=rand(NumberofHiddenNeurons,NumberofInputNeurons)*<span style="color: #800080;">2</span>-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">105</span> BiasofHiddenNeurons=rand(NumberofHiddenNeurons,<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">106</span> tempH=InputWeight*<span style="color: #000000;">P;
+</span><span style="color: #008080;">107</span> clear P;                                            %<span style="color: #000000;">   Release input of training data 
+</span><span style="color: #008080;">108</span> ind=ones(<span style="color: #800080;">1</span><span style="color: #000000;">,NumberofTrainingData);
+</span><span style="color: #008080;">109</span> BiasMatrix=BiasofHiddenNeurons(:,ind);              %<span style="color: #000000;">   Extend the bias matrix BiasofHiddenNeurons to match the demention of H
+</span><span style="color: #008080;">110</span> tempH=tempH+<span style="color: #000000;">BiasMatrix;
+</span><span style="color: #008080;">111</span> 
+<span style="color: #008080;">112</span> %%%%%%%%%%%<span style="color: #000000;"> Calculate hidden neuron output matrix H
+</span><span style="color: #008080;">113</span> <span style="color: #0000ff;">switch</span><span style="color: #000000;"> lower(ActivationFunction)
+</span><span style="color: #008080;">114</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">sig</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">sigmoid</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">115</span>         %%%%%%%%<span style="color: #000000;"> Sigmoid 
+</span><span style="color: #008080;">116</span>         H = <span style="color: #800080;">1</span> ./ (<span style="color: #800080;">1</span> + exp(-<span style="color: #000000;">tempH));
+</span><span style="color: #008080;">117</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">sin</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">sine</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">118</span>         %%%%%%%%<span style="color: #000000;"> Sine
+</span><span style="color: #008080;">119</span>         H =<span style="color: #000000;"> sin(tempH);    
+</span><span style="color: #008080;">120</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">hardlim</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">121</span>         %%%%%%%%<span style="color: #000000;"> Hard Limit
+</span><span style="color: #008080;">122</span>         H = <span style="color: #0000ff;">double</span><span style="color: #000000;">(hardlim(tempH));
+</span><span style="color: #008080;">123</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">tribas</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">124</span>         %%%%%%%%<span style="color: #000000;"> Triangular basis function
+</span><span style="color: #008080;">125</span>         H =<span style="color: #000000;"> tribas(tempH);
+</span><span style="color: #008080;">126</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">radbas</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">127</span>         %%%%%%%%<span style="color: #000000;"> Radial basis function
+</span><span style="color: #008080;">128</span>         H =<span style="color: #000000;"> radbas(tempH);
+</span><span style="color: #008080;">129</span>         %%%%%%%%<span style="color: #000000;"> More activation functions can be added here                
+</span><span style="color: #008080;">130</span> <span style="color: #000000;">end
+</span><span style="color: #008080;">131</span> clear tempH;                                        %   Release the temparary array <span style="color: #0000ff;">for</span><span style="color: #000000;"> calculation of hidden neuron output matrix H
+</span><span style="color: #008080;">132</span> 
+<span style="color: #008080;">133</span> %%%%%%%%%%%<span style="color: #000000;"> Calculate output weights OutputWeight (beta_i)
+</span><span style="color: #008080;">134</span> OutputWeight=pinv(H<span style="color: #800000;">'</span><span style="color: #800000;">) * T</span><span style="color: #800000;">'</span>;                        % implementation without regularization factor <span style="color: #008000;">//</span><span style="color: #008000;">refer to 2006 Neurocomputing paper</span>
+<span style="color: #008080;">135</span> %OutputWeight=inv(eye(size(H,<span style="color: #800080;">1</span>))/C+H * H<span style="color: #800000;">'</span><span style="color: #800000;">) * H * T</span><span style="color: #800000;">'</span>;   % faster method <span style="color: #800080;">1</span> <span style="color: #008000;">//</span><span style="color: #008000;">refer to 2012 IEEE TSMC-B paper</span>
+<span style="color: #008080;">136</span> %implementation; one can <span style="color: #0000ff;">set</span> regularizaiton factor C properly <span style="color: #0000ff;">in</span><span style="color: #000000;"> classification applications 
+</span><span style="color: #008080;">137</span> %OutputWeight=(eye(size(H,<span style="color: #800080;">1</span>))/C+H * H<span style="color: #800000;">'</span><span style="color: #800000;">) \ H * T</span><span style="color: #800000;">'</span>;      % faster method <span style="color: #800080;">2</span> <span style="color: #008000;">//</span><span style="color: #008000;">refer to 2012 IEEE TSMC-B paper</span>
+<span style="color: #008080;">138</span> %implementation; one can <span style="color: #0000ff;">set</span> regularizaiton factor C properly <span style="color: #0000ff;">in</span><span style="color: #000000;"> classification applications
+</span><span style="color: #008080;">139</span> 
+<span style="color: #008080;">140</span> %If you use faster methods or kernel method, PLEASE CITE <span style="color: #0000ff;">in</span><span style="color: #000000;"> your paper properly: 
+</span><span style="color: #008080;">141</span> 
+<span style="color: #008080;">142</span> %Guang-Bin Huang, Hongming Zhou, Xiaojian Ding, and Rui Zhang, <span style="color: #800000;">"</span><span style="color: #800000;">Extreme Learning Machine for Regression and Multi-Class Classification,</span><span style="color: #800000;">"</span> submitted to IEEE Transactions on Pattern Analysis and Machine Intelligence, October <span style="color: #800080;">2010</span><span style="color: #000000;">. 
+</span><span style="color: #008080;">143</span> 
+<span style="color: #008080;">144</span> end_time_train=<span style="color: #000000;">cputime;
+</span><span style="color: #008080;">145</span> TrainingTime=end_time_train-start_time_train        %   Calculate CPU time (seconds) spent <span style="color: #0000ff;">for</span><span style="color: #000000;"> training ELM
+</span><span style="color: #008080;">146</span> 
+<span style="color: #008080;">147</span> %%%%%%%%%%%<span style="color: #000000;"> Calculate the training accuracy
+</span><span style="color: #008080;">148</span> Y=(H<span style="color: #800000;">'</span><span style="color: #800000;"> * OutputWeight)</span><span style="color: #800000;">'</span>;                             %<span style="color: #000000;">   Y: the actual output of the training data
+</span><span style="color: #008080;">149</span> <span style="color: #0000ff;">if</span> Elm_Type ==<span style="color: #000000;"> REGRESSION
+</span><span style="color: #008080;">150</span>     TrainingAccuracy=sqrt(mse(T - Y))               %   Calculate training accuracy (RMSE) <span style="color: #0000ff;">for</span> regression <span style="color: #0000ff;">case</span>
+<span style="color: #008080;">151</span> <span style="color: #000000;">end
+</span><span style="color: #008080;">152</span> <span style="color: #000000;">clear H;
+</span><span style="color: #008080;">153</span> 
+<span style="color: #008080;">154</span> %%%%%%%%%%%<span style="color: #000000;"> Calculate the output of testing input
+</span><span style="color: #008080;">155</span> start_time_test=<span style="color: #000000;">cputime;
+</span><span style="color: #008080;">156</span> tempH_test=InputWeight*<span style="color: #000000;">TV.P;
+</span><span style="color: #008080;">157</span> clear TV.P;             %<span style="color: #000000;">   Release input of testing data             
+</span><span style="color: #008080;">158</span> ind=ones(<span style="color: #800080;">1</span><span style="color: #000000;">,NumberofTestingData);
+</span><span style="color: #008080;">159</span> BiasMatrix=BiasofHiddenNeurons(:,ind);              %<span style="color: #000000;">   Extend the bias matrix BiasofHiddenNeurons to match the demention of H
+</span><span style="color: #008080;">160</span> tempH_test=tempH_test +<span style="color: #000000;"> BiasMatrix;
+</span><span style="color: #008080;">161</span> <span style="color: #0000ff;">switch</span><span style="color: #000000;"> lower(ActivationFunction)
+</span><span style="color: #008080;">162</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">sig</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">sigmoid</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">163</span>         %%%%%%%%<span style="color: #000000;"> Sigmoid 
+</span><span style="color: #008080;">164</span>         H_test = <span style="color: #800080;">1</span> ./ (<span style="color: #800080;">1</span> + exp(-<span style="color: #000000;">tempH_test));
+</span><span style="color: #008080;">165</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">sin</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">sine</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">166</span>         %%%%%%%%<span style="color: #000000;"> Sine
+</span><span style="color: #008080;">167</span>         H_test =<span style="color: #000000;"> sin(tempH_test);        
+</span><span style="color: #008080;">168</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">hardlim</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">169</span>         %%%%%%%%<span style="color: #000000;"> Hard Limit
+</span><span style="color: #008080;">170</span>         H_test =<span style="color: #000000;"> hardlim(tempH_test);        
+</span><span style="color: #008080;">171</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">tribas</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">172</span>         %%%%%%%%<span style="color: #000000;"> Triangular basis function
+</span><span style="color: #008080;">173</span>         H_test =<span style="color: #000000;"> tribas(tempH_test);        
+</span><span style="color: #008080;">174</span>     <span style="color: #0000ff;">case</span> {<span style="color: #800000;">'</span><span style="color: #800000;">radbas</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+</span><span style="color: #008080;">175</span>         %%%%%%%%<span style="color: #000000;"> Radial basis function
+</span><span style="color: #008080;">176</span>         H_test =<span style="color: #000000;"> radbas(tempH_test);        
+</span><span style="color: #008080;">177</span>         %%%%%%%%<span style="color: #000000;"> More activation functions can be added here        
+</span><span style="color: #008080;">178</span> <span style="color: #000000;">end
+</span><span style="color: #008080;">179</span> TY=(H_test<span style="color: #800000;">'</span><span style="color: #800000;"> * OutputWeight)</span><span style="color: #800000;">'</span>;                       %<span style="color: #000000;">   TY: the actual output of the testing data
+</span><span style="color: #008080;">180</span> end_time_test=<span style="color: #000000;">cputime;
+</span><span style="color: #008080;">181</span> TestingTime=end_time_test-start_time_test           %<span style="color: #000000;">   Calculate CPU time (seconds) spent by ELM predicting the whole testing data
+</span><span style="color: #008080;">182</span> 
+<span style="color: #008080;">183</span> <span style="color: #0000ff;">if</span> Elm_Type ==<span style="color: #000000;"> REGRESSION
+</span><span style="color: #008080;">184</span>     TestingAccuracy=sqrt(mse(TV.T - TY))            %   Calculate testing accuracy (RMSE) <span style="color: #0000ff;">for</span> regression <span style="color: #0000ff;">case</span>
+<span style="color: #008080;">185</span> <span style="color: #000000;">end
+</span><span style="color: #008080;">186</span> 
+<span style="color: #008080;">187</span> <span style="color: #0000ff;">if</span> Elm_Type ==<span style="color: #000000;"> CLASSIFIER
+</span><span style="color: #008080;">188</span> %%%%%%%%%% Calculate training &amp;<span style="color: #000000;"> testing classification accuracy
+</span><span style="color: #008080;">189</span>     MissClassificationRate_Training=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">190</span>     MissClassificationRate_Testing=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">191</span> 
+<span style="color: #008080;">192</span>     <span style="color: #0000ff;">for</span> i = <span style="color: #800080;">1</span> : size(T, <span style="color: #800080;">2</span><span style="color: #000000;">)
+</span><span style="color: #008080;">193</span>         [x, label_index_expected]=<span style="color: #000000;">max(T(:,i));
+</span><span style="color: #008080;">194</span>         [x, label_index_actual]=<span style="color: #000000;">max(Y(:,i));
+</span><span style="color: #008080;">195</span>         <span style="color: #0000ff;">if</span> label_index_actual~=<span style="color: #000000;">label_index_expected
+</span><span style="color: #008080;">196</span>             MissClassificationRate_Training=MissClassificationRate_Training+<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">197</span> <span style="color: #000000;">        end
+</span><span style="color: #008080;">198</span> <span style="color: #000000;">    end
+</span><span style="color: #008080;">199</span>     TrainingAccuracy=<span style="color: #800080;">1</span>-MissClassificationRate_Training/size(T,<span style="color: #800080;">2</span><span style="color: #000000;">)
+</span><span style="color: #008080;">200</span>     <span style="color: #0000ff;">for</span> i = <span style="color: #800080;">1</span> : size(TV.T, <span style="color: #800080;">2</span><span style="color: #000000;">)
+</span><span style="color: #008080;">201</span>         [x, label_index_expected]=<span style="color: #000000;">max(TV.T(:,i));
+</span><span style="color: #008080;">202</span>         [x, label_index_actual]=<span style="color: #000000;">max(TY(:,i));
+</span><span style="color: #008080;">203</span>         <span style="color: #0000ff;">if</span> label_index_actual~=<span style="color: #000000;">label_index_expected
+</span><span style="color: #008080;">204</span>             MissClassificationRate_Testing=MissClassificationRate_Testing+<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">205</span> <span style="color: #000000;">        end
+</span><span style="color: #008080;">206</span> <span style="color: #000000;">    end
+</span><span style="color: #008080;">207</span>     TestingAccuracy=<span style="color: #800080;">1</span>-MissClassificationRate_Testing/size(TV.T,<span style="color: #800080;">2</span><span style="color: #000000;">)  
+</span><span style="color: #008080;">208</span> end</pre>
+</div>
+<span class="cnblogs_code_collapse">ELM</span></div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">我对ELM算法的解读</span></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201313881-1119358.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201324230-1667609521.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201333473-681864869.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201342720-2071132346.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201352098-1146771331.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201401424-1831098434.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201409041-958718904.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/202001/1027447-20200103201416762-172096774.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">这是我很久之前写的神经网络ELM代码及解读，只有知道ELM的数学原理，再看程序，才会有所理解。如有不足之处，望指点。</span></p>

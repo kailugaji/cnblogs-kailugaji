@@ -1,0 +1,92 @@
+<p>凯鲁嘎吉 - 博客园</p>
+<p>http://www.cnblogs.com/kailugaji/</p>
+<p>&nbsp;</p>
+<p><strong>造纸厂接到定单，所需卷纸的宽度和长度如表</strong></p>
+<table align="center">
+<tbody>
+<tr>
+<td valign="top" width="290">
+<p align="center"><strong>卷纸的宽度</strong></p>
+</td>
+<td valign="top" width="290">
+<p align="center"><strong>长度</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="290">
+<p align="center"><strong>5</strong></p>
+<p align="center"><strong>7</strong></p>
+<p align="center"><strong>9</strong></p>
+</td>
+<td valign="top" width="290">
+<p align="center"><strong>10000</strong></p>
+<p align="center"><strong>30000</strong></p>
+<p align="center"><strong>20000</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span style="font-family: 宋体;">工厂生产</span>1号(宽度10)和2号(宽度20)两种标准卷纸，其长度未加规定。现按定单要求对标准卷纸进行切割，切割后有限长度的卷纸可连接起来达到所需卷纸的长度。问如何安排切割计划以满足定单需求而使切割损失最小?</strong></p>
+<p><strong>解：为了满足定单要求和使切割损失最小，我们可以使用多种切割方法来进行组合。此时，我们不但要考虑对两种标准卷纸的宽度如何进行切割，而且还要确定按某一种方式切割时标准卷纸所耗用的长度。</strong></p>
+<p><strong><span style="font-family: 宋体;">例如，可以把宽</span>10的1号标准卷纸切割成宽5的卷纸2卷，根据定单要求，此时需1号标准卷纸5000单位长度，与此同时，把宽度20的2号标准卷纸切割成宽度7和宽度9的卷纸各1卷，此时为满足定单要求，需2号标准卷纸30000单位长度。按此切割方案，宽度9的卷纸多生产10000单位长度，因此，切割损失的面积为(20-7-9) &times;30000+9&times;10000。</strong></p>
+<p><strong><span style="font-family: 宋体;">设</span>xij为第i号标准卷纸按第j种方式切割时所耗用的长度。</strong></p>
+<p><strong><span style="font-family: 宋体;">各种可能的切割方式及切割损失宽度由下表给出</span>(每种方式所产生的切割损失宽度应小于5)。</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2017.cnblogs.com/blog/1027447/201801/1027447-20180106211220690-866777100.png" alt="" /></strong></p>
+<p><strong><span style="font-family: 宋体;">按这</span>9种切割方式，宽度9的卷纸所得长度为</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;x13+x23+x25+2x26。</strong></p>
+<p><strong><span style="font-family: 宋体;">令</span> &nbsp;xl=x13+x23+x25+2x26-20000，</strong><strong><span style="font-family: 宋体;">则宽度</span>9、长度</strong><strong>x1</strong><strong><span style="font-family: 宋体;">的卷纸再可切割成宽度</span>5(切割损失宽度4)或宽度7(切割损失宽度2)的卷纸</strong><strong><span style="font-family: 宋体;">设它们的长度分别为</span>x2及x3</strong></p>
+<p><strong><span style="font-family: 宋体;">现在切割所得宽度</span>7的卷纸其长度为</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;x12+x22+2x24+x25+x3</strong></p>
+<p><strong><span style="font-family: 宋体;">令</span> &nbsp;&nbsp;&nbsp;x4=x12+x22+2x24+x25+x3-30000，</strong><strong><span style="font-family: 宋体;">则宽度</span>7、长度x4的卷纸又可切割成宽度5的卷纸(切割损失宽度2)。</strong></p>
+<p><strong><span style="font-family: 宋体;">在上述切割方式组合的条件下，宽度</span>5的卷纸其所得长度为</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;2xll+4x21+2x22+2x23+x24+x2+x4</strong></p>
+<p><strong><span style="font-family: 宋体;">令</span> &nbsp;&nbsp;&nbsp;x5=2x11+4x21+2x22+2x23+x24+x2+x4-10000</strong></p>
+<p><strong><span style="font-family: 宋体;">我们应注意到，</span>4x2，2x3，2x4，5x5都为卷纸的切割损失面积。从而，总的切割损失面积</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;f=3x12+x13+3x22+x23+x24+4x25+2x26</strong><strong>+4x2+2x3+2x4+5x5</strong></p>
+<p><strong>于是，我们得本问题的线性规划模型：</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;&nbsp;minf=3x12+x13+3x22+x23+x24+4x25+2x26+4x2+2x3+2x4+5x5</strong></p>
+<p><strong>&nbsp;s．t． 2x11+4x21+2x22+2x23+x24+x2+x4- x5=10000</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x12+x22+2x24+x25+x3- x4=30000</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;x13+x23+x25+2x26- x1=20000</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x2+x3=x1，</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xlj&ge;0， &nbsp;j=1，2，3</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x2j&ge;0， &nbsp;j=1，&hellip;，6</strong></p>
+<p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xj&ge;0， &nbsp;j=1，&hellip;，5</strong></p>
+<p><strong>Lingo程序：</strong></p>
+<div class="cnblogs_code">
+<pre>min=3*x12+x13+3*x22+x23+x24+4*x25+2*x26+2*x3+5*x5+4*<span style="color: #000000;">x2+2*x4;
+</span><span style="color: #000000;">2*x11+4*x21+2*x22+2*x23+x24+x2+x4-x5=10000;<br />x12+x22+2*x24+x25+x3-x4=30000;<br />x13+x23+x25+2*x26-x1=20000;<br />x2+x3=x1;
+end</span></pre>
+</div>
+<p>结果为：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Global optimal solution found.
+  Objective value:                              </span>60000.00<span style="color: #000000;">
+  Infeasibilities:                              </span>0.000000<span style="color: #000000;">
+  Total solver iterations:                             </span>1<span style="color: #000000;">
+
+
+                       Variable           Value        Reduced Cost
+                            X12        </span>0.000000            0.000000<span style="color: #000000;">
+                            X13        </span>0.000000            0.000000<span style="color: #000000;">
+                            X22        </span>0.000000            10.00000<span style="color: #000000;">
+                            X23        </span>0.000000            10.00000<span style="color: #000000;">
+                            X24        </span>10000.00            0.000000<span style="color: #000000;">
+                            X25        </span>0.000000            0.000000<span style="color: #000000;">
+                            X26        </span>15000.00            0.000000<span style="color: #000000;">
+                             X3        </span>10000.00            0.000000<span style="color: #000000;">
+                             X5        </span>0.000000            0.000000<span style="color: #000000;">
+                             X2        </span>0.000000            10.00000<span style="color: #000000;">
+                             X4        </span>0.000000            10.00000<span style="color: #000000;">
+                            X11        </span>0.000000            10.00000<span style="color: #000000;">
+                            X21        </span>0.000000            20.00000<span style="color: #000000;">
+                             X1        </span>10000.00            0.000000<span style="color: #000000;">
+
+                            Row    Slack </span><span style="color: #0000ff;">or</span><span style="color: #000000;"> Surplus      Dual Price
+                              </span>1        60000.00           -1.000000
+                              2        0.000000            5.000000
+                              3        0.000000           -3.000000
+                              4        0.000000           -1.000000
+                              5        0.000000            1.000000</pre>
+</div>
+<p>&nbsp;</p>

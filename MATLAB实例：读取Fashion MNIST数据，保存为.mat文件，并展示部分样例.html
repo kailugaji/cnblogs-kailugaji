@@ -1,0 +1,160 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：读取Fashion MNIST数据，保存为.mat文件，并展示部分样例</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Fashion MNIST数据来源：<a href="https://github.com/zalandoresearch/fashion-mnist" target="_blank">https://github.com/zalandoresearch/fashion-mnist</a></span></p>
+<table style="height: 255px; width: 1597px;">
+<thead>
+<tr><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Name</span></th><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Content</span></th><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Examples</span></th><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Size</span></th><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Link</span></th><th style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">MD5 Checksum</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>train-images-idx3-ubyte.gz</code></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">training set images</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">60,000</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">26 MBytes</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz" rel="nofollow">Download</a></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>8d4fb7e6c68d591d4c3dfef9ec88bf0d</code></span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>train-labels-idx1-ubyte.gz</code></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">training set labels</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">60,000</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">29 KBytes</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz" rel="nofollow">Download</a></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>25c81989df183df01b3e8a0aad5dffbe</code></span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>t10k-images-idx3-ubyte.gz</code></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">test set images</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">10,000</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">4.3 MBytes</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz" rel="nofollow">Download</a></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>bef4ecab320f06d8554ea6380940ec79</code></span></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>t10k-labels-idx1-ubyte.gz</code></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">test set labels</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">10,000</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">5.1 KBytes</span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz" rel="nofollow">Download</a></span></td>
+<td style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><code>bb300cfdad3c16e7a12a480ee83cd310</code></span></td>
+</tr>
+</tbody>
+</table>
+<h2><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="font-size: 1.5em;">MATLAB程序</span></span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">demo.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">clear
+clc
+% Author：kailugaji https://www.cnblogs.com/kailugaji/
+filename_data='E:\database\MNIST\Fashion MNIST\t10k-images-idx3-ubyte\t10k-images-idx3-ubyte'; %自行修改路径
+data = loadMNISTImages(filename_data);
+data=data';
+filename_label='E:\database\MNIST\Fashion MNIST\t10k-labels-idx1-ubyte\t10k-labels-idx1-ubyte'; %自行修改路径
+real_label = loadMNISTLabels(filename_label);
+%     标签	所代表的意思
+%     0	短袖圆领T恤
+%     1	裤子
+%     2	套衫
+%     3	连衣裙
+%     4	外套
+%     5	凉鞋
+%     6	衬衫
+%     7	运动鞋
+%     8	包
+%     9	短靴
+%  real_label(real_label==0)=10;
+save fashion_MNIST data real_label
+
+Image_samples=Image_integration(data, real_label, 10);
+A=mat2gray(Image_samples);
+figure(1)
+imshow(A, 'Border','tight');
+print(gcf,'-r1000','-djpeg','My_Fashion_MNIST.jpg');
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">loadMNISTImages.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function images = loadMNISTImages(filename)
+%load MNIST Images returns a 28x28x[number of MNIST images] matrix containing
+% 原链接：https://blog.csdn.net/tracer9/article/details/51253604
+%the raw MNIST images
+ 
+fp = fopen(filename, 'rb');
+assert(fp ~= -1, ['Could not open ', filename, '']);
+ 
+magic = fread(fp, 1, 'int32', 0, 'ieee-be');
+assert(magic == 2051, ['Bad magic number in ', filename, '']);
+ 
+numImages = fread(fp, 1, 'int32', 0, 'ieee-be');
+numRows = fread(fp, 1, 'int32', 0, 'ieee-be');
+numCols = fread(fp, 1, 'int32', 0, 'ieee-be');
+ 
+images = fread(fp, inf, 'unsigned char');
+images = reshape(images, numCols, numRows, numImages);
+images = permute(images,[2 1 3]);
+ 
+fclose(fp);
+ 
+% Reshape to #pixels x #examples
+images = reshape(images, size(images, 1) * size(images, 2), size(images, 3));
+% Convert to double and rescale to [0,1]
+images = double(images) / 255;
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">loadMNISTLabels.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function labels = loadMNISTLabels(filename)
+% load MNIST Labels returns a [number of MNIST images]x1 matrix containing
+% 原链接：https://blog.csdn.net/tracer9/article/details/51253604
+% the labels for the MNIST images
+fp = fopen(filename, 'rb');
+assert(fp ~= -1, ['Could not open ', filename, '']);
+magic = fread(fp, 1, 'int32', 0, 'ieee-be');
+assert(magic == 2049, ['Bad magic number in ', filename, '']);
+numLabels = fread(fp, 1, 'int32', 0, 'ieee-be');
+labels = fread(fp, inf, 'unsigned char');
+assert(size(labels,1) == numLabels, 'Mismatch in label count');
+fclose(fp);
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Image_integration.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">function Image_samples=Image_integration(data, real_label, N_samples)
+% Gray image integration
+% This code only applies to square matrices
+% Input:
+% data: dataset. N*Dim
+% real_label: GroundTruth. N*1
+% N_samples: number of selected samples
+% Output:
+% Image_samples:Integrated image
+% Author: kailugaji https://www.cnblogs.com/kailugaji/
+[~, Dim]=size(data);
+[real_label, b]=sort(real_label);
+data=data(b, :);
+K=length(unique(real_label)); % number of cluster
+[~, ID]=unique(real_label);
+ID=ID-1;
+image_10=cell(N_samples, K);
+temp=cell(N_samples, K);
+Image_samples=[];
+for i=1:N_samples
+    for j=1:K
+        temp{i, j}=reshape(data(ID(j)+i, :), sqrt(Dim), sqrt(Dim)); % you can change its size
+        image_10{i, j}=[image_10{i, j}, temp{i, j}];
+    end
+    Image_samples=[Image_samples; image_10{i, :}];
+end</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">数据已经转换成.mat格式，同时保存在和MATLAB程序同目录下。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201019145641520-1127986640.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201019145712657-673081090.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">每一类取了10个样例来展示。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201019145742677-2079157461.jpg" alt="" width="509" height="509" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">参考</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] GitHub - zalandoresearch/<a href="https://github.com/zalandoresearch/fashion-mnist" target="_blank">fashion-mnist</a>: A MNIST-like fashion product database. Benchmark&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] <a href="https://www.cnblogs.com/kailugaji/p/13281615.html" target="_blank">MATLAB小函数：展示灰度图像数据集的部分样例</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3]【机器学习】<a href="https://blog.csdn.net/tracer9/article/details/51253604" target="_blank">MATLAB读取mnist数据库</a>_心所愿，力必坚！-CSDN博客</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #ff0000;">注意：</span>传统的<a href="http://yann.lecun.com/exdb/mnist/" target="_blank">MNIST数据</a>也可以采用相同的方式进行转化成.mat文件，只需把路径改一下，换成MNIST的路径即可。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201019154302308-17116017.jpg" alt="" width="495" height="495" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>

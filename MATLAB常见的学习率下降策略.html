@@ -1,0 +1,72 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB常见的学习率下降策略</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 几种常见的学习率下降策略（learning rate decay strategy）</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">t：自变量，迭代次数，&lambda;(t)：因变量，学习率，T：常量，最大迭代次数，其他参数均为常量，可自行设定。可以设定初始学习率&lambda;(0)：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103925082-284019997.png" alt="" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1) exp</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103530907-2062167115.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162945834-534451635.png" alt="" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2) inv</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103554760-1853452623.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162914151-1895545083.png" alt="" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3) plot</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103623076-1087630411.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162836597-1647035809.png" alt="" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4) sigmoid</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103653286-1178434476.png" alt="" /></span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723163018921-1841499485.png" alt="" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5) cosine_decay</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723103709987-806472027.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162750843-1986485185.png" alt="" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">6) Gaussian</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162520858-790020784.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201907/1027447-20190723162557908-1884465951.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function learning_rate_decay(choose)
+% Author: kailugaji 凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+max_iter=1000;
+y=zeros(1, max_iter);
+t=1:max_iter;
+if choose==1
+    % cosine decay
+    y(t)=0.5*(1+cos(pi*t/max_iter));
+elseif choose==2
+    % plot p&gt;1:凹曲线, 0&lt;p&lt;1:凸曲线
+    p=0.25;
+    y(t)=(1-(t/max_iter)).^p;
+elseif choose==3
+    % inv
+    gamma=0.99; p=0.25;
+    y(t)=(1+gamma*t).^(-p);
+elseif choose==4
+    % exp
+    gamma=0.99;
+    y(t)=gamma.^t; 
+elseif choose==5
+    % sigmoid
+    gamma=-0.01; stepsize=max_iter/2;
+    y(t)=1./(1+exp(-gamma*(t-stepsize)));
+elseif choose==6
+    % Gaussian
+    sigma=300;
+    y(t)=exp(-(t.^2)/(2*(sigma^2)));
+else 
+    disp('input error!');
+end
+%%
+plot(t, y);
+axis([1, max_iter, 0, 1]);
+xlabel('iter');
+ylabel('learning rate');</pre>
+</div>
+<h2>3. 学习率衰减</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/i-beta/1027447/201912/1027447-20191212164305384-138204721.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/i-beta/1027447/201912/1027447-20191212164401182-10934150.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/i-beta/1027447/201912/1027447-20191212164419563-455985122.png" alt="" /></p>
+<h2>4. 参考文献</h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><a href="https://lumingdong.cn/setting-strategy-of-gradient-descent-learning-rate.html" target="_blank"><span style="font-size: 16px;">梯度下降学习率的设定策略</span></a></span></p>
+<p class="Post-Title"><span style="font-family: 'comic sans ms', sans-serif;"><a href="https://zhuanlan.zhihu.com/p/32923584" target="_blank"><span style="font-size: 16px;">Tensorflow中learning rate decay的奇技淫巧</span></a></span></p>
+<p class="title-article"><span style="font-family: 'comic sans ms', sans-serif;"><a href="https://blog.csdn.net/akadiao/article/details/79560731" target="_blank"><span style="font-size: 16px;">TensorFlow学习－－学习率衰减/learning rate decay</span></a></span></p>
+<p class="post-title"><span style="font-family: 'comic sans ms', sans-serif;"><a href="https://shenxiaohai.me/2019/01/11/bag-tricks/" target="_blank"><span style="font-size: 16px;">图像分类训练技巧集锦（论文笔记）</span></a></span></p>
+<p class="post-title"><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px;">邱锡鹏,&nbsp;<a href="https://nndl.github.io/" target="_blank">神经网络与深度学习</a>[M]. 2019.</span></span></p>
