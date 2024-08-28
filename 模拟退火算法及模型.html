@@ -1,0 +1,95 @@
+<h1><span style="font-family: 'times new roman', times;">模拟退火算法及模型</span></h1>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</span></p>
+<h2><span style="font-family: 'times new roman', times;">一、算法的提出&nbsp;</span></h2>
+<p><span style="font-family: 'times new roman', times;">&nbsp; &nbsp;<span style="font-size: 15px;"> 模拟退火算法最早的思想由Metropolis等（1953）提出，1983年Kirkpatrick等将其应用于组合优化</span>。</span></p>
+<h2><span style="font-family: 'times new roman', times;">二、算法的目的</span></h2>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 1.解决NP复杂性问题</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 2.克服优化过程陷入局部极小</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 3.克服初值依赖性</span></p>
+<h2><span style="font-family: 'times new roman', times;">三、物理退火过程</span></h2>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 1.<span style="color: #ff0000;">加温过程</span> -- 增强粒子的热运动，消除系统原先可能存在的非均匀态；</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 2.<span style="color: #ff0000;">等温过程</span> -- 对于与环境换热而温度不变的封闭系统，系统状态的自发变化总是朝自由能减少的方向进行，当自由能达到最小时，系统达到平衡态； </span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 3.<span style="color: #ff0000;">冷却过程</span> -- 使粒子热运动减弱并渐趋有序，系统能量逐渐下降，从而得到低能的晶体结构。</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914201937929-701584126.png" alt="" /></span></p>
+<h2><span style="font-family: 'times new roman', times;">四、组合优化与物理退火的相似性</span></h2>
+<p><span style="font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914205209247-10173763.png" alt="" width="686" height="368" /></span></p>
+<h2><span style="font-family: 'times new roman', times;">五、数学表述</span></h2>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp;<span style="font-size: 16px;"> 1.在温度 T ，分子停留在状态 r 满足<strong>波尔兹曼</strong>概率分布</span></span></p>
+<p><span style="font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914202701325-931915955.png" alt="" /></span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp; &nbsp; E 表示分子能量的一个随机变量，E(r) 表示状态 r 的能量，k<sub>b</sub>为Boltzmann常数。Z(T)为<strong>概率分布的标准化因子</strong>：</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914202747096-1342623235.png" alt="" /></span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; <span style="font-size: 16px;">2.<strong>Metropolis准则</strong> - 以概率接受新状态</span></span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp; &nbsp; 假设在状态x<sub>old</sub>时，系统受到某种扰动而使其状态变为x<sub>new</sub>。与此相对应，系统的能量也从E(x<sub>old</sub>)变为E(x<sub>new</sub>) ，系统由x<sub>old</sub>状态变为x<sub>new</sub>状态的接受概率p为</span></p>
+<p><span style="font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914202408841-1837053784.png" alt="" /></span></p>
+<h2><span style="font-family: 'times new roman', times;">六、状态产生函数</span></h2>
+<h3><span style="font-size: 16px;">1. 原则</span></h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; 产生的候选解应遍布全部解空间(保证全局最优解)</span></p>
+<h3><span style="font-size: 16px;">2.&nbsp;方法</span></h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; 在当前状态的邻域结构内以一定概率方式（均匀分布、正态分布、指数分布等）产生</span></p>
+<h2><span style="font-family: 'times new roman', times;">七、状态接受函数</span></h2>
+<h3><span style="font-family: 'times new roman', times; font-size: 16px;">1. 原则</span></h3>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （1）在固定温度下，接受使目标函数下降的候选解的概率要大于使目标函数上升的候选解概率；</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （2）随着温度的下降，接受使目标函数上升的解的概率要逐渐减小；</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （3）当温度趋于零时，只能接受目标函数下降的解。</span></p>
+<h3><span style="font-family: 'times new roman', times; font-size: 16px;">2. 方法</span></h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; 具体形式对算法影响不大, 一般采用min[1,exp(-∆C/t)]</span></p>
+<h2><span style="font-family: 'times new roman', times;">八、初温</span></h2>
+<h3><span style="font-family: 'times new roman', times; font-size: 16px;">1. 收敛性分析</span></h3>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; 通过理论分析可以得到初温的解析式，但解决实际问题时难以得到精确的参数；</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp;初温应充分大；</span></p>
+<h3><span style="font-family: 'times new roman', times; font-size: 16px;">2. 实验表明</span></h3>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; 初温越大，获得高质量解的机率越大，但花费较多的计算时间。</span></p>
+<h3><span style="font-family: 'times new roman', times; font-size: 16px;">3. 方法</span></h3>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （1）均匀抽样一组状态，以各状态目标值的方差为初温；</span></p>
+<p><span style="font-size: 15px;"><span style="font-family: 'times new roman', times;">&nbsp; &nbsp; （2）</span>随机产生一组状态，确定两两状态间的最大目标值差，根据差值，利用一定的函数确定初温；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （3）利用经验公式。</span></p>
+<h2><span style="font-family: 'times new roman', times;">九、温度更新函数</span></h2>
+<p><span style="font-family: 'times new roman', times;">&nbsp; <span style="font-size: 15px;">&nbsp; 若固定每一温度，算法均计算至平稳分布，然后下降温度，则称为时齐算法；</span></span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; 若无需各温度下算法均达到平稳分布，但温度需按一定速率下降，则称为非时齐算法。</span></p>
+<h2><span style="font-family: 'times new roman', times;">十、内循环终止准则&nbsp;</span></h2>
+<h3><span style="font-size: 16px;"><span style="font-family: 'times new roman', times;">1.&nbsp;</span>非时齐模拟退火算法</span></h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; 每个温度下只产生一个或少量候选解</span></p>
+<h3><span style="font-size: 16px;">2.&nbsp;时齐算法&mdash;常用的Metropolis抽样稳定准则</span></h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （1）检验目标函数的均值是否稳定；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （2）连续若干步的目标值变化较小；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （3）按一定的步数抽样。 &nbsp;</span></p>
+<h2><span style="font-family: 'times new roman', times;">十一、外循环终止准则&nbsp;</span></h2>
+<p><span style="font-size: 16px;">常用方法 </span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （1）设置终止温度的阈值；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （2）设置外循环迭代次数；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （3）算法搜索到的最优值连续若干步保持不变；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; （4）概率分析方法。</span></p>
+<h2><span style="font-family: 'times new roman', times;">十二、算法描述</span></h2>
+<p><span style="font-family: 'times new roman', times;">&nbsp; &nbsp; <span style="font-size: 15px;">（1）随机产生一个初始解 x<sub>0</sub> ,令x<sub>best</sub> = x<sub>0</sub> ,并计算目标函数值E( x<sub>0</sub> );</span></span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （2）设置初始温度T = T<sub>0</sub>,迭代次数 i = 1 ; </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （3）do while T &gt; T<sub>min</sub></span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1) for j = 1 ~ k </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2) 对当前最优解 x<sub>best</sub> 按照某一邻域函数， 产生一新的解 x<sub>new</sub> 。计算新的目标函数值E(x<sub>new</sub> )，并计算目标函数值的增量∆E= E(x<sub>new</sub> )- E(x<sub>best</sub> );</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3) 如果 ∆E &lt;0 , 则 x<sub>best</sub> = x<sub>new</sub> ;</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 4) 如果 ∆E &gt;0, 则 p = exp (- ∆E / T(i));</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; і) 如果 c = random[0,1]&lt;p, x<sub>best</sub> = x<sub>new</sub>; </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ii) 否则 x<sub>best</sub> = x<sub>best</sub> 。 </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 5) End for </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （4）update T, i = i+1; </span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （5）End Do</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 15px;">&nbsp; &nbsp; （6）输出当前最优点，计算结束。</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-size: 15px;"><span style="color: #008080;"> 1</span> 给定初温t=t0，随机产生初始状态s=s0，令k=<span style="color: #800080;">0</span><span style="color: #000000;">；
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">Repeat
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">   Repeat
+</span><span style="color: #008080;"> 4</span>       产生新状态sj=<span style="color: #000000;">Genete(s)；
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">if</span> min{<span style="color: #800080;">1</span>,exp[-(C(sj)-C(s))/tk]}&gt;=randrom[<span style="color: #800080;">0</span>,<span style="color: #800080;">1</span><span style="color: #000000;">]             
+</span><span style="color: #008080;"> 6</span>               s=<span style="color: #000000;">sj;
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">   Until 抽样稳定准则满足；
+</span><span style="color: #008080;"> 8</span>    退温tk+<span style="color: #800080;">1</span>=update(tk)并令k=k+<span style="color: #800080;">1</span><span style="color: #000000;">；
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">Until 算法终止准则满足； 
+</span><span style="color: #008080;">10</span> 输出算法搜索结果。</span></pre>
+</div>
+<h2>十三、模拟退火算法的优缺点</h2>
+<h3><span style="font-size: 15px;">&nbsp; </span>&nbsp; 1.模拟退火算法的优点</h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; （1）质量高；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; （2）初值鲁棒性强；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; （3）简单、通用、易实现；</span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; （4）能获得全局最优。</span></p>
+<h3><span style="font-size: 15px;">&nbsp; &nbsp; </span>2.模拟退火算法的缺点</h3>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; 由于要求较高的初始温度、较慢的降温速率、较低的终止温度，以及各温度下足够多次的抽样，因此优化过程较长。</span></p>

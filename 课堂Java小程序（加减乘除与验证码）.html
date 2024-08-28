@@ -1,0 +1,122 @@
+<p><strong>一、编写一个程序，用户输入两个数，求出其加减乘除，并用消息框</strong></p>
+<p><strong>显示计算结果。</strong></p>
+<p>1.设计思想：从键盘输入两个数字和运算符，然后计算。将输入的数字及运算符由字符型转换为整型，再用if判断输入的运算符，根据运算符进行对应的+-*/运算,最后输出结果。</p>
+<p>2.程序流程图：</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234623598-1816305542.png" alt="" /></p>
+<p>3.Calculate.java 源程序代码：</p>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>import</strong>&nbsp;javax.swing.JOptionPane; &nbsp;// import class JOptionPane</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;Calculate {</p>
+<p>&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main( String args[] )</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String firstNumber, &nbsp;&nbsp;// first string entered by user</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secondNumber, // second string entered by user</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj1; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//运算符 entered by user</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>int</strong>&nbsp;number1, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// first number to add</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number2, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// second number to add</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj2, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//运算符</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// sum of number1 and number2</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract, &nbsp;&nbsp;&nbsp;&nbsp;//number1 和 number2的差</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//number 和 number2的乘积</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divide; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//number1&divide;number2</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// read in first number from user as a string</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;firstNumber&nbsp;=</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOptionPane.<em>showInputDialog</em>( "请输入第一个数："&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// read in second number from user as a string</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secondNumber&nbsp;=</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOptionPane.<em>showInputDialog</em>( "请输入第二个数："&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//输入+-*/符号</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj1=</p>
+<p>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JOptionPane.<em>showInputDialog</em>( "请输入数字1/2/3/4中<span style="font-family: 'Times New Roman';">任意一个</span>,分别代表的是 + - * / :"&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// convert numbers from type String to type <span style="text-decoration: underline;">int</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number1&nbsp;= Integer.<em>parseInt</em>( firstNumber&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number2&nbsp;= Integer.<em>parseInt</em>( secondNumber&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;obj2&nbsp;= Integer.<em>parseInt</em>( obj1);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//计算加减乘除</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum&nbsp;= number1&nbsp;+ number2;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subtract&nbsp;= &nbsp;number1&nbsp;- number2;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiply&nbsp;= &nbsp;number1&nbsp;* number2;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divide&nbsp;= &nbsp;number1&nbsp;/ number2;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//匹配运算符与运算结果</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>if</strong>(obj2==1)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;JOptionPane.<em>showMessageDialog</em>(</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>null</strong>, number1&nbsp;+"+"+number2+" &nbsp;= "&nbsp;+ sum,</p>
+<p>"Results",JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>else</strong>&nbsp;<strong>if</strong>(obj2==2)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;JOptionPane.<em>showMessageDialog</em>(</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>null</strong>, number1&nbsp;+"-"+number2+" &nbsp;="&nbsp;+ subtract,</p>
+<p>"Results",JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>else</strong>&nbsp;<strong>if</strong>(obj2==3)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;JOptionPane.<em>showMessageDialog</em>(</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>null</strong>, number1+"*"+number2+" &nbsp;="&nbsp;+ multiply,</p>
+<p>"Results",JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>else</strong>&nbsp;<strong>if</strong>(obj2==4)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;JOptionPane.<em>showMessageDialog</em>(</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>null</strong>, number1+"/"+number2+" &nbsp;= "&nbsp;+ divide,</p>
+<p>"Results",JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>else</strong>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;JOptionPane.<em>showMessageDialog</em>(</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>null</strong>, "此运算符错误，请重新运行程序并输入",</p>
+<p>"Results",JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// display the results &nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<em>exit</em>( 0 ); &nbsp;&nbsp;// terminate the program</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>}</p>
+<p>4.结果：</p>
+<p><span style="font-family: 宋体;">（</span>1）加法运算：</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234704067-222758144.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234716551-1650243452.png" alt="" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234729379-1908006364.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234741817-107857622.png" alt="" /></p>
+<p><span style="font-family: 宋体;">（</span>2）减法运算：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234811473-1322457134.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234823989-1267099521.png" alt="" /></p>
+<p>&nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234841020-1323728993.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234852067-2131185718.png" alt="" /></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>3）乘法运算：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234913364-5229095.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234925457-1770761057.png" alt="" /></p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234936582-53128811.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005234946864-1971680797.png" alt="" /></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>4）除法运算：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235001614-1476651286.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235010364-943605911.png" alt="" /></p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235022317-2140949942.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235032629-505328971.png" alt="" /></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>5）运算符输入错误：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235047473-1217496268.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235057317-58706223.png" alt="" /></p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235107442-777206566.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235118020-2123299062.png" alt="" /></p>
+<p>二、<strong><span style="font-family: 宋体;">在上网时，我们经常会看到以下这种对话框，要用户输入一个验证码。要求根据</span>Random Str.java<span style="font-family: 宋体;">：使用类型转换生成六位验证字符串，示例程序每次运行时，都会生成不同的字符串。实现上述用户输入验证码的功能。（可以扩展如何实现整个用户登录界面的设计和功能的实现。</span></strong></p>
+<p>1.设计思想：先用类型转换生成6位随机验证字符串，然后用户输入验证码，判断生成的验证码与用户所输入的是否一致，若一致，验证成功，否则，验证失败。</p>
+<p>2.程序流程图：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235136004-1916159010.png" alt="" /></p>
+<p>3.源程序：Yanzhengma.java文件</p>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>import</strong>&nbsp;javax.swing.*;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;Yanzhengma {</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args){</p>
+<p>//6位随机字符串的生成</p>
+<p>String result&nbsp;= "";</p>
+<p><strong>for</strong>(<strong>int</strong>&nbsp;i&nbsp;= 0 ; i&nbsp;&lt; 6 ; i&nbsp;++)</p>
+<p>{</p>
+<p><strong>int</strong>&nbsp;intVal&nbsp;= (<strong>int</strong>)(Math.<em>random</em>() * 26 + 97);</p>
+<p>result&nbsp;= result&nbsp;+ (<strong>char</strong>)intVal;</p>
+<p>}</p>
+<p>//输入验证码</p>
+<p>String input=JOptionPane.<em>showInputDialog</em>("验证码：\n"+result,"</p>
+<p><span style="font-family: 'Times New Roman';">请在此输入以上验证码</span>");</p>
+<p>//判断验证码与所输入的是否一致</p>
+<p><strong>if</strong>(input.equals(result))</p>
+<p>{</p>
+<p>JOptionPane.<em>showMessageDialog</em>(<strong>null</strong>, "验证成功！","恭喜！</p>
+<p>", JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>);</p>
+<p>}</p>
+<p><strong>else</strong></p>
+<p>{</p>
+<p>JOptionPane.<em>showMessageDialog</em>(<strong>null</strong>, "对不起，验证失败！</p>
+<p>","请重新验证", JOptionPane.<strong><em>PLAIN_MESSAGE</em></strong>);</p>
+<p>&nbsp; &nbsp;}</p>
+<p>&nbsp;}</p>
+<p>}</p>
+<p>4.结果：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235154254-2058676218.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235225504-1503503836.png" alt="" /></p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235236895-2081783924.png" alt="" /></p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235254145-1284571277.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235310879-1307954099.png" alt="" /></p>
+<p><span style="line-height: 1.5;">5.实验总结：在判断验证码与所输入的是否一致时，我开始编写的程序是</span></p>
+<p>if(input==result)，可无论验证码与所输入的是否一致，它都报错。</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235333192-1860681595.png" alt="" />&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005235343395-1371609096.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体;">后来想起老师上课讲的</span>&ldquo;equals()&rdquo;与&ldquo;==&rdquo;等价,于是用了if(input.equals(result))，程序才成功。但现在还是不理解为什么用&ldquo;==&rdquo;不行。</p>
+<p><strong>&nbsp;</strong></p>
