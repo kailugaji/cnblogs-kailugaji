@@ -8,6 +8,8 @@
 
 原博客园地址：https://www.cnblogs.com/kailugaji
 
+![](https://github.com/kailugaji/cnblogs-kailugaji/blob/main/www.cnblogs.com_kailugaji_%E6%88%AA%E5%9B%BE.png)   
+
 ## 解释所上传的html与pdf区别
 html文件是博客园文章原版文件，但是公式没法显示，还是LaTeX。html排版好，看着顺眼，但里面的图片地址仍然是博客园的原图片地址，如果博客园挂掉，这里html的图片也加载不出来。
 
