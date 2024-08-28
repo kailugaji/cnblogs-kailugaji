@@ -1,0 +1,544 @@
+<h1 style="text-align: center;" align="justify"><span style="font-family: 宋体;">多态动手动脑</span></h1>
+<h2 align="justify"><span style="font-family: 宋体;">一、怎样判断对象是否可以转换？可以使用</span>instanceof<span style="font-family: 宋体;">运算符判断一个对象是否可以转换为指定的类型，参看实例</span><span style="font-family: 'Times New Roman';">: TestInstanceof.java</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestInstanceof
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) 
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">声明hello时使用Object类，则hello的编译类型是Object，Object是所有类的父类
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">但hello变量的实际类型是String</span>
+        Object hello = "Hello"<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">String是Object类的子类，所以返回true。</span>
+        System.out.println("字符串是否是Object类的实例：" + (hello <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Object));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">返回true。</span>
+        System.out.println("字符串是否是String类的实例：" + (hello <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> String));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">返回false。</span>
+        System.out.println("字符串是否是Math类的实例：" + (hello <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Math));
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">String实现了Comparable接口，所以返回true。</span>
+        System.out.println("字符串是否是Comparable接口的实例：" + (hello <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Comparable));
+        String a </span>= "Hello"<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">String类既不是Math类，也不是Math类的父类，所以下面代码编译无法通过
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">System.out.println("字符串是否是Math类的实例：" + (a instanceof Math));</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119213739904-568250400.png" alt="" /></p>
+<h2 align="justify"><span style="font-family: 宋体;">二、下列语句哪一个将引起编译错误</span>?<span style="font-family: 宋体;">为什么</span><span style="font-family: 'Times New Roman';">?</span><span style="font-family: 宋体;">哪一个会引起运行时错误</span><span style="font-family: 'Times New Roman';">?</span><span style="font-family: 宋体;">为什么</span><span style="font-family: 'Times New Roman';">?</span></h2>
+<p align="justify">m=d;</p>
+<p align="justify">d=m;</p>
+<p align="justify">d=(Dog)m;</p>
+<p align="justify">d=c;</p>
+<p align="justify">c=(Cat)m;</p>
+<p><span style="font-family: 宋体;">先进行自我判断，得出结论后，运行</span>TestCast.java<span style="font-family: 宋体;">实例代码，看看你的判断是否正确</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Mammal{}
+</span><span style="color: #0000ff;">class</span> Dog <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Mammal {}
+</span><span style="color: #0000ff;">class</span> Cat <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Mammal{}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestCast
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[])
+    {
+        Mammal m;
+        Dog d</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Dog();
+        Cat c</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Cat();
+        m</span>=<span style="color: #000000;">d;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">d=m;</span>
+        d=<span style="color: #000000;">(Dog)m;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">d=c;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">c=(Cat)m;</span>
+<span style="color: #000000;">
+    }
+}</span></pre>
+</div>
+<p align="justify">d=m;</p>
+<p align="justify">d=c;</p>
+<p align="justify">c=(Cat)m;</p>
+<p align="justify">这三句话有错。</p>
+<h2 align="justify"><span style="font-family: 宋体;">三、请看以下</span>&ldquo;变态&rdquo;的类（参看示例<span style="font-family: 'Times New Roman';">ParentChildTest.java</span><span style="font-family: 宋体;">），运行以下测试代码，并回答如下问题</span></h2>
+<p align="justify"><span style="font-family: 'Times New Roman';">1.</span><span style="font-family: 宋体;">程序运行结果是什么？</span></p>
+<p align="justify"><span style="font-family: 'Times New Roman';">2.</span><span style="font-family: 宋体;">你如何解释会得到这样的输出？</span></p>
+<p align="justify"><span style="font-family: 'Times New Roman';">3.</span><span style="font-family: 宋体;">计算机是不会出错的，之所以得到这样的运行结果也是有原因的，那么从这些运行结果中，你能总结出</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">的哪些语法特性？</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ParentChildTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Parent parent</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Parent();
+        parent.printValue();
+        Child child</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Child();
+        child.printValue();
+        
+        parent</span>=<span style="color: #000000;">child;
+        parent.printValue();
+        
+        parent.myValue</span>++<span style="color: #000000;">;
+        parent.printValue();
+        
+        ((Child)parent).myValue</span>++<span style="color: #000000;">;
+        parent.printValue();
+        
+    }
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Parent{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> myValue=100<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> printValue() {
+        System.out.println(</span>"Parent.printValue(),myValue="+<span style="color: #000000;">myValue);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Child <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Parent{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> myValue=200<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> printValue() {
+        System.out.println(</span>"Child.printValue(),myValue="+<span style="color: #000000;">myValue);
+    }
+}</span></pre>
+</div>
+<h3>1、结果</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119213911810-963230351.png" alt="" /></p>
+<h3>2、Java<span style="font-family: 宋体;">语法特性</span></h3>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>1<span style="font-family: 宋体;">）当子类与父类拥有一样的方法，并且让一个父类变量引用一个子类对象时，到底调用哪个方法，由对象自己的&ldquo;真实&rdquo;类型所决定，这就是说：对象是子类型的，它就调用子类型的方法，是父类型的，它就调用父类型的方法。</span></p>
+<p align="justify"><span style="font-family: 宋体;">这个特性实际上就是面向对象</span>&ldquo;多态&rdquo;特性的具体表现。</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）如果子类与父类有相同的字段</span><span style="font-family: 'Times New Roman';">,</span><span style="font-family: 宋体;">则子类中的字段会代替或隐藏父类的字段，子类方法中访问的是子类中的字段（而不是父类中的字段）。如果子类方法确实想访问父类中被隐藏的同名字段，可以用</span><span style="font-family: 'Times New Roman';">super</span><span style="font-family: 宋体;">关键字来访问它。如果子类被当作父类使用</span><span style="font-family: 'Times New Roman';">,</span><span style="font-family: 宋体;">则通过子类访问的字段是父类的</span><span style="font-family: 'Times New Roman';">!</span></p>
+<h2 align="justify"><span style="font-family: 宋体;">四、请使用</span>javap<span style="font-family: 宋体;">查看编译器为</span><span style="font-family: 'Times New Roman';">TestPolymorphism.java</span><span style="font-family: 宋体;">生成的字节码指令，然后通过互联网搜索资料，尝试从底层开始理解</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">编译器是如何为多态代码生成字节码指令，在程序运行过程中，多态特性又是如何实现的。</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Parent1        
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> value=100<span style="color: #000000;">;    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Introduce()
+    {
+            System.out.println(</span>"I'm father"<span style="color: #000000;">);
+        }
+}
+</span><span style="color: #0000ff;">class</span> Son <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Parent1
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> value=101<span style="color: #000000;">;
+         </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Introduce()
+    {
+            System.out.println(</span>"I'm son"<span style="color: #000000;">);    
+}
+}
+</span><span style="color: #0000ff;">class</span> Daughter <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Parent1
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> value=102<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Introduce()
+    {
+            System.out.println(</span>"I'm daughter"<span style="color: #000000;">);    
+}
+}
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestPolymorphism
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[])
+    {
+        Parent1 p</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Parent1();
+        p.Introduce();</span><span style="color: #008000;">//</span><span style="color: #008000;">子类的方法</span>
+        System.out.println(p.value);<span style="color: #008000;">//</span><span style="color: #008000;">父类的变量对象</span>
+        p=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Son();
+        p.Introduce();
+        System.out.println(p.value);
+        p</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Daughter();
+        p.Introduce();
+        System.out.println(p.value);
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><strong><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119214008623-836393985.png" alt="" /></strong></p>
+<h2>五、在实例中理解多态的含义与用途</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119214032013-1528476895.png" alt="" /></p>
+<h3 align="justify">1<span style="font-family: 宋体;">、三种动物对应三个类，每个类定义一个</span><span style="font-family: 'Times New Roman';">eat()</span><span style="font-family: 宋体;">方法，表示吃饲养员给它们的食物</span><span style="font-family: 宋体;">，再设计一个</span>Feeder<span style="font-family: 宋体;">类代表饲养员，其</span><span style="font-family: 'Times New Roman';">name</span><span style="font-family: 宋体;">字段保存饲养员名字，三个方法分别代表喂养三种不同的动物，其参数分别引用三种动物对象。</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> Zoo1;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Zoo 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[])
+    {
+        Feeder f </span>= <span style="color: #0000ff;">new</span> Feeder("小李"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 饲养员小李喂养一只狮子</span>
+        f.feedLion(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Lion());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 饲养员小李喂养十只猴子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 10; i++<span style="color: #000000;">)
+         {
+            f.feedMonkey(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Monkey());
+        }        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 饲养员小李喂养5只鸽子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 5; i++<span style="color: #000000;">)
+         {
+            f.feedPigeon(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Pigeon());
+        }    
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Feeder 
+{
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String name;
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Feeder(String name)
+    {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> feedLion(Lion l)
+    {
+        l.eat();
+    }    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> feedPigeon(Pigeon p)
+    {
+        p.eat();
+    }    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> feedMonkey(Monkey m)
+    {
+        m.eat();
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Lion
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+    {
+        System.out.println(</span>"我不吃肉谁敢吃肉！"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Monkey 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+    {
+        System.out.println(</span>"我什么都吃，尤其喜欢香蕉。"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Pigeon 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+    {
+        System.out.println(</span>"我要减肥，所以每天只吃一点大米。"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<h3 align="justify">2<span style="font-family: 宋体;">、第一次程序重构：引入继承，简化</span><span style="font-family: 'Times New Roman';">Feeder</span><span style="font-family: 宋体;">类</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> Zoo2;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Zoo 
+{   
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[])
+    {
+            Feeder f </span>= <span style="color: #0000ff;">new</span> Feeder("小李"<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养一只狮子</span>
+            f.feedAnimal(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Lion());
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养十只猴子</span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 10; i++<span style="color: #000000;">) 
+        {
+                f.feedAnimal(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Monkey());    
+        }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养5只鸽子</span>
+            <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 5; i++<span style="color: #000000;">) 
+        {
+                f.feedAnimal(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Pigeon());
+            }
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Feeder 
+{
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String name;
+    Feeder(String name) 
+    {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> feedAnimal(Animal an) 
+   {
+        an.eat();
+    }
+}
+</span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Animal 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat();
+}
+</span><span style="color: #0000ff;">class</span> Lion <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+   {
+        System.out.println(</span>"我不吃肉谁敢吃肉！"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Monkey <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal 
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+    {
+        System.out.println(</span>"我什么都吃，尤其喜欢香蕉。"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Pigeon <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal 
+{    
+   </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() 
+    {
+       System.out.println(</span>"我要减肥，所以每天只吃一点大米。"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<h3 align="justify">3<span style="font-family: 宋体;">、第</span>二次程序重构，<span style="font-family: 宋体;">修改</span>feedAnimals<span style="font-family: 宋体;">方法，让它接收一个</span><span style="font-family: 'Times New Roman';">Animal</span><span style="font-family: 宋体;">数组&hellip;&hellip;</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> Zoo3;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Zoo {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[]) {
+        Feeder f </span>= <span style="color: #0000ff;">new</span> Feeder("小李"<span style="color: #000000;">);
+        Animal[] ans </span>= <span style="color: #0000ff;">new</span> Animal[16<span style="color: #000000;">];
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养一只狮子</span>
+        ans[0] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lion();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养十只猴子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 10; i++<span style="color: #000000;">) {
+            ans[</span>1 + i] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Monkey();
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养5只鸽子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 5; i++<span style="color: #000000;">) {
+            ans[</span>11 + i] = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Pigeon();
+        }
+        f.feedAnimals(ans);
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Feeder {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String name;
+    Feeder(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> feedAnimals(Animal[] ans) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Animal an : ans) {
+            an.eat();
+        }
+    }
+}
+</span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat();
+}
+</span><span style="color: #0000ff;">class</span> Lion <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我不吃肉谁敢吃肉！"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Monkey <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我什么都吃，尤其喜欢香蕉。"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Pigeon <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我要减肥，所以每天只吃一点大米。"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<h3 align="justify">4<span style="font-family: 宋体;">、第三次重构</span><span style="font-family: 宋体;">，修改</span>feedAnimals<span style="font-family: 宋体;">方法，让其接收一个元素数目可变的对象容器。</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">package</span><span style="color: #000000;"> Zoo4;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Vector;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Zoo {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[]) {
+        Feeder f </span>= <span style="color: #0000ff;">new</span> Feeder("小李"<span style="color: #000000;">);
+        Vector</span>&lt;Animal&gt; ans = <span style="color: #0000ff;">new</span> Vector&lt;Animal&gt;<span style="color: #000000;">();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养一只狮子</span>
+        ans.add(<span style="color: #0000ff;">new</span><span style="color: #000000;"> Lion());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养十只猴子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 10; i++<span style="color: #000000;">) {
+            ans.add(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Monkey());
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">饲养员小李喂养5只鸽子</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; 5; i++<span style="color: #000000;">) {
+            ans.add(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Pigeon());
+        }
+        f.feedAnimals(ans);
+    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Feeder {
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String name;
+    Feeder(String name) {
+        </span><span style="color: #0000ff;">this</span>.name =<span style="color: #000000;"> name;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> feedAnimals(Vector&lt;Animal&gt;<span style="color: #000000;"> ans) {
+        </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (Animal an : ans) {
+            an.eat();
+        }
+    }
+}
+</span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat();
+}
+</span><span style="color: #0000ff;">class</span> Lion <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我不吃肉谁敢吃肉！"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Monkey <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我什么都吃，尤其喜欢香蕉。"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Pigeon <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Animal {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> eat() {
+        System.out.println(</span>"我要减肥，所以每天只吃一点大米。"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<h3 align="justify">5<span style="font-family: 宋体;">、从这个示例中可以看到，通过在编程中应用多态，可以使我们的代码具有更强的适用性。当需求变化时，多态特性可以帮助我们将需要改动的地方减少到最低限度。</span></h3>
+<p align="justify">多态编程有两种主要形式：</p>
+<p align="justify"><span style="font-family: 宋体;">（</span>1<span style="font-family: 宋体;">）继承多态：示例程序使用的方法</span></p>
+<p align="justify"><span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）接口多态：使用接口代替抽象基类。</span></p>
+<p align="justify">使用多态最大的好处是：</p>
+<p align="justify"><span style="font-family: 宋体;">当你要修改程序并扩充系统时，你需要修改的地方较少，对其它部分代码的影响较小！千万不要小看这两个</span>&ldquo;较&rdquo;字！程序规模越大，其优势就越突出。</p>
+<h2 align="justify"><span style="font-family: 宋体;">六、用多态的方法模拟</span>ATM<span style="font-family: 宋体;">操作流程</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/11/18</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> PersonalAccount{
+    </span><span style="color: #0000ff;">private</span> String passWord="123456";<span style="color: #008000;">//</span><span style="color: #008000;">密码</span>
+    <span style="color: #0000ff;">private</span> String number;<span style="color: #008000;">//</span><span style="color: #008000;">银行卡号</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> money=0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getMoney(){
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> money;
+        }</span><span style="color: #008000;">//</span><span style="color: #008000;">余额</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setPw(String s){
+        passWord</span>=<span style="color: #000000;">s;
+        }</span><span style="color: #008000;">//</span><span style="color: #008000;">设置密码</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> addMoney(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x){
+        money</span>+=<span style="color: #000000;">x;
+        }</span><span style="color: #008000;">//</span><span style="color: #008000;">加钱</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> minusMoney(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x){
+        money</span>-=<span style="color: #000000;">x;
+        }</span><span style="color: #008000;">//</span><span style="color: #008000;">减钱</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span> whetherPwTrue(String s){<span style="color: #008000;">//</span><span style="color: #008000;">密码是否正确</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;">(s.equals(passWord))
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    }
+    </span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PATM{
+    </span><span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">boolean</span> withdraw(<span style="color: #0000ff;">int</span> x);<span style="color: #008000;">//</span><span style="color: #008000;">取款</span>
+    <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span> save(<span style="color: #0000ff;">int</span> x);<span style="color: #008000;">//</span><span style="color: #008000;">存款</span>
+    <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">boolean</span> transfer(String s,<span style="color: #0000ff;">int</span> x);<span style="color: #008000;">//</span><span style="color: #008000;">转账</span>
+    <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">boolean</span> ifPass(String s);<span style="color: #008000;">//</span><span style="color: #008000;">判断输入的密码是否正确</span>
+    <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">int</span> getRest();<span style="color: #008000;">//</span><span style="color: #008000;">查询余额</span>
+    <span style="color: #0000ff;">abstract</span> <span style="color: #0000ff;">void</span> setPassword(String s);<span style="color: #008000;">//</span><span style="color: #008000;">设置密码</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">class</span> ATM <span style="color: #0000ff;">extends</span><span style="color: #000000;"> PATM{
+    </span><span style="color: #0000ff;">private</span> String numbers[]={"123451","123452"<span style="color: #000000;">,
+            </span>"123453","123454","123455"};<span style="color: #008000;">//</span><span style="color: #008000;">数据库中已有的账户卡号</span>
+    <span style="color: #0000ff;">private</span> PersonalAccount account=<span style="color: #0000ff;">new</span><span style="color: #000000;"> PersonalAccount();
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span> withdraw(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #0000ff;">if</span>(x&gt;<span style="color: #000000;">account.getMoney())
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            account.minusMoney(x);
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> save(<span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        account.addMoney(x);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span> transfer(String s, <span style="color: #0000ff;">int</span><span style="color: #000000;"> x) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">转账
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">先判断转到账户号是否存在
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">再判断余额是否足够</span>
+        <span style="color: #0000ff;">boolean</span> flag=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;numbers.length;i++<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">if</span>(s.equals(numbers[i])) flag=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(x&gt;account.getMoney()) flag=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(x&lt;=account.getMoney()&amp;&amp;<span style="color: #000000;">flag) account.minusMoney(x);;
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> flag;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> ifPass(String s) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> account.whetherPwTrue(s);
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getRest() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> account.getMoney();
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setPassword(String s) {
+        account.setPw(s);        
+    }
+    }
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Atm1 {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        Scanner in</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        ATM atm</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> ATM();
+        </span><span style="color: #0000ff;">int</span> choose=0,num=0<span style="color: #000000;">;
+        String pw</span>=""<span style="color: #000000;">;
+        next:</span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">true</span><span style="color: #000000;">){
+            System.out.println(</span>"是否进入账户（0否1是）："<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">int</span> kk=<span style="color: #000000;">in.nextInt();
+            </span><span style="color: #0000ff;">if</span>(kk==0) <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(kk!=1<span style="color: #000000;">){
+                System.out.println(</span>"输入错误！"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+            }
+            System.out.println(</span>"输入账户密码："<span style="color: #000000;">);
+            pw</span>=<span style="color: #000000;">in.next();
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(atm.ifPass(pw)){
+                </span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">true</span><span style="color: #000000;">){
+                    showFace();
+                    choose</span>=<span style="color: #000000;">in.nextInt();
+                    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;">(choose){
+                    </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+                        System.out.println(</span>"输入存款金额："<span style="color: #000000;">);
+                        num</span>=<span style="color: #000000;">in.nextInt();
+                        atm.save(num);
+                        System.out.println(</span>"存款成功！"<span style="color: #000000;">);
+                        System.out.println(</span>"当前余额："+atm.getRest()+"元"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                        System.out.println(</span>"请选择："<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">int</span> a[]={100,500,1000,1500,2000,5000<span style="color: #000000;">};
+                        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;a.length;i++<span style="color: #000000;">)
+                            System.out.println((i</span>+1)+"."+a[i]+"元"<span style="color: #000000;">);
+                        System.out.println(</span>"7.其他"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">int</span> ch=<span style="color: #000000;">in.nextInt();
+                        </span><span style="color: #0000ff;">if</span>(ch&gt;=1&amp;&amp;ch&lt;=6<span style="color: #000000;">){
+                            </span><span style="color: #0000ff;">if</span>(atm.withdraw(a[ch-1<span style="color: #000000;">]))
+                                System.out.println(</span>"取款成功！"<span style="color: #000000;">);
+                            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                                System.out.println(</span>"余额不足！"<span style="color: #000000;">);
+                        }
+                        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(ch==7<span style="color: #000000;">){
+                            System.out.println(</span>"请输入取款金额："<span style="color: #000000;">);
+                            num</span>=<span style="color: #000000;">in.nextInt();
+                            </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(atm.withdraw(num))
+                                System.out.println(</span>"取款成功！"<span style="color: #000000;">);
+                            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> 
+                                System.out.println(</span>"余额不足！"<span style="color: #000000;">);
+                        }
+                        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> 
+                            System.out.println(</span>"输入有误！"<span style="color: #000000;">);
+                        System.out.println(</span>"当前余额："+atm.getRest()+"元"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                        System.out.println(</span>"账户号："<span style="color: #000000;">);
+                        String s</span>=<span style="color: #000000;">in.next();
+                        System.out.println(</span>"转账金额："<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">int</span> i=<span style="color: #000000;">in.nextInt();
+                        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(atm.transfer(s, i))
+                            System.out.println(</span>"转账成功！"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                            System.out.println(</span>"转账失败！"<span style="color: #000000;">);
+                        System.out.println(</span>"当前余额："+atm.getRest()+"元"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+                        System.out.println(</span>"输入六位数密码："<span style="color: #000000;">);
+                        String p</span>=<span style="color: #000000;">in.next();
+                        atm.setPassword(p);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">case</span> 5<span style="color: #000000;">:
+                        System.out.println(</span>"当前余额："+atm.getRest()+"元"<span style="color: #000000;">);
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+                        </span><span style="color: #0000ff;">continue</span><span style="color: #000000;"> next;
+                    }
+                }
+            }
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                System.out.println(</span>"密码错误！"<span style="color: #000000;">);
+        }
+    }
+  </span><span style="color: #008000;">//</span><span style="color: #008000;">显示菜单方法</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> showFace(){
+        System.out.println(</span>"1.存款"<span style="color: #000000;">);
+        System.out.println(</span>"2.取款"<span style="color: #000000;">);
+        System.out.println(</span>"3.转账汇款"<span style="color: #000000;">);
+        System.out.println(</span>"4.修改密码"<span style="color: #000000;">);
+        System.out.println(</span>"5.查询余额"<span style="color: #000000;">);
+        System.out.println(</span>"6.退卡"<span style="color: #000000;">);
+        System.out.println(</span>"请选择："<span style="color: #000000;">);
+    }
+    }</span></pre>
+</div>
+<p>结果：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119214430654-645376232.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119214442842-1286603095.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161119214451435-1588080290.png" alt="" /></p>

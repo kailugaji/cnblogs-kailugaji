@@ -1,0 +1,38 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">变分推断与变分自编码器</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 本文主要介绍变分自编码器(Variational Auto-Encoder, VAE)及其推导过程，但变分自编码器涉及一些概率统计的基础知识，因此为了更好地理解变分自编码器，首先介绍变分推断(Variational Inference)与期望最大化(Expectation-Maximization, EM)算法，进而介绍变分自编码器，并给出另一种理解方法(参考文献[3])。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 变分推断</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200311174400593-124968249.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200311183546952-1936361630.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200311183605632-478197529.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200313160013372-243354241.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 变分自编码器</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200311175555087-10107830.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202302099-423094894.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202336609-20157932.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202348799-510336441.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202408577-1221212164.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202426027-2059864808.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202440847-972886937.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-size: 16px;">一般情况下，只采一个样即可，即K=1。详见参考文献[3]。</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202453617-1634744314.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331202506757-26206561.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">代码里z是这样的来的：$z \sim \mu +\varepsilon {{e}^{0.5\ln ({{\sigma }^{2}})}}=\mu +\varepsilon \sigma $</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200331205756813-583385798.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202111/1027447-20211103160204129-899487405.jpg" alt="" width="1001" height="386" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 变分自编码器另一种理解&mdash;&mdash;直面联合分布</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200330161854898-1389242376.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200320085410413-121861807.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202003/1027447-20200312085142359-16060605.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. KL散度公式推导</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200513095753419-1677080901.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202005/1027447-20200513095815941-1268679617.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;<a href="https://www.cnblogs.com/kailugaji/p/10692797.html" target="_blank">变分贝叶斯</a>&nbsp;- 凯鲁嘎吉 - 博客园</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;邱锡鹏,&nbsp;<a href="https://nndl.github.io/" target="_blank">神经网络与深度学习</a>[M]. 2019.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3]&nbsp;<a href="https://spaces.ac.cn/tag/vae/" target="_blank">标签 vae 下的文章</a> - 科学空间|Scientific Spaces</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;Kingma D P , Welling M . <a href="https://arxiv.org/pdf/1312.6114v10.pdf" target="_blank">Auto-Encoding Variational Bayes</a>[J]. 2013.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[5] 变分推断详细请参考：<a href="https://files-cdn.cnblogs.com/files/kailugaji/%E5%8D%8E%E4%BF%8A%E8%B1%AA%E5%8D%9A%E5%AE%A2-%E5%8F%98%E5%88%86%E6%8E%A8%E7%90%86.rar" target="_blank">华俊豪博客-变分推理</a>、<a href="https://huajh7.github.io/2013/03/06/variational-bayes/" target="_blank">变分贝叶斯算法理解与推导</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[6]&nbsp;Tutorial - What is a variational autoencoder? &ndash; Jaan Altosaar <a href="https://jaan.io/what-is-variational-autoencoder-vae-tutorial/" target="_blank">https://jaan.io/what-is-variational-autoencoder-vae-tutorial/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[7]&nbsp;CS 285, Variational Inference and Generative Models, <a href="http://rail.eecs.berkeley.edu/deeprlcourse-fa20/static/slides/lec-18.pdf" target="_blank">http://rail.eecs.berkeley.edu/deeprlcourse-fa20/static/slides/lec-18.pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[8]&nbsp;Ankush Ganguly, Samuel W. F. Earp, An Introduction to Variational Inference, 2021.&nbsp;<a href="https://arxiv.org/pdf/2108.13083.pdf" target="_blank">https://arxiv.org/pdf/2108.13083.pdf</a></span></p>

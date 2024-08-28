@@ -1,0 +1,97 @@
+<p>一、古罗马皇帝凯撒在打仗时曾经使用过以下方法加密军事情报：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174352158-1473101099.png" alt="" /></p>
+<p align="justify">请编写一个程序，使用上述算法加密或解密用户输入的英文字串要求设计思想、程序流程图、源代码、结果截图。</p>
+<p align="justify">1、<span style="font-family: 宋体;">程序设计思想：从键盘输入任意字符串</span>ming，每个字符往后挪3,替换成mi,用循环算法，最终一个一个字符按序输出。</p>
+<p align="justify">2、程序流程图：</p>
+<p align="justify"><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174409986-1863591324.png" alt="" /></p>
+<p align="justify">3、源代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> My2 {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args)
+    {  
+       Scanner in </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+       System.out.print(</span>"请输入明文： "<span style="color: #000000;">);
+       String ming </span>=<span style="color: #000000;"> in.nextLine();
+       in.close();
+       String r</span>=""<span style="color: #000000;">;
+       </span><span style="color: #0000ff;">char</span><span style="color: #000000;"> mi;
+       </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;ming.length();i++<span style="color: #000000;">)
+       {
+           mi</span>=(<span style="color: #0000ff;">char</span>)(ming.charAt(i)+3<span style="color: #000000;">);
+           r</span>=r+<span style="color: #000000;">mi;          
+       }
+      System.out.println(</span>"密文为:"+<span style="color: #000000;">r);
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174501361-1312870863.png" alt="" /></p>
+<p align="justify">二、String.equals()方法、整理String类的Length()、charAt()、 getChars()、replace()、 toUpperCase()、 toLowerCase()、trim()、toCharArray()使用说明、阅读笔记。</p>
+<p align="justify">1、String.equals()方法</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">用来可以比较两个字符串的内容。而使用</span>==比较两字串变量是否引用同一字串对象。</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">使用方法</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>1）String s1=<strong>new</strong>&nbsp;String("Hello");</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;String s2=<strong>new</strong>&nbsp;String("Hello");</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println(s1.equals(s2));</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">比较构造方法的初始化对象的内容。</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）</span>String s3="Hello"; &nbsp;&nbsp;</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;String s4="Hello";</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println(s3.equals(s4));</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">比较两个字符串的内容。</span></p>
+<p align="justify">&nbsp;&nbsp;&nbsp;2、Length()</p>
+<p align="justify">获取字串长度（字符串内包含的字符个数）。</p>
+<p align="justify">使用方法：</p>
+<p align="justify">(1)、String&nbsp;s1&nbsp;= <strong>new</strong>&nbsp;String( "hello"&nbsp;);</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println(s1.length());//6</p>
+<p align="justify"><span style="font-family: 宋体;">（</span>2）、String s3="Hello";</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println(s3.length());//6</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;3<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">charAt()</span></p>
+<p align="justify"><span style="font-family: 'Times New Roman';">获取指定位置的字符。第一个字符是从</span>0开始的。</p>
+<p align="justify">使用方法：</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;String s3="Hello";</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;System.out.println(s1.charAt(1));//e</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;4<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">getChars(a,b,c,d)</span></p>
+<p align="justify">获取从指定位置起的子串复制到字符数组中，有四个参数：</p>
+<p align="justify">a.<span style="font-family: 宋体;">被拷贝字符在字串中的起始位置</span><span style="font-family: 'Times New Roman';">(</span><span style="font-family: 宋体;">整型数字</span><span style="font-family: 'Times New Roman';">)</span></p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;b.<span style="font-family: 宋体;">被拷贝的最后一个字符在字串中的下标再加</span><span style="font-family: 'Times New Roman';">1</span><span style="font-family: 宋体;">（整型数字）</span></p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;c.<span style="font-family: 宋体;">目标字符数组（数组名称）</span></p>
+<p align="justify">d.<span style="font-family: 宋体;">拷贝的字符放在字符数组中的起始下标（整型数字）</span></p>
+<p align="justify">使用方法：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String s1, output;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>char</strong>&nbsp;charArray[];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1&nbsp;= <strong>new</strong>&nbsp;String( "hello there"&nbsp;);</p>
+<p align="justify">&nbsp;&nbsp;charArray&nbsp;= <strong>new</strong>&nbsp;<strong>char</strong>[ 5 ];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s1.getChars( 0, 5, charArray, 0 );</p>
+<p align="justify">&nbsp;&nbsp;output&nbsp;+= "\nThe character array is: ";//The character array is:hello</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;5<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">replace()</span></p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">子串替换，</span>replace(char oldChar,char newChar)<span style="font-family: 宋体;">：将字符串中的所有的</span><span style="font-family: 'Times New Roman';">oldChar</span><span style="font-family: 宋体;">字符替换为</span><span style="font-family: 'Times New Roman';">newChar</span><span style="font-family: 宋体;">字符。</span></p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">使用方法：</span></p>
+<p>String s1=&rdquo;aBC123&rdquo;;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(s1.replace(&lsquo;C&rsquo;,&rsquo;0&rsquo;));//<span style="font-family: 宋体;">将所有的&lsquo;</span><span style="font-family: 'Times New Roman';">C</span><span style="font-family: 宋体;">&rsquo;替换为&lsquo;</span><span style="font-family: 'Times New Roman';">0</span><span style="font-family: 宋体;">&rsquo;</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">输出结果为：</span>aB0123</p>
+<p>&nbsp;&nbsp;&nbsp;6<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">toUpperCase()</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">将</span>(<span style="font-family: 宋体;">当前</span><span style="font-family: 'Times New Roman';">)</span><span style="font-family: 宋体;">字符串转换为大写（英文）。</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">使用方法：</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String s1=<span style="font-family: 宋体;">&rdquo;</span><span style="font-family: 'Times New Roman';">abC123</span><span style="font-family: 宋体;">&rdquo;</span><span style="font-family: 'Times New Roman';">;</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(s1.toUpperCase());//<span style="font-family: 宋体;">将当前字符串转换为大写</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">输出结果：</span>ABC123</p>
+<p>&nbsp;&nbsp;&nbsp;7<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">toLowerCase()</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">将</span>(<span style="font-family: 宋体;">当前</span><span style="font-family: 'Times New Roman';">)</span><span style="font-family: 宋体;">字符串转换为小写（英文）。</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">使用方法：</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String s1=<span style="font-family: 宋体;">&rdquo;</span><span style="font-family: 'Times New Roman';">aBC123</span><span style="font-family: 宋体;">&rdquo;</span><span style="font-family: 'Times New Roman';">;</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(s1.toLowerCase());//<span style="font-family: 宋体;">将当前字符串转换为小写</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">输出结果：</span>abc123</p>
+<p>&nbsp;&nbsp;&nbsp;8<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">trim()</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">去除字符串头尾空格。</span></p>
+<p><span style="font-family: 宋体;">使用方法：</span>String s1=&rdquo;a b c&rdquo;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(s1.trim());//<span style="font-family: 宋体;">去除字符串头尾空格</span></p>
+<p><span style="font-family: 宋体;">输出结果：</span>a b c</p>
+<p>&nbsp;&nbsp;9<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">toCharArray()</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">将字符串对象转换为字符数组（空格算一个字符）</span></p>
+<p>使用方法：</p>
+<p>&nbsp;&nbsp;&nbsp;String s1=&rdquo;Java&rdquo;;</p>
+<p>&nbsp;&nbsp;&nbsp;char[] s2=s1.toCharArray();</p>
+<p>&nbsp;&nbsp;&nbsp;System.out.println(s2);</p>
+<p><span style="font-family: 宋体;">输出结果：</span>Java</p>
+<p>&nbsp;</p>

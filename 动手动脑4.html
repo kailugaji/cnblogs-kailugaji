@@ -1,0 +1,152 @@
+<h1 style="text-align: center;"><span style="font-family: 宋体;">动手动脑4</span></h1>
+<h2><span style="font-family: 宋体;">1、求平方数的静态类方法</span>Square.java,不用static但仍想在main中调用的处理方法</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171407111-892836382.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">类的对象实例化
+</span><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/10/16</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SquareIntTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {    
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span>  x=1; x &lt;= 10; x++<span style="color: #000000;">) {
+            SquareIntTest obj;   </span><span style="color: #008000;">//</span><span style="color: #008000;">创建类的示例obj</span>
+            obj=<span style="color: #0000ff;">new</span><span style="color: #000000;"> SquareIntTest();
+              </span><span style="color: #0000ff;">int</span> result =<span style="color: #000000;"> obj.square(x);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Math库中也提供了求平方数的方法
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> result=(int)Math.pow(x,2);</span>
+            System.out.println("The square of " + x + " is " + result + "\n"<span style="color: #000000;">);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 自定义求平方数的静态方法</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> square(<span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {        
+        </span><span style="color: #0000ff;">return</span> y *<span style="color: #000000;"> y;
+    }
+}</span></pre>
+</div>
+<p align="justify"><span style="font-family: 宋体;">结果</span>:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171541908-315021960.png" alt="" /></p>
+<h2 align="justify">2.<span style="font-family: 宋体;">编写一个方法，使用以下算法生成指定数目（比如</span>1000个）的随机整数</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/10/15</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Random;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Random1000 {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) 
+    {
+        Random r1 </span>= <span style="color: #0000ff;">new</span> Random(1000<span style="color: #000000;">);
+        System.out.println(</span>"第一个种子为1000的Random对象"<span style="color: #000000;">);
+        System.out.println(</span>"r1.nextBoolean():\t" +<span style="color: #000000;"> r1.nextBoolean());
+        System.out.println(</span>"r1.nextInt():\t\t" +<span style="color: #000000;"> r1.nextInt());
+        System.out.println(</span>"r1.nextDouble():\t" +<span style="color: #000000;"> r1.nextDouble());
+        System.out.println(</span>"r1.nextGaussian():\t" +<span style="color: #000000;"> r1.nextGaussian());
+        System.out.println(</span>"---------------------------"<span style="color: #000000;">);
+      
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p>&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171747471-793219132.png" alt="" /></p>
+<h2>&nbsp;3.请看以下代码，你发现了有什么特殊之处吗？</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171808940-1548430862.png" alt="" /></p>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171825627-415048671.png" alt="" /></p>
+<p><span style="font-family: 宋体;">上述示例代码展示了</span>Java的&ldquo;方法重载（overload）&rdquo;特性。计算7^2时，调用的是整型</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>int</strong>&nbsp;square(<strong>int</strong>&nbsp;x) {</p>
+<p><strong>return</strong>&nbsp;x&nbsp;* x;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p><span style="font-family: 宋体;">而计算</span>7.5^2<span style="font-family: 宋体;">时，调用的是双精度类型</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>double</strong>&nbsp;square(<strong>double</strong>&nbsp;y) {</p>
+<p><strong>return</strong>&nbsp;y&nbsp;* y;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;<span style="font-family: 宋体;">满足以下条件的两个或多个方法构成</span>&ldquo;重载&rdquo;关系：</p>
+<p><span style="font-family: 宋体;">（</span>1）方法名相同；</p>
+<p><span style="font-family: 宋体;">（</span>2）参数类型不同，参数个数不同，或者是参数类型的顺序不同。</p>
+<p>以上重载是参数类型不同。</p>
+<p>注意：方法的返回值不作为方法重载的判断条件。</p>
+<h2>4.查看一下JDK中System.out.println()方法，你发现了什么？&nbsp;</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171851830-1907752522.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>System.out.println()方法中实参表内可输入很多类型。</p>
+<h2>5.CalculateN示例程序中的BUG，50！出现负数</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171916721-1251580226.png" alt="" /></p>
+<p>原因：由于计算机使用固定的位数来保存数值，因此，能处理的数值大小是有限的，当要处理的数值超过了这一范围时，计算机将会自动截断数值的二进制表示为它所能处理的最多位数，这将导致错误的处理结果。</p>
+<h2>6.使用计算机计算组合数</h2>
+<p><span style="font-family: 宋体;">（</span>1）使用组合数公式利用n!来计算</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106171938221-295915473.png" alt="" /></p>
+<p>源代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.math.BigInteger;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Zhuheshu {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.print(</span>"请输入N："<span style="color: #000000;">);
+        Scanner scanner</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        </span><span style="color: #0000ff;">int</span> n=<span style="color: #000000;">scanner.nextInt();
+        System.out.print(</span>"请输入M："<span style="color: #000000;">);
+        Scanner scanner1</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        </span><span style="color: #0000ff;">int</span> k=<span style="color: #000000;">scanner1.nextInt();
+        System.out.println(ca(n).divide(ca(k).multiply(ca(n</span>-<span style="color: #000000;">k))));    
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> BigInteger ca(<span style="color: #0000ff;">int</span><span style="color: #000000;"> m) {
+        </span><span style="color: #0000ff;">if</span>(m==1 || m==0<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">return</span> BigInteger.valueOf(1<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> BigInteger.valueOf(m).multiply(ca((m-1<span style="color: #000000;">)));
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172026205-2040001517.png" alt="" />&nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172035283-568591906.png" alt="" /></p>
+<h2>7.递归编程解决汉诺塔问题。用Java实现</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172101049-589121031.png" alt="" /></p>
+<p>源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">用递归方式编程解决汉诺塔问题
+</span><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/10/16</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Hannuota {
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+    System.out.print(</span>"请输入盘子的个数："<span style="color: #000000;">);
+    Scanner scanner</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+    </span><span style="color: #0000ff;">int</span> disks=scanner.nextInt();<span style="color: #008000;">//</span><span style="color: #008000;">盘子的个数</span>
+    <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> source=1;<span style="color: #008000;">//</span><span style="color: #008000;">盘子的初始位置第一根柱子上</span>
+    <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> desk=3;<span style="color: #008000;">//</span><span style="color: #008000;">盘子的最终位置第三根柱子上</span>
+    <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> spare=2;<span style="color: #008000;">//</span><span style="color: #008000;">临时存放盘子的位置第二根柱子上</span>
+<span style="color: #000000;">    move(disks,source,desk,spare);
+}
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> move(<span style="color: #0000ff;">int</span> disks,<span style="color: #0000ff;">int</span> source,<span style="color: #0000ff;">int</span> desk,<span style="color: #0000ff;">int</span><span style="color: #000000;"> spare){
+    </span><span style="color: #0000ff;">if</span>(disks==1<span style="color: #000000;">)
+        System.out.println(source</span>+"-&gt;"+<span style="color: #000000;">desk);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+        move(disks</span>-1<span style="color: #000000;">,source,spare,desk);
+    System.out.println(source</span>+"-&gt;"+<span style="color: #000000;">desk);
+    move(disks</span>-1<span style="color: #000000;">,spare,desk,source);
+    }
+}
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172145768-1048519885.png" alt="" /></p>
+<h2>8.<span style="font-family: 宋体;">使用递归方式判断某个字串是否是回文（</span> palindrome ）</h2>
+<div class="cnblogs_code">
+<pre> <span style="color: #008000;">//</span><span style="color: #008000;">王荣荣2016/10/15</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Huiwen {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args){
+        String str</span>=""<span style="color: #000000;">;
+        System.out.println(</span>"请输入一个字符串："<span style="color: #000000;">);
+        Scanner in</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        str</span>=<span style="color: #000000;">in.nextLine();
+        StringBuffer sb</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> StringBuffer(str);
+        sb.reverse();
+        </span><span style="color: #0000ff;">int</span> n=0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=0;i&lt;str.length();i++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">if</span>(str.charAt(i)==<span style="color: #000000;">sb.charAt(i))
+                n</span>++<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span>(n==<span style="color: #000000;">str.length())
+            System.out.println(str</span>+"是回文！"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span> System.out.println(str+"不是回文！"<span style="color: #000000;">);    
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172252643-641434599.png" alt="" />&nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172302377-832907434.png" alt="" />&nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106172313361-1409292568.png" alt="" /></p>
+<p>&nbsp;</p>

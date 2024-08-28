@@ -1,0 +1,1279 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Windows下OpenAI gym环境的使用</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. gym环境搭建用到的关键语句</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.1 准备工作</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;">&nbsp; &nbsp; <span style="font-size: 16px;">首先创建一个虚拟环境conda create -n RL python=3.8，激活activate RL。我用到的包及版本conda list:</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">ale-py 0.7.3 &lt;pip&gt;
+atari-py 1.2.2 &lt;pip&gt;
+Box2D 2.3.10 &lt;pip&gt;
+box2d-py 2.3.8 &lt;pip&gt;
+ca-certificates 2021.10.26 haa95532_2 http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+certifi 2020.6.20 py37_0 anaconda
+cffi 1.15.0 &lt;pip&gt;
+cloudpickle 2.0.0 &lt;pip&gt;
+cycler 0.11.0 &lt;pip&gt;
+Cython 0.29.26 &lt;pip&gt;
+fasteners 0.16.3 &lt;pip&gt;
+ffmpeg 1.4 &lt;pip&gt;
+fonttools 4.28.5 &lt;pip&gt;
+glfw 2.5.0 &lt;pip&gt;
+gym 0.21.0 &lt;pip&gt;
+imageio 2.13.5 &lt;pip&gt;
+importlib-metadata 2.0.0 py_1 anaconda
+importlib-resources 5.4.0 &lt;pip&gt;
+kiwisolver 1.3.2 &lt;pip&gt;
+lockfile 0.12.2 &lt;pip&gt;
+matplotlib 3.5.1 &lt;pip&gt;
+mujoco-py 1.50.1.68 &lt;pip&gt;
+numpy 1.21.5 &lt;pip&gt;
+openssl 1.0.2t vc14h62dcd97_0 [vc14] anaconda
+packaging 21.3 &lt;pip&gt;
+Pillow 9.0.0 &lt;pip&gt;
+pip 20.2.4 py37_0 anaconda
+pycparser 2.21 &lt;pip&gt;
+pyglet 1.5.21 &lt;pip&gt;
+pyparsing 3.0.6 &lt;pip&gt;
+python 3.7.1 h33f27b4_4 anaconda
+python-dateutil 2.8.2 &lt;pip&gt;
+setuptools 50.3.0 py37h9490d1a_1 anaconda
+six 1.16.0 &lt;pip&gt;
+sqlite 3.20.1 vc14h7ce8c62_1 [vc14] anaconda
+swig 3.0.12 h047fa9f_3 anaconda
+vc 14.2 h21ff451_1 http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+vs2015_runtime 14.27.29016 h5e58377_2 http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+wheel 0.37.0 pyhd3eb1b0_1 http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+wincertstore 0.2 py37_0 anaconda
+wrappers 0.1.9 &lt;pip&gt;
+zipp 3.3.1 py_0 anaconda
+zipp 3.7.0 &lt;pip&gt;
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">然后安装numpy: pip install numpy</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.2 安装gym, atari,&nbsp;Box2D,&nbsp;mujoco</span></h3>
+<h4><span style="font-family: 'comic sans ms', sans-serif;">1.2.1&nbsp;安装简单版的gym</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pip install gym,&nbsp;pip install pyglet</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">查看所有模拟环境:&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">from gym import envs</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">names = [env.id for env in envs.registry.all()]</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">print('\n'.join(names))</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;collapse:true;;gutter:true;">ALE/Tetris-v5
+ALE/Tetris-ram-v5
+ALE/Adventure-v5
+ALE/Adventure-ram-v5
+ALE/AirRaid-v5
+ALE/AirRaid-ram-v5
+ALE/Alien-v5
+ALE/Alien-ram-v5
+ALE/Asterix-v5
+ALE/Asterix-ram-v5
+ALE/Asteroids-v5
+ALE/Asteroids-ram-v5
+ALE/BeamRider-v5
+ALE/BeamRider-ram-v5
+ALE/Bowling-v5
+ALE/Bowling-ram-v5
+ALE/Boxing-v5
+ALE/Boxing-ram-v5
+ALE/Breakout-v5
+ALE/Breakout-ram-v5
+ALE/ChopperCommand-v5
+ALE/ChopperCommand-ram-v5
+ALE/CrazyClimber-v5
+ALE/CrazyClimber-ram-v5
+ALE/ElevatorAction-v5
+ALE/ElevatorAction-ram-v5
+ALE/Enduro-v5
+ALE/Enduro-ram-v5
+ALE/FishingDerby-v5
+ALE/FishingDerby-ram-v5
+ALE/Freeway-v5
+ALE/Freeway-ram-v5
+ALE/Frostbite-v5
+ALE/Frostbite-ram-v5
+ALE/Hero-v5
+ALE/Hero-ram-v5
+ALE/Jamesbond-v5
+ALE/Jamesbond-ram-v5
+ALE/JourneyEscape-v5
+ALE/JourneyEscape-ram-v5
+ALE/Kangaroo-v5
+ALE/Kangaroo-ram-v5
+ALE/MontezumaRevenge-v5
+ALE/MontezumaRevenge-ram-v5
+ALE/Phoenix-v5
+ALE/Phoenix-ram-v5
+ALE/Pong-v5
+ALE/Pong-ram-v5
+ALE/PrivateEye-v5
+ALE/PrivateEye-ram-v5
+ALE/Qbert-v5
+ALE/Qbert-ram-v5
+ALE/Robotank-v5
+ALE/Robotank-ram-v5
+ALE/Seaquest-v5
+ALE/Seaquest-ram-v5
+ALE/Solaris-v5
+ALE/Solaris-ram-v5
+ALE/StarGunner-v5
+ALE/StarGunner-ram-v5
+ALE/TimePilot-v5
+ALE/TimePilot-ram-v5
+ALE/UpNDown-v5
+ALE/UpNDown-ram-v5
+ALE/Zaxxon-v5
+ALE/Zaxxon-ram-v5
+Adventure-v0
+AdventureDeterministic-v0
+AdventureNoFrameskip-v0
+Adventure-v4
+AdventureDeterministic-v4
+AdventureNoFrameskip-v4
+Adventure-ram-v0
+Adventure-ramDeterministic-v0
+Adventure-ramNoFrameskip-v0
+Adventure-ram-v4
+Adventure-ramDeterministic-v4
+Adventure-ramNoFrameskip-v4
+AirRaid-v0
+AirRaidDeterministic-v0
+AirRaidNoFrameskip-v0
+AirRaid-v4
+AirRaidDeterministic-v4
+AirRaidNoFrameskip-v4
+AirRaid-ram-v0
+AirRaid-ramDeterministic-v0
+AirRaid-ramNoFrameskip-v0
+AirRaid-ram-v4
+AirRaid-ramDeterministic-v4
+AirRaid-ramNoFrameskip-v4
+Alien-v0
+AlienDeterministic-v0
+AlienNoFrameskip-v0
+Alien-v4
+AlienDeterministic-v4
+AlienNoFrameskip-v4
+Alien-ram-v0
+Alien-ramDeterministic-v0
+Alien-ramNoFrameskip-v0
+Alien-ram-v4
+Alien-ramDeterministic-v4
+Alien-ramNoFrameskip-v4
+Amidar-v0
+AmidarDeterministic-v0
+AmidarNoFrameskip-v0
+Amidar-v4
+AmidarDeterministic-v4
+AmidarNoFrameskip-v4
+Amidar-ram-v0
+Amidar-ramDeterministic-v0
+Amidar-ramNoFrameskip-v0
+Amidar-ram-v4
+Amidar-ramDeterministic-v4
+Amidar-ramNoFrameskip-v4
+Assault-v0
+AssaultDeterministic-v0
+AssaultNoFrameskip-v0
+Assault-v4
+AssaultDeterministic-v4
+AssaultNoFrameskip-v4
+Assault-ram-v0
+Assault-ramDeterministic-v0
+Assault-ramNoFrameskip-v0
+Assault-ram-v4
+Assault-ramDeterministic-v4
+Assault-ramNoFrameskip-v4
+Asterix-v0
+AsterixDeterministic-v0
+AsterixNoFrameskip-v0
+Asterix-v4
+AsterixDeterministic-v4
+AsterixNoFrameskip-v4
+Asterix-ram-v0
+Asterix-ramDeterministic-v0
+Asterix-ramNoFrameskip-v0
+Asterix-ram-v4
+Asterix-ramDeterministic-v4
+Asterix-ramNoFrameskip-v4
+Asteroids-v0
+AsteroidsDeterministic-v0
+AsteroidsNoFrameskip-v0
+Asteroids-v4
+AsteroidsDeterministic-v4
+AsteroidsNoFrameskip-v4
+Asteroids-ram-v0
+Asteroids-ramDeterministic-v0
+Asteroids-ramNoFrameskip-v0
+Asteroids-ram-v4
+Asteroids-ramDeterministic-v4
+Asteroids-ramNoFrameskip-v4
+Atlantis-v0
+AtlantisDeterministic-v0
+AtlantisNoFrameskip-v0
+Atlantis-v4
+AtlantisDeterministic-v4
+AtlantisNoFrameskip-v4
+Atlantis-ram-v0
+Atlantis-ramDeterministic-v0
+Atlantis-ramNoFrameskip-v0
+Atlantis-ram-v4
+Atlantis-ramDeterministic-v4
+Atlantis-ramNoFrameskip-v4
+BankHeist-v0
+BankHeistDeterministic-v0
+BankHeistNoFrameskip-v0
+BankHeist-v4
+BankHeistDeterministic-v4
+BankHeistNoFrameskip-v4
+BankHeist-ram-v0
+BankHeist-ramDeterministic-v0
+BankHeist-ramNoFrameskip-v0
+BankHeist-ram-v4
+BankHeist-ramDeterministic-v4
+BankHeist-ramNoFrameskip-v4
+BattleZone-v0
+BattleZoneDeterministic-v0
+BattleZoneNoFrameskip-v0
+BattleZone-v4
+BattleZoneDeterministic-v4
+BattleZoneNoFrameskip-v4
+BattleZone-ram-v0
+BattleZone-ramDeterministic-v0
+BattleZone-ramNoFrameskip-v0
+BattleZone-ram-v4
+BattleZone-ramDeterministic-v4
+BattleZone-ramNoFrameskip-v4
+BeamRider-v0
+BeamRiderDeterministic-v0
+BeamRiderNoFrameskip-v0
+BeamRider-v4
+BeamRiderDeterministic-v4
+BeamRiderNoFrameskip-v4
+BeamRider-ram-v0
+BeamRider-ramDeterministic-v0
+BeamRider-ramNoFrameskip-v0
+BeamRider-ram-v4
+BeamRider-ramDeterministic-v4
+BeamRider-ramNoFrameskip-v4
+Berzerk-v0
+BerzerkDeterministic-v0
+BerzerkNoFrameskip-v0
+Berzerk-v4
+BerzerkDeterministic-v4
+BerzerkNoFrameskip-v4
+Berzerk-ram-v0
+Berzerk-ramDeterministic-v0
+Berzerk-ramNoFrameskip-v0
+Berzerk-ram-v4
+Berzerk-ramDeterministic-v4
+Berzerk-ramNoFrameskip-v4
+Bowling-v0
+BowlingDeterministic-v0
+BowlingNoFrameskip-v0
+Bowling-v4
+BowlingDeterministic-v4
+BowlingNoFrameskip-v4
+Bowling-ram-v0
+Bowling-ramDeterministic-v0
+Bowling-ramNoFrameskip-v0
+Bowling-ram-v4
+Bowling-ramDeterministic-v4
+Bowling-ramNoFrameskip-v4
+Boxing-v0
+BoxingDeterministic-v0
+BoxingNoFrameskip-v0
+Boxing-v4
+BoxingDeterministic-v4
+BoxingNoFrameskip-v4
+Boxing-ram-v0
+Boxing-ramDeterministic-v0
+Boxing-ramNoFrameskip-v0
+Boxing-ram-v4
+Boxing-ramDeterministic-v4
+Boxing-ramNoFrameskip-v4
+Breakout-v0
+BreakoutDeterministic-v0
+BreakoutNoFrameskip-v0
+Breakout-v4
+BreakoutDeterministic-v4
+BreakoutNoFrameskip-v4
+Breakout-ram-v0
+Breakout-ramDeterministic-v0
+Breakout-ramNoFrameskip-v0
+Breakout-ram-v4
+Breakout-ramDeterministic-v4
+Breakout-ramNoFrameskip-v4
+Carnival-v0
+CarnivalDeterministic-v0
+CarnivalNoFrameskip-v0
+Carnival-v4
+CarnivalDeterministic-v4
+CarnivalNoFrameskip-v4
+Carnival-ram-v0
+Carnival-ramDeterministic-v0
+Carnival-ramNoFrameskip-v0
+Carnival-ram-v4
+Carnival-ramDeterministic-v4
+Carnival-ramNoFrameskip-v4
+Centipede-v0
+CentipedeDeterministic-v0
+CentipedeNoFrameskip-v0
+Centipede-v4
+CentipedeDeterministic-v4
+CentipedeNoFrameskip-v4
+Centipede-ram-v0
+Centipede-ramDeterministic-v0
+Centipede-ramNoFrameskip-v0
+Centipede-ram-v4
+Centipede-ramDeterministic-v4
+Centipede-ramNoFrameskip-v4
+ChopperCommand-v0
+ChopperCommandDeterministic-v0
+ChopperCommandNoFrameskip-v0
+ChopperCommand-v4
+ChopperCommandDeterministic-v4
+ChopperCommandNoFrameskip-v4
+ChopperCommand-ram-v0
+ChopperCommand-ramDeterministic-v0
+ChopperCommand-ramNoFrameskip-v0
+ChopperCommand-ram-v4
+ChopperCommand-ramDeterministic-v4
+ChopperCommand-ramNoFrameskip-v4
+CrazyClimber-v0
+CrazyClimberDeterministic-v0
+CrazyClimberNoFrameskip-v0
+CrazyClimber-v4
+CrazyClimberDeterministic-v4
+CrazyClimberNoFrameskip-v4
+CrazyClimber-ram-v0
+CrazyClimber-ramDeterministic-v0
+CrazyClimber-ramNoFrameskip-v0
+CrazyClimber-ram-v4
+CrazyClimber-ramDeterministic-v4
+CrazyClimber-ramNoFrameskip-v4
+Defender-v0
+DefenderDeterministic-v0
+DefenderNoFrameskip-v0
+Defender-v4
+DefenderDeterministic-v4
+DefenderNoFrameskip-v4
+Defender-ram-v0
+Defender-ramDeterministic-v0
+Defender-ramNoFrameskip-v0
+Defender-ram-v4
+Defender-ramDeterministic-v4
+Defender-ramNoFrameskip-v4
+DemonAttack-v0
+DemonAttackDeterministic-v0
+DemonAttackNoFrameskip-v0
+DemonAttack-v4
+DemonAttackDeterministic-v4
+DemonAttackNoFrameskip-v4
+DemonAttack-ram-v0
+DemonAttack-ramDeterministic-v0
+DemonAttack-ramNoFrameskip-v0
+DemonAttack-ram-v4
+DemonAttack-ramDeterministic-v4
+DemonAttack-ramNoFrameskip-v4
+DoubleDunk-v0
+DoubleDunkDeterministic-v0
+DoubleDunkNoFrameskip-v0
+DoubleDunk-v4
+DoubleDunkDeterministic-v4
+DoubleDunkNoFrameskip-v4
+DoubleDunk-ram-v0
+DoubleDunk-ramDeterministic-v0
+DoubleDunk-ramNoFrameskip-v0
+DoubleDunk-ram-v4
+DoubleDunk-ramDeterministic-v4
+DoubleDunk-ramNoFrameskip-v4
+ElevatorAction-v0
+ElevatorActionDeterministic-v0
+ElevatorActionNoFrameskip-v0
+ElevatorAction-v4
+ElevatorActionDeterministic-v4
+ElevatorActionNoFrameskip-v4
+ElevatorAction-ram-v0
+ElevatorAction-ramDeterministic-v0
+ElevatorAction-ramNoFrameskip-v0
+ElevatorAction-ram-v4
+ElevatorAction-ramDeterministic-v4
+ElevatorAction-ramNoFrameskip-v4
+Enduro-v0
+EnduroDeterministic-v0
+EnduroNoFrameskip-v0
+Enduro-v4
+EnduroDeterministic-v4
+EnduroNoFrameskip-v4
+Enduro-ram-v0
+Enduro-ramDeterministic-v0
+Enduro-ramNoFrameskip-v0
+Enduro-ram-v4
+Enduro-ramDeterministic-v4
+Enduro-ramNoFrameskip-v4
+FishingDerby-v0
+FishingDerbyDeterministic-v0
+FishingDerbyNoFrameskip-v0
+FishingDerby-v4
+FishingDerbyDeterministic-v4
+FishingDerbyNoFrameskip-v4
+FishingDerby-ram-v0
+FishingDerby-ramDeterministic-v0
+FishingDerby-ramNoFrameskip-v0
+FishingDerby-ram-v4
+FishingDerby-ramDeterministic-v4
+FishingDerby-ramNoFrameskip-v4
+Freeway-v0
+FreewayDeterministic-v0
+FreewayNoFrameskip-v0
+Freeway-v4
+FreewayDeterministic-v4
+FreewayNoFrameskip-v4
+Freeway-ram-v0
+Freeway-ramDeterministic-v0
+Freeway-ramNoFrameskip-v0
+Freeway-ram-v4
+Freeway-ramDeterministic-v4
+Freeway-ramNoFrameskip-v4
+Frostbite-v0
+FrostbiteDeterministic-v0
+FrostbiteNoFrameskip-v0
+Frostbite-v4
+FrostbiteDeterministic-v4
+FrostbiteNoFrameskip-v4
+Frostbite-ram-v0
+Frostbite-ramDeterministic-v0
+Frostbite-ramNoFrameskip-v0
+Frostbite-ram-v4
+Frostbite-ramDeterministic-v4
+Frostbite-ramNoFrameskip-v4
+Gopher-v0
+GopherDeterministic-v0
+GopherNoFrameskip-v0
+Gopher-v4
+GopherDeterministic-v4
+GopherNoFrameskip-v4
+Gopher-ram-v0
+Gopher-ramDeterministic-v0
+Gopher-ramNoFrameskip-v0
+Gopher-ram-v4
+Gopher-ramDeterministic-v4
+Gopher-ramNoFrameskip-v4
+Gravitar-v0
+GravitarDeterministic-v0
+GravitarNoFrameskip-v0
+Gravitar-v4
+GravitarDeterministic-v4
+GravitarNoFrameskip-v4
+Gravitar-ram-v0
+Gravitar-ramDeterministic-v0
+Gravitar-ramNoFrameskip-v0
+Gravitar-ram-v4
+Gravitar-ramDeterministic-v4
+Gravitar-ramNoFrameskip-v4
+Hero-v0
+HeroDeterministic-v0
+HeroNoFrameskip-v0
+Hero-v4
+HeroDeterministic-v4
+HeroNoFrameskip-v4
+Hero-ram-v0
+Hero-ramDeterministic-v0
+Hero-ramNoFrameskip-v0
+Hero-ram-v4
+Hero-ramDeterministic-v4
+Hero-ramNoFrameskip-v4
+IceHockey-v0
+IceHockeyDeterministic-v0
+IceHockeyNoFrameskip-v0
+IceHockey-v4
+IceHockeyDeterministic-v4
+IceHockeyNoFrameskip-v4
+IceHockey-ram-v0
+IceHockey-ramDeterministic-v0
+IceHockey-ramNoFrameskip-v0
+IceHockey-ram-v4
+IceHockey-ramDeterministic-v4
+IceHockey-ramNoFrameskip-v4
+Jamesbond-v0
+JamesbondDeterministic-v0
+JamesbondNoFrameskip-v0
+Jamesbond-v4
+JamesbondDeterministic-v4
+JamesbondNoFrameskip-v4
+Jamesbond-ram-v0
+Jamesbond-ramDeterministic-v0
+Jamesbond-ramNoFrameskip-v0
+Jamesbond-ram-v4
+Jamesbond-ramDeterministic-v4
+Jamesbond-ramNoFrameskip-v4
+JourneyEscape-v0
+JourneyEscapeDeterministic-v0
+JourneyEscapeNoFrameskip-v0
+JourneyEscape-v4
+JourneyEscapeDeterministic-v4
+JourneyEscapeNoFrameskip-v4
+JourneyEscape-ram-v0
+JourneyEscape-ramDeterministic-v0
+JourneyEscape-ramNoFrameskip-v0
+JourneyEscape-ram-v4
+JourneyEscape-ramDeterministic-v4
+JourneyEscape-ramNoFrameskip-v4
+Kangaroo-v0
+KangarooDeterministic-v0
+KangarooNoFrameskip-v0
+Kangaroo-v4
+KangarooDeterministic-v4
+KangarooNoFrameskip-v4
+Kangaroo-ram-v0
+Kangaroo-ramDeterministic-v0
+Kangaroo-ramNoFrameskip-v0
+Kangaroo-ram-v4
+Kangaroo-ramDeterministic-v4
+Kangaroo-ramNoFrameskip-v4
+Krull-v0
+KrullDeterministic-v0
+KrullNoFrameskip-v0
+Krull-v4
+KrullDeterministic-v4
+KrullNoFrameskip-v4
+Krull-ram-v0
+Krull-ramDeterministic-v0
+Krull-ramNoFrameskip-v0
+Krull-ram-v4
+Krull-ramDeterministic-v4
+Krull-ramNoFrameskip-v4
+KungFuMaster-v0
+KungFuMasterDeterministic-v0
+KungFuMasterNoFrameskip-v0
+KungFuMaster-v4
+KungFuMasterDeterministic-v4
+KungFuMasterNoFrameskip-v4
+KungFuMaster-ram-v0
+KungFuMaster-ramDeterministic-v0
+KungFuMaster-ramNoFrameskip-v0
+KungFuMaster-ram-v4
+KungFuMaster-ramDeterministic-v4
+KungFuMaster-ramNoFrameskip-v4
+MontezumaRevenge-v0
+MontezumaRevengeDeterministic-v0
+MontezumaRevengeNoFrameskip-v0
+MontezumaRevenge-v4
+MontezumaRevengeDeterministic-v4
+MontezumaRevengeNoFrameskip-v4
+MontezumaRevenge-ram-v0
+MontezumaRevenge-ramDeterministic-v0
+MontezumaRevenge-ramNoFrameskip-v0
+MontezumaRevenge-ram-v4
+MontezumaRevenge-ramDeterministic-v4
+MontezumaRevenge-ramNoFrameskip-v4
+MsPacman-v0
+MsPacmanDeterministic-v0
+MsPacmanNoFrameskip-v0
+MsPacman-v4
+MsPacmanDeterministic-v4
+MsPacmanNoFrameskip-v4
+MsPacman-ram-v0
+MsPacman-ramDeterministic-v0
+MsPacman-ramNoFrameskip-v0
+MsPacman-ram-v4
+MsPacman-ramDeterministic-v4
+MsPacman-ramNoFrameskip-v4
+NameThisGame-v0
+NameThisGameDeterministic-v0
+NameThisGameNoFrameskip-v0
+NameThisGame-v4
+NameThisGameDeterministic-v4
+NameThisGameNoFrameskip-v4
+NameThisGame-ram-v0
+NameThisGame-ramDeterministic-v0
+NameThisGame-ramNoFrameskip-v0
+NameThisGame-ram-v4
+NameThisGame-ramDeterministic-v4
+NameThisGame-ramNoFrameskip-v4
+Phoenix-v0
+PhoenixDeterministic-v0
+PhoenixNoFrameskip-v0
+Phoenix-v4
+PhoenixDeterministic-v4
+PhoenixNoFrameskip-v4
+Phoenix-ram-v0
+Phoenix-ramDeterministic-v0
+Phoenix-ramNoFrameskip-v0
+Phoenix-ram-v4
+Phoenix-ramDeterministic-v4
+Phoenix-ramNoFrameskip-v4
+Pitfall-v0
+PitfallDeterministic-v0
+PitfallNoFrameskip-v0
+Pitfall-v4
+PitfallDeterministic-v4
+PitfallNoFrameskip-v4
+Pitfall-ram-v0
+Pitfall-ramDeterministic-v0
+Pitfall-ramNoFrameskip-v0
+Pitfall-ram-v4
+Pitfall-ramDeterministic-v4
+Pitfall-ramNoFrameskip-v4
+Pong-v0
+PongDeterministic-v0
+PongNoFrameskip-v0
+Pong-v4
+PongDeterministic-v4
+PongNoFrameskip-v4
+Pong-ram-v0
+Pong-ramDeterministic-v0
+Pong-ramNoFrameskip-v0
+Pong-ram-v4
+Pong-ramDeterministic-v4
+Pong-ramNoFrameskip-v4
+Pooyan-v0
+PooyanDeterministic-v0
+PooyanNoFrameskip-v0
+Pooyan-v4
+PooyanDeterministic-v4
+PooyanNoFrameskip-v4
+Pooyan-ram-v0
+Pooyan-ramDeterministic-v0
+Pooyan-ramNoFrameskip-v0
+Pooyan-ram-v4
+Pooyan-ramDeterministic-v4
+Pooyan-ramNoFrameskip-v4
+PrivateEye-v0
+PrivateEyeDeterministic-v0
+PrivateEyeNoFrameskip-v0
+PrivateEye-v4
+PrivateEyeDeterministic-v4
+PrivateEyeNoFrameskip-v4
+PrivateEye-ram-v0
+PrivateEye-ramDeterministic-v0
+PrivateEye-ramNoFrameskip-v0
+PrivateEye-ram-v4
+PrivateEye-ramDeterministic-v4
+PrivateEye-ramNoFrameskip-v4
+Qbert-v0
+QbertDeterministic-v0
+QbertNoFrameskip-v0
+Qbert-v4
+QbertDeterministic-v4
+QbertNoFrameskip-v4
+Qbert-ram-v0
+Qbert-ramDeterministic-v0
+Qbert-ramNoFrameskip-v0
+Qbert-ram-v4
+Qbert-ramDeterministic-v4
+Qbert-ramNoFrameskip-v4
+Riverraid-v0
+RiverraidDeterministic-v0
+RiverraidNoFrameskip-v0
+Riverraid-v4
+RiverraidDeterministic-v4
+RiverraidNoFrameskip-v4
+Riverraid-ram-v0
+Riverraid-ramDeterministic-v0
+Riverraid-ramNoFrameskip-v0
+Riverraid-ram-v4
+Riverraid-ramDeterministic-v4
+Riverraid-ramNoFrameskip-v4
+RoadRunner-v0
+RoadRunnerDeterministic-v0
+RoadRunnerNoFrameskip-v0
+RoadRunner-v4
+RoadRunnerDeterministic-v4
+RoadRunnerNoFrameskip-v4
+RoadRunner-ram-v0
+RoadRunner-ramDeterministic-v0
+RoadRunner-ramNoFrameskip-v0
+RoadRunner-ram-v4
+RoadRunner-ramDeterministic-v4
+RoadRunner-ramNoFrameskip-v4
+Robotank-v0
+RobotankDeterministic-v0
+RobotankNoFrameskip-v0
+Robotank-v4
+RobotankDeterministic-v4
+RobotankNoFrameskip-v4
+Robotank-ram-v0
+Robotank-ramDeterministic-v0
+Robotank-ramNoFrameskip-v0
+Robotank-ram-v4
+Robotank-ramDeterministic-v4
+Robotank-ramNoFrameskip-v4
+Seaquest-v0
+SeaquestDeterministic-v0
+SeaquestNoFrameskip-v0
+Seaquest-v4
+SeaquestDeterministic-v4
+SeaquestNoFrameskip-v4
+Seaquest-ram-v0
+Seaquest-ramDeterministic-v0
+Seaquest-ramNoFrameskip-v0
+Seaquest-ram-v4
+Seaquest-ramDeterministic-v4
+Seaquest-ramNoFrameskip-v4
+Skiing-v0
+SkiingDeterministic-v0
+SkiingNoFrameskip-v0
+Skiing-v4
+SkiingDeterministic-v4
+SkiingNoFrameskip-v4
+Skiing-ram-v0
+Skiing-ramDeterministic-v0
+Skiing-ramNoFrameskip-v0
+Skiing-ram-v4
+Skiing-ramDeterministic-v4
+Skiing-ramNoFrameskip-v4
+Solaris-v0
+SolarisDeterministic-v0
+SolarisNoFrameskip-v0
+Solaris-v4
+SolarisDeterministic-v4
+SolarisNoFrameskip-v4
+Solaris-ram-v0
+Solaris-ramDeterministic-v0
+Solaris-ramNoFrameskip-v0
+Solaris-ram-v4
+Solaris-ramDeterministic-v4
+Solaris-ramNoFrameskip-v4
+SpaceInvaders-v0
+SpaceInvadersDeterministic-v0
+SpaceInvadersNoFrameskip-v0
+SpaceInvaders-v4
+SpaceInvadersDeterministic-v4
+SpaceInvadersNoFrameskip-v4
+SpaceInvaders-ram-v0
+SpaceInvaders-ramDeterministic-v0
+SpaceInvaders-ramNoFrameskip-v0
+SpaceInvaders-ram-v4
+SpaceInvaders-ramDeterministic-v4
+SpaceInvaders-ramNoFrameskip-v4
+StarGunner-v0
+StarGunnerDeterministic-v0
+StarGunnerNoFrameskip-v0
+StarGunner-v4
+StarGunnerDeterministic-v4
+StarGunnerNoFrameskip-v4
+StarGunner-ram-v0
+StarGunner-ramDeterministic-v0
+StarGunner-ramNoFrameskip-v0
+StarGunner-ram-v4
+StarGunner-ramDeterministic-v4
+StarGunner-ramNoFrameskip-v4
+Tennis-v0
+TennisDeterministic-v0
+TennisNoFrameskip-v0
+Tennis-v4
+TennisDeterministic-v4
+TennisNoFrameskip-v4
+Tennis-ram-v0
+Tennis-ramDeterministic-v0
+Tennis-ramNoFrameskip-v0
+Tennis-ram-v4
+Tennis-ramDeterministic-v4
+Tennis-ramNoFrameskip-v4
+TimePilot-v0
+TimePilotDeterministic-v0
+TimePilotNoFrameskip-v0
+TimePilot-v4
+TimePilotDeterministic-v4
+TimePilotNoFrameskip-v4
+TimePilot-ram-v0
+TimePilot-ramDeterministic-v0
+TimePilot-ramNoFrameskip-v0
+TimePilot-ram-v4
+TimePilot-ramDeterministic-v4
+TimePilot-ramNoFrameskip-v4
+Tutankham-v0
+TutankhamDeterministic-v0
+TutankhamNoFrameskip-v0
+Tutankham-v4
+TutankhamDeterministic-v4
+TutankhamNoFrameskip-v4
+Tutankham-ram-v0
+Tutankham-ramDeterministic-v0
+Tutankham-ramNoFrameskip-v0
+Tutankham-ram-v4
+Tutankham-ramDeterministic-v4
+Tutankham-ramNoFrameskip-v4
+UpNDown-v0
+UpNDownDeterministic-v0
+UpNDownNoFrameskip-v0
+UpNDown-v4
+UpNDownDeterministic-v4
+UpNDownNoFrameskip-v4
+UpNDown-ram-v0
+UpNDown-ramDeterministic-v0
+UpNDown-ramNoFrameskip-v0
+UpNDown-ram-v4
+UpNDown-ramDeterministic-v4
+UpNDown-ramNoFrameskip-v4
+Venture-v0
+VentureDeterministic-v0
+VentureNoFrameskip-v0
+Venture-v4
+VentureDeterministic-v4
+VentureNoFrameskip-v4
+Venture-ram-v0
+Venture-ramDeterministic-v0
+Venture-ramNoFrameskip-v0
+Venture-ram-v4
+Venture-ramDeterministic-v4
+Venture-ramNoFrameskip-v4
+VideoPinball-v0
+VideoPinballDeterministic-v0
+VideoPinballNoFrameskip-v0
+VideoPinball-v4
+VideoPinballDeterministic-v4
+VideoPinballNoFrameskip-v4
+VideoPinball-ram-v0
+VideoPinball-ramDeterministic-v0
+VideoPinball-ramNoFrameskip-v0
+VideoPinball-ram-v4
+VideoPinball-ramDeterministic-v4
+VideoPinball-ramNoFrameskip-v4
+WizardOfWor-v0
+WizardOfWorDeterministic-v0
+WizardOfWorNoFrameskip-v0
+WizardOfWor-v4
+WizardOfWorDeterministic-v4
+WizardOfWorNoFrameskip-v4
+WizardOfWor-ram-v0
+WizardOfWor-ramDeterministic-v0
+WizardOfWor-ramNoFrameskip-v0
+WizardOfWor-ram-v4
+WizardOfWor-ramDeterministic-v4
+WizardOfWor-ramNoFrameskip-v4
+YarsRevenge-v0
+YarsRevengeDeterministic-v0
+YarsRevengeNoFrameskip-v0
+YarsRevenge-v4
+YarsRevengeDeterministic-v4
+YarsRevengeNoFrameskip-v4
+YarsRevenge-ram-v0
+YarsRevenge-ramDeterministic-v0
+YarsRevenge-ramNoFrameskip-v0
+YarsRevenge-ram-v4
+YarsRevenge-ramDeterministic-v4
+YarsRevenge-ramNoFrameskip-v4
+Zaxxon-v0
+ZaxxonDeterministic-v0
+ZaxxonNoFrameskip-v0
+Zaxxon-v4
+ZaxxonDeterministic-v4
+ZaxxonNoFrameskip-v4
+Zaxxon-ram-v0
+Zaxxon-ramDeterministic-v0
+Zaxxon-ramNoFrameskip-v0
+Zaxxon-ram-v4
+Zaxxon-ramDeterministic-v4
+Zaxxon-ramNoFrameskip-v4
+CartPole-v0
+CartPole-v1
+MountainCar-v0
+MountainCarContinuous-v0
+Pendulum-v1
+Acrobot-v1
+LunarLander-v2
+LunarLanderContinuous-v2
+BipedalWalker-v3
+BipedalWalkerHardcore-v3
+CarRacing-v0
+Blackjack-v1
+FrozenLake-v1
+FrozenLake8x8-v1
+CliffWalking-v0
+Taxi-v3
+Reacher-v2
+Pusher-v2
+Thrower-v2
+Striker-v2
+InvertedPendulum-v2
+InvertedDoublePendulum-v2
+HalfCheetah-v2
+HalfCheetah-v3
+Hopper-v2
+Hopper-v3
+Swimmer-v2
+Swimmer-v3
+Walker2d-v2
+Walker2d-v3
+Ant-v2
+Ant-v3
+Humanoid-v2
+Humanoid-v3
+HumanoidStandup-v2
+FetchSlide-v1
+FetchPickAndPlace-v1
+FetchReach-v1
+FetchPush-v1
+HandReach-v0
+HandManipulateBlockRotateZ-v0
+HandManipulateBlockRotateZTouchSensors-v0
+HandManipulateBlockRotateZTouchSensors-v1
+HandManipulateBlockRotateParallel-v0
+HandManipulateBlockRotateParallelTouchSensors-v0
+HandManipulateBlockRotateParallelTouchSensors-v1
+HandManipulateBlockRotateXYZ-v0
+HandManipulateBlockRotateXYZTouchSensors-v0
+HandManipulateBlockRotateXYZTouchSensors-v1
+HandManipulateBlockFull-v0
+HandManipulateBlock-v0
+HandManipulateBlockTouchSensors-v0
+HandManipulateBlockTouchSensors-v1
+HandManipulateEggRotate-v0
+HandManipulateEggRotateTouchSensors-v0
+HandManipulateEggRotateTouchSensors-v1
+HandManipulateEggFull-v0
+HandManipulateEgg-v0
+HandManipulateEggTouchSensors-v0
+HandManipulateEggTouchSensors-v1
+HandManipulatePenRotate-v0
+HandManipulatePenRotateTouchSensors-v0
+HandManipulatePenRotateTouchSensors-v1
+HandManipulatePenFull-v0
+HandManipulatePen-v0
+HandManipulatePenTouchSensors-v0
+HandManipulatePenTouchSensors-v1
+FetchSlideDense-v1
+FetchPickAndPlaceDense-v1
+FetchReachDense-v1
+FetchPushDense-v1
+HandReachDense-v0
+HandManipulateBlockRotateZDense-v0
+HandManipulateBlockRotateZTouchSensorsDense-v0
+HandManipulateBlockRotateZTouchSensorsDense-v1
+HandManipulateBlockRotateParallelDense-v0
+HandManipulateBlockRotateParallelTouchSensorsDense-v0
+HandManipulateBlockRotateParallelTouchSensorsDense-v1
+HandManipulateBlockRotateXYZDense-v0
+HandManipulateBlockRotateXYZTouchSensorsDense-v0
+HandManipulateBlockRotateXYZTouchSensorsDense-v1
+HandManipulateBlockFullDense-v0
+HandManipulateBlockDense-v0
+HandManipulateBlockTouchSensorsDense-v0
+HandManipulateBlockTouchSensorsDense-v1
+HandManipulateEggRotateDense-v0
+HandManipulateEggRotateTouchSensorsDense-v0
+HandManipulateEggRotateTouchSensorsDense-v1
+HandManipulateEggFullDense-v0
+HandManipulateEggDense-v0
+HandManipulateEggTouchSensorsDense-v0
+HandManipulateEggTouchSensorsDense-v1
+HandManipulatePenRotateDense-v0
+HandManipulatePenRotateTouchSensorsDense-v0
+HandManipulatePenRotateTouchSensorsDense-v1
+HandManipulatePenFullDense-v0
+HandManipulatePenDense-v0
+HandManipulatePenTouchSensorsDense-v0
+HandManipulatePenTouchSensorsDense-v1
+CubeCrash-v0
+CubeCrashSparse-v0
+CubeCrashScreenBecomesBlack-v0
+MemorizeDigits-v0</pre>
+</div>
+<h4><span style="font-family: 'comic sans ms', sans-serif;">1.2.2 安装atari</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pip install gym[atari]</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pip uninstall atari_py</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pip install --no-index -f https://github.com/Kojoley/atari-py/releases atari_py</span></p>
+<h4><span style="font-family: 'comic sans ms', sans-serif;">1.2.3 安装Gym Box2D</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">conda install -c anaconda swig</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">pip install box2d-py</span></p>
+<h4><span style="font-family: 'comic sans ms', sans-serif;">1.2.4 安装mujoco</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">1).&nbsp;Visual Studio安装的时候要选择windows 10 SDK</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2). 在C:\Users\24410\下创建文件夹：.mujoco，在<a href="https://www.roboti.us/index.html" target="_blank">https://www.roboti.us/index.html</a>下载<strong><a href="https://www.roboti.us/download/mjpro150_win64.zip">mjpro150 win64</a></strong><span style="color: #000000;">，下载<a href="https://www.roboti.us/file/mjkey.txt" target="_blank">mjkey.txt</a>，将<a href="https://www.apache.org/licenses/LICENSE-2.0.txt" target="_blank">https://www.apache.org/licenses/LICENSE-2.0.txt</a>中的文字保存为LICENSE.txt。<strong><br /></strong></span></span></p>
+<p><span style="color: #000000; font-family: 'comic sans ms', sans-serif; font-size: 16px;">3). 将这三个文件放在C:\Users\24410\.mujoco下。其中<strong><a href="https://www.roboti.us/download/mjpro150_win64.zip">mjpro150 win64</a></strong>解压，文件名为mjpro150。并将<a href="https://www.roboti.us/file/mjkey.txt" target="_blank">mjkey.txt</a>与LICENSE.txt复制到C:\Users\24410\.mujoco\mjpro150\bin一份。</span></p>
+<p><span style="color: #000000; font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104002109440-1856110974.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="color: #000000; font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104002248997-2035078076.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104002308862-730033687.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;4). 添加系统环境变量</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变量名：MUJOCO_PY_MJKEY_PATH</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变量值：C:\Users\24410\.mujoco\mjpro150\bin\mjkey.txt</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变量名：MUJOCO_PY_MUJOCO_PATH</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变量值：C:\Users\24410\.mujoco\mjpro150\bin</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">并添加path路径：C:\Users\24410\.mujoco\mjpro150\bin</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">5).&nbsp;在终端输入</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">cd&nbsp;C:\Users\24410\.mujoco\mjpro150\bin</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">simulate.exe ../model/humanoid.xml</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104002726674-1623561476.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;6). 在RL环境下输入pip install mujoco-py==1.50.1.68。完成。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 第一个Python小程序(gym环境)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1 gym环境的简单使用(随机采样选择动作)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">这里给的是玩5局游戏，每局最多走1000步。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;"># -*- coding: UTF-8 -*-
+# https://www.cnblogs.com/kailugaji/ - 凯鲁嘎吉 - 博客园
+import gym
+import time
+
+def run_gym(index):
+    env = gym.make(index)
+    for i_episode in range(5): # 玩几局游戏
+        observation = env.reset() #用于重置环境
+        for t in range(1000): #  # 每一局游戏最多1000步
+            env.render()  # 用于渲染出当前的智能体以及环境的状态
+            time.sleep(0.01) # 为了让显示变慢，否则画面会非常快
+            action = env.action_space.sample() # 随机采样选择动作，这一步后续可以通过RL策略获得好的动作，而不是随机
+            observation, reward, done, info = env.step(action) # take a random action
+            """
+                    env.step()返回四个值：
+                    observation（object）一个特定的环境对象，代表了你从环境中得到的观测值
+                        例如从摄像头获得的像素数据，机器人的关节角度和关节速度，或者棋盘游戏的棋盘
+                    reward（float）由于之前采取的动作所获得的大量奖励，与环境交互的过程中，奖励值的规模会发生变化，但是总体的目标一直都是使得总奖励最大
+                    done（boolean）决定是否将环境初始化，大多数，但不是所有的任务都被定义好了什么情况该结束这个回合
+                        例如倒立摆的小车离开地太远了就结束了这个回合
+                    info（dict）调试过程中将会产生的有用信息，有时它会对我们的强化学习学习过程很有用
+                        例如，有时它会包含最后一个状态改变后的原始概率
+                        然而在评估你的智能体的时候你是不会用到这些信息去驱动你的智能体学习的
+                    """
+            if done:
+                print("Episode finished after {} timesteps".format(t+1))
+                break
+    env.close()
+    return observation, reward, env.action_space, env.observation_space
+
+
+if __name__ == "__main__":
+    index = 'CartPole-v0' # Classic control
+    # index =  'MountainCar-v0' # Classic control
+    # index = 'AirRaid-ram-v0' # Atari
+    # index = 'Taxi-v3' # Toy text
+    '''
+    出租车调度
+    这里有 4 个地点，分别用 4 个字母表示，任务是要从一个地点接上乘客，送到另外 3 个中的一个放下乘客，越快越好。
+    颜色：蓝色：乘客，红色：乘客的目的地，黄色：空出租车，绿色：出租车满座，其中 &ldquo;:&rdquo; 栅栏可以穿越，"|" 栅栏不能穿越
+    Reward:  成功运送一个客人获得 20 分奖励
+             每走一步损失 1 分（希望尽快送到目的地）
+             没有把客人放到指定的位置，损失 10 分
+    Action: 0：向南移动，1：向北移动，2：向东移动，3：向西移动，4：乘客上车，5：乘客下车
+    State:  500维，（出租车行、出租车列、乘客位置、目的地）
+    '''
+    # index = 'Ant-v2'
+    # index = 'BipedalWalker-v3' # Box2D
+    '''
+    训练两足机器人行走
+    Goal：Agent需要学会克服各种障碍向前移动
+    State:  24维向量，包括各部件角速度，水平速度，垂直速度，关节位置，腿与地面的接触以及10个激光雷达测距仪的测量值
+    Action:  4维连续动作空间，取值范围为[-1,1]，分别对应机器人胯下两个关节的转矩以及膝关节的转矩
+    Reward:  向前移动会获得到正奖励信号，摔倒会得到-100的奖励信号，同时，驱动各关节转动会得到一定的负奖励信号
+    Done:  摔倒或抵达地图终点会结束当前回合
+    '''
+    # index = 'LunarLander-v2' # Box2D
+    '''
+    将着陆器导航到其着陆台
+    着陆点始终位于坐标 (0,0)。坐标是状态向量中的前两个数字。
+    燃料是无限的，所以代理可以学习飞行，然后在第一次尝试时着陆。
+    Reward:  从屏幕顶部移动到着陆垫和零速度的奖励约为 100..140 点。
+             如果着陆器远离着陆台，它会失去奖励。如果着陆器坠毁或静止，情节结束，获得额外的 -100 或 +100 分。
+             每条腿接地是+10。点火主机每帧-0.3分。解决是200分。可以在着陆场外着陆。
+    Action: 什么都不做，向左方向引擎开火，向主引擎开火，向右方向引擎开火。
+    State: 水平坐标x，垂直坐标y，水平速度，垂直速度，角度，角速度，腿1触地，腿2触地。
+    '''
+    observation, reward, action_space, observation_space = run_gym(index)
+    print('Action Space: \n', action_space)
+    print('Observation Space: \n', observation_space)
+    print('Observation: \n', observation)
+    print('Reward: \n', reward)</span></pre>
+</div>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">CartPole-v0</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104003803595-207179685.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641227883930" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MountainCar-v0</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104003925961-654731286.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641227966627" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">AirRaid-ram-v0</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004006697-837005912.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228007052" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Taxi-v3</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004033988-8005394.png" alt="" loading="lazy" /></span></p>
+<p id="1641228034324" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;Ant-v2</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004101528-1727352158.png" alt="" loading="lazy" /></span></p>
+<p id="1641228062039" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">BipedalWalker-v3</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004130745-1857925276.png" alt="" loading="lazy" /></span></p>
+<p id="1641228091016" style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;LunarLander-v2</span></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004155946-20873134.png" alt="" loading="lazy" /></span></p>
+<h3 id="1641228116301" style="text-align: left;"><span style="font-family: 'comic sans ms', sans-serif;">2.2 将gym游戏界面保存为gif动图</span></h3>
+<p style="text-align: left;"><span style="font-family: 'comic sans ms', sans-serif;">这里给的是玩1局游戏，每局最多走1000步。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;"># -*- coding: UTF-8 -*-
+# https://www.cnblogs.com/kailugaji/ - 凯鲁嘎吉 - 博客园
+import gym
+import time
+from matplotlib import animation
+import matplotlib.pyplot as plt
+
+# 将gym界面保存为gif动图
+def save_frames_as_gif(frames, path, index):
+    filename = 'gym_'+ index + '.gif'
+    #Mess with this to change frame size
+    plt.figure(figsize=(frames[0].shape[1] / 72.0, frames[0].shape[0] / 72.0), dpi=72)
+    patch = plt.imshow(frames[0])
+    plt.axis('off')
+    def animate(i):
+        patch.set_data(frames[i])
+    anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50)
+    anim.save(path + filename, writer='pillow', fps=60)
+
+def run_gym(index):
+    env = gym.make(index)
+    frames = []
+    for i_episode in range(1): # 玩几局游戏
+        observation = env.reset() #用于重置环境
+        for t in range(1000): #  # 每一局游戏最多1000步
+            env.render()  # 用于渲染出当前的智能体以及环境的状态
+            frames.append(env.render(mode='rgb_array'))
+            time.sleep(0.01) # 为了让显示变慢，否则画面会非常快
+            action = env.action_space.sample() # 随机采样选择动作，这一步后续可以通过RL策略获得好的动作，而不是随机
+            observation, reward, done, info = env.step(action) # take a random action
+            if done:
+                print("Episode finished after {} timesteps".format(t+1))
+                break
+    env.close()
+    save_frames_as_gif(frames, path = './', index = index)
+    return observation, reward, env.action_space, env.observation_space
+
+if __name__ == "__main__":
+    index = 'CartPole-v0' # Classic control
+    # index =  'MountainCar-v0' # Classic control
+    # index = 'AirRaid-ram-v0' # Atari
+    # index = 'Taxi-v3' # Toy text
+    # index = 'Ant-v2'
+    # index = 'BipedalWalker-v3' # Box2D
+    # index = 'LunarLander-v2' # Box2D
+    observation, reward, action_space, observation_space = run_gym(index)
+    print('Action Space: \n', action_space)
+    print('Observation Space: \n', observation_space)
+    print('Observation: \n', observation)
+    print('Reward: \n', reward)
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;">CartPole-v0</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 14 timesteps
+Action Space: 
+ Discrete(2)
+Observation Space: 
+ Box([-4.8000002e+00 -3.4028235e+38 -4.1887903e-01 -3.4028235e+38], [4.8000002e+00 3.4028235e+38 4.1887903e-01 3.4028235e+38], (4,), float32)
+Observation: 
+ [-0.21281277 -0.82338583  0.21441801  1.4051291 ]
+Reward: 
+ 1.0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004600132-203086875.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228360530"><span style="font-family: 'comic sans ms', sans-serif;">MountainCar-v0</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 200 timesteps
+Action Space: 
+ Discrete(3)
+Observation Space: 
+ Box([-1.2  -0.07], [0.6  0.07], (2,), float32)
+Observation: 
+ [-0.44918552  0.00768781]
+Reward: 
+ -1.0
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004745970-1537699794.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228466700"><span style="font-family: 'comic sans ms', sans-serif;">AirRaid-ram-v0</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 520 timesteps
+Action Space: 
+ Discrete(6)
+Observation Space: 
+ Box([0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0], [255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
+ 255 255], (128,), uint8)
+Observation: 
+ [188 184 180 184 188  62 188   0   0   0 128  16  56  68 146  56  68   0
+  37  64  44 124   0 191 252 175 252   2   1 240 240 240  62  62  62   0
+   0   0 224 255   0   8 117  14  14   4 155 246 150 246 145 246 140 246
+ 135 246 130 246 234   0  31  31  10   1   2   6  30  79 123   0   0   0
+   0   2   2   0  16  16 181 236 236   0   0 248 248  35  89   1   0   3
+   0   0  22  60  80  80  64   0   2  15   0   0   0   0   0   0   0   0
+   0   0   0   0  62 247 236 247  62 247 181 247 240 240   0   0 202 245
+ 144 245]
+Reward: 
+ 0.0
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104004916958-522200808.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228557799"><span style="font-family: 'comic sans ms', sans-serif;">Ant-v2</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 84 timesteps
+Action Space: 
+ Box([-1. -1. -1. -1. -1. -1. -1. -1.], [1. 1. 1. 1. 1. 1. 1. 1.], (8,), float32)
+Observation Space: 
+ Box([-inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf], [inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf], (111,), float64)
+Observation: 
+ [ 1.01382928  0.93552107 -0.3281438  -0.11665695  0.05927168  0.45597194
+  0.97790293  0.54600325 -1.25270942 -0.52486369 -1.22324054 -0.37710358
+  1.20411015 -0.63179069  0.77311549  1.25462637 -3.07764597 -0.53052459
+ -0.56717237  5.52724079 -7.48125022 -0.67642035  1.00847733  0.0252006
+ -6.03428845  5.96745216  5.86833084  0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.          0.          0.          0.
+  0.          0.          0.        ]
+Reward: 
+ -1.3955676167834756</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104005118700-2125042657.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228679744"><span style="font-family: 'comic sans ms', sans-serif;">BipedalWalker-v3</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 72 timesteps
+Action Space: 
+ Box([-1. -1. -1. -1.], [1. 1. 1. 1.], (4,), float32)
+Observation Space: 
+ Box([-inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf
+ -inf -inf -inf -inf -inf -inf -inf -inf -inf -inf], [inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf inf
+ inf inf inf inf inf inf], (24,), float32)
+Observation: 
+ [ 2.2528927   0.10642751 -0.30818883 -0.07858526 -0.64701635  0.07910275
+ -0.09122896 -0.10672931  1.         -0.7459374  -1.264112   -0.5282707
+  0.41768146  1.          0.18380441  0.18589178  0.19239755  0.20412572
+  0.22270261  0.25120568  0.2956909   0.36940333  0.50724566  0.83926386]
+Reward: 
+ -100
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104005319905-2077934859.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228800545"><span style="font-family: 'comic sans ms', sans-serif;">LunarLander-v2</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">Episode finished after 88 timesteps
+Action Space: 
+ Discrete(4)
+Observation Space: 
+ Box([-inf -inf -inf -inf -inf -inf -inf -inf], [inf inf inf inf inf inf inf inf], (8,), float32)
+Observation: 
+ [ 0.620516   -0.04573616  0.10586149  0.08483806 -1.4809935  -0.49739528
+  0.          0.        ]
+Reward: 
+ -100
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220104005427455-1618996802.gif" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1641228868170"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">由于这里是随机选动作，所以基本没有学习到任何东西，全靠蒙。后续可以通过强化学习的相关方法来确定agent的下一步动作。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">atari, mujoco在第一个程序里渲染的颜色没有问题，但第二个程序里渲染的颜色出问题了，但不影响算法的学习能力(虽然这里并未学习)，可能是某些包版本的问题，有待进一步改善。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">推荐网址(介绍gym部分环境)：<a href="https://www.gymlibrary.dev/" target="_blank">https://www.gymlibrary.dev/</a></span></p>

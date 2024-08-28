@@ -1,0 +1,25 @@
+<h1 style="text-align: center;">VMware虚拟机上网络连接解决方案</h1>
+<p><span style="font-size: 16px;">作者：凯鲁嘎吉&nbsp;-&nbsp;博客园<a target="_blank">&nbsp;http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-size: 16px;">从虚拟机上连接外部网络，需要设置以下几个地方。</span></p>
+<h2>1.服务</h2>
+<p><span style="font-size: 16px;">（1）打开命令提示符，输入services.msc，打开服务</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125163641757-545890227.png" alt="" /></p>
+<p><span style="font-size: 16px;">（2）找到和VMware有关的服务，并启动这些服务，状态为&ldquo;正在运行&rdquo;说明已经启动，否则请启动。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125163854369-158488369.png" alt="" /></p>
+<p><span style="font-size: 16px;">点击NAT服务，点击&ldquo;启动&rdquo;-&gt;&ldquo;确定&rdquo;，即可。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164016046-1026961501.png" alt="" /></p>
+<h2>2.适配器设置</h2>
+<p><span style="font-size: 16px;">（1）打开&ldquo;控制面板&rdquo;-&gt;&ldquo;网络与Internet&rdquo;-&gt;&ldquo;网络与共享中心&rdquo;-&gt;&ldquo;更改适配器设置&rdquo;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164339030-160539721.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">（2）启用虚拟网卡</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164452873-1659363264.png" alt="" /></p>
+<h2>3.VMware虚拟机设置</h2>
+<p><span style="font-size: 16px;">（1）点击&ldquo;虚拟机&rdquo;-&gt;&ldquo;设置&rdquo;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164655514-724953424.png" alt="" /></p>
+<p><span style="font-size: 16px;">（2）在&ldquo;网络适配器&rdquo;的&ldquo;网络连接&rdquo;中选择&ldquo;NAT模式&rdquo;，&ldquo;设备状态&rdquo;选择&ldquo;已连接&rdquo;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164751227-1365449210.png" alt="" /></p>
+<h2>4.虚拟机上的网络已经连接上了</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125164945619-1568959085.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125165024463-1078278718.png" alt="" /></p>
+<p>&nbsp;</p>

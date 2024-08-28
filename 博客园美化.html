@@ -1,0 +1,510 @@
+<h1 style="text-align: center;">博客园美化</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 16px;">首先应该获得JS权限，之后才能进行如下操作。</span></p>
+<h2>1. 小人时间</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）</span>&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;!--博客侧边栏公告--&gt;
+&lt;hr&gt;
+&lt;embed allowscriptaccess="never" allownetworking="internal" invokeurls="false" src="https://files.cnblogs.com/files/mmzs/flashDate.swf" 
+pluginspage="https://files.cnblogs.com/files/mmzs/flashDate.swf" type="application/x-shockwave-flash" quality="high" autostart="0" wmode="transparent" width="220" 
+height="65" align="middle"&gt;
+&lt;/div&gt;
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220171243635-633672189.png" alt="" /></p>
+<h2>2. 博主头像以及个人信息</h2>
+<p><span style="font-size: 16px;">博主头像地址：<a href="https://home.cnblogs.com/u/kailugaji/" target="_blank">凯鲁嘎吉的主页 - 博客园</a>中右击鼠标，查看源代码，将头像的地址复制过来即可。</span></p>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">img {
+max-width:90%;
+}</pre>
+</div>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;img src="//pic.cnblogs.com/avatar/1027447/20180318220610.png" alt="凯鲁嘎吉的头像" class="img_avatar"&gt;
+&lt;!--联系方式及个人信息--&gt;
+&lt;p class="para"&gt;关于我：&lt;strong&gt;宅女宅出新高度~&lt;/strong&gt;&lt;/p&gt;
+&lt;p class="para"&gt;联系我：&lt;a href="mailto:2441040217@qq.com" title="email"&gt;2441040217@qq.com&lt;/a&gt;&lt;/p&gt;
+&lt;p class="para"&gt;Weibo：&lt;a href="http://weibo.com/kailugaji" title="kailugaji's weibo" target="_blank"&gt;weibo.com/kailugaji&lt;/a&gt;&lt;/p&gt;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221112945813-1835769442.png" alt="" /></p>
+<h2>3. 背景鼠标点击动态线条</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;div style = "display:none;"&gt;动态线条&lt;/div&gt;
+&lt;script&gt;
+!function(){
+function n(n,e,t){
+return n.getAttribute(e)||t
+}
+function e(n){
+return document.getElementsByTagName(n)
+}
+function t(){
+var t=e("script"),o=t.length,i=t[o-1];
+return{
+l:o,z:n(i,"zIndex",-1),o:n(i,"opacity",.5),c:n(i,"color","0,0,0"),n:n(i,"count",99)
+}
+}
+function o(){
+a=m.width=window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth,
+c=m.height=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight
+}
+function i(){
+r.clearRect(0,0,a,c);
+var n,e,t,o,m,l;
+s.forEach(function(i,x){
+for(i.x+=i.xa,i.y+=i.ya,i.xa*=i.x&gt;a||i.x&lt;0?-1:1,i.ya*=i.y&gt;c||i.y&lt;0?-1:1,r.fillRect(i.x-.5,i.y-.5,1,1),e=x+1;e&lt;u.length;e++)n=u[e],
+null!==n.x&amp;&amp;null!==n.y&amp;&amp;(o=i.x-n.x,m=i.y-n.y,
+l=o*o+m*m,l&lt;n.max&amp;&amp;(n===y&amp;&amp;l&gt;=n.max/2&amp;&amp;(i.x-=.03*o,i.y-=.03*m),
+t=(n.max-l)/n.max,r.beginPath(),r.lineWidth=t/2,r.strokeStyle="rgba("+d.c+","+(t+.2)+")",r.moveTo(i.x,i.y),r.lineTo(n.x,n.y),r.stroke()))
+}),
+x(i)
+}
+var a,c,u,m=document.createElement("canvas"),
+d=t(),l="c_n"+d.l,r=m.getContext("2d"),
+x=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||
+function(n){
+window.setTimeout(n,1e3/45)
+},
+w=Math.random,y={x:null,y:null,max:2e4};m.id=l,m.style.cssText="position:fixed;top:0;left:0;z-index:"+d.z+";opacity:"+d.o,e("body")[0].appendChild(m),o(),window.onresize=o,
+window.onmousemove=function(n){
+n=n||window.event,y.x=n.clientX,y.y=n.clientY
+},
+window.onmouseout=function(){
+y.x=null,y.y=null
+};
+for(var s=[],f=0;d.n&gt;f;f++){
+var h=w()*a,g=w()*c,v=2*w()-1,p=2*w()-1;s.push({x:h,y:g,xa:v,ya:p,max:6e3})
+}
+u=s.concat([y]),
+setTimeout(function(){i()},100)
+}();
+&lt;/script&gt;
+&lt;div style = "display:none;"&gt; 动态线条end&lt;/div&gt;
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220171344346-648675960.png" alt="" /></p>
+<h2>4. 页首个性签名</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页首Html代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;div id="blogTitle"&gt;
+&lt;div class="title"&gt;
+&lt;a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/kailugaji/"&gt;凯鲁嘎吉&lt;/a&gt;
+&lt;/div&gt;
+&lt;div class="subtitle"&gt;用书写铭记日常，最迷人的不在远方&lt;/div&gt;
+&lt;/div&gt;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220171419824-1503822867.png" alt="" /></p>
+<h2>5. 鼠标点击彩色字体</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页脚Html代码<span id="jsPermissionArea">&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;script type="text/javascript"&gt;
+/* 鼠标特效 */
+var a_idx = 0;
+jQuery(document).ready(function($) {
+    $("body").click(function(e) {
+        var a = new Array("❤凯鲁嘎吉❤","❤爱你❤","❤欢迎您❤","❤光临本园❤","❤加油❤","❤努力❤","❤奋斗❤","❤拼搏❤","❤凯鲁嘎吉❤","❤爱你❤","❤forever❤","❤爱你❤");
+        var $i = $("&lt;span&gt;&lt;/span&gt;").text(a[a_idx]);
+        a_idx = (a_idx + 1) % a.length;
+        var x = e.pageX,
+        y = e.pageY;
+        $i.css({
+            "z-index": 999999999999999999999999999999999999999999999999999999999999999999999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": "rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"
+        });
+        $("body").append($i);
+        $i.animate({
+            "top": y - 180,
+            "opacity": 0
+        },
+        1500,
+        function() {
+            $i.remove();
+        });
+    });
+});
+&lt;/script&gt;
+</pre>
+</div>
+<p><span style="font-size: 16px;">详见主页：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2>6. 自动生成目录</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页脚Html代码<span id="jsPermissionArea">&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;script language="javascript" type="text/javascript"&gt;
+//生成目录索引列表
+function GenerateContentList()
+{
+    var jquery_h1_list = $('#cnblogs_post_body h1');
+    if (jquery_h1_list.length == 0) { return; }
+    if ($('#cnblogs_post_body').length == 0) { return; }
+
+    var content = '&lt;a name="_labelTop"&gt;&lt;/a&gt;';
+    content    += '&lt;div id="navCategory"&gt;';
+    content    += '&lt;p style="font-size:18px"&gt;&lt;b&gt;阅读目录(Content)&lt;/b&gt;&lt;/p&gt;';
+    // 一级目录 start
+    content += '&lt;ul class="first_class_ul"&gt;';
+
+    for (var i = 0; i &lt; jquery_h1_list.length; i++)
+    {
+        var go_to_top = '&lt;div style="text-align: right"&gt;&lt;a href="#_labelTop"&gt;回到顶部(go to top)&lt;/a&gt;&lt;a name="_label' + i + '"&gt;&lt;/a&gt;&lt;/div&gt;';
+        $(jquery_h1_list[i]).before(go_to_top);
+
+        // 一级目录的一条
+        var li_content = '&lt;li&gt;&lt;a href="#_label' + i + '"&gt;' + $(jquery_h1_list[i]).text() + '&lt;/a&gt;&lt;/li&gt;';
+
+        var nextH1Index = i + 1;
+        if (nextH1Index == jquery_h1_list.length) { nextH1Index = 0; }
+        var jquery_h2_list = $(jquery_h1_list[i]).nextUntil(jquery_h1_list[nextH1Index], "h2");
+        // 二级目录 start
+        if (jquery_h2_list.length &gt; 0)
+        {
+            //li_content +='&lt;ul style="list-style-type:none; text-align: left; margin:2px 2px;"&gt;';
+            li_content += '&lt;ul class="second_class_ul"&gt;';
+        }
+        for (var j = 0; j &lt; jquery_h2_list.length; j++)
+        {
+            var go_to_top2 = '&lt;div style="text-align: right"&gt;&lt;a name="_lab2_'+ i + '_' + j + '"&gt;&lt;/a&gt;&lt;/div&gt;';
+            $(jquery_h2_list[j]).before(go_to_top2);
+            // 二级目录的一条
+            li_content +='&lt;li&gt;&lt;a href="#_lab2_'+ i +'_' + j + '"&gt;' + $(jquery_h2_list[j]).text() + '&lt;/a&gt;&lt;/li&gt;';
+
+            var nextH2Index = j + 1;
+            var next;
+            if (nextH2Index == jquery_h2_list.length) 
+            {
+                if (i + 1 == jquery_h1_list.length)
+                {
+                    next = jquery_h1_list[0];
+                }
+                else
+                {
+                    next = jquery_h1_list[i + 1];
+                }
+            }
+            else
+            {
+                next = jquery_h2_list[nextH2Index];
+            }
+            var jquery_h3_list = $(jquery_h2_list[j]).nextUntil(next, "h3");
+            // 三级目录 start
+            if (jquery_h3_list.length &gt; 0)
+            {
+                li_content += '&lt;ul class="third_class_ul"&gt;';
+            }
+            
+            for (var k = 0; k &lt; jquery_h3_list.length; k++)
+            {
+                var go_to_third_Content = '&lt;div style="text-align: right"&gt;&lt;a name="_label3_' + i + '_' + j + '_' + k + '"&gt;&lt;/a&gt;&lt;/div&gt;';
+                $(jquery_h3_list[k]).before(go_to_third_Content);
+                // 三级目录的一条
+                li_content += '&lt;li&gt;&lt;a href="#_label3_' + i + '_' + j + '_' + k + '"&gt;' + $(jquery_h3_list[k]).text() + '&lt;/a&gt;&lt;/li&gt;';
+            }
+            
+            if (jquery_h3_list.length &gt; 0)
+            {
+                li_content += '&lt;/ul&gt;';
+            }
+            li_content += '&lt;/li&gt;';
+            // 三级目录 end
+        }
+        if (jquery_h2_list.length &gt; 0)
+        {
+            li_content +='&lt;/ul&gt;';
+        }
+        li_content +='&lt;/li&gt;';
+        // 二级目录 end
+
+        content += li_content;
+    }
+    // 一级目录 end
+    content += '&lt;/ul&gt;';
+    content += '&lt;/div&gt;';
+
+    $($('#cnblogs_post_body')[0]).prepend(content);
+}
+
+GenerateContentList();
+&lt;/script&gt;
+levels of contents</pre>
+</div>
+<p>　　<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220191357944-1855421829.png" alt="" /></p>
+<h2>&nbsp;7. 回到顶部</h2>
+<h3>样式一</h3>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">.returntop{
+            height:85px;width:30px;background:deepskyblue;position: fixed;bottom:0;right:22px;
+            text-align: center;color:white;cursor: pointer;border-radius:6px;font-size:16px;display:none;
+        }
+</pre>
+</div>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;script&gt;
+    var returntop=document.createElement("div");
+    returntop.className="returntop";
+    returntop.innerText="回到顶部";
+    document.body.appendChild(returntop);
+    var returntimer=null;
+    var isuser=true;
+
+    window.onscroll=function(){
+        var scroll=document.documentElement.scrollTop||document.body.scrollTop;
+        if(scroll&gt;300){
+            returntop.style.display="block";
+        }
+        if(scroll&lt;300){
+            returntop.style.display="none";
+        }
+        if(!isuser){
+            clearInterval(returntimer);
+        }
+        isuser=false;
+    };
+    returntop.onclick=function(){
+        returntimer=setInterval(function(){
+            var scroll=document.documentElement.scrollTop||document.body.scrollTop;
+            var speed=Math.floor(-scroll/8);
+            if(scroll==0){
+                clearInterval(returntimer);
+            }
+            isuser=true;
+            document.documentElement.scrollTop=document.body.scrollTop=scroll+speed;
+        },30);
+    }
+&lt;/script&gt;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220201650923-2079177085.png" alt="" /></p>
+<h3>样式二</h3>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页首Html代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;style&gt;
+#back-top {
+     position: fixed;
+     bottom: 10px;
+     right: 5px;
+     z-index: 99;
+}
+#back-top span {
+     width: 50px;
+     height: 64px;
+     display: block;
+     background:url(http://images.cnblogs.com/cnblogs_com/seanshao/855033/o_rocket.png) no-repeat center center;
+}
+#back-top a{outline:none}
+&lt;/style&gt;
+&lt;script type="text/javascript"&gt;
+$(function() {
+	// hide #back-top first
+	$("#back-top").hide();
+	// fade in #back-top
+	$(window).scroll(function() {
+		if ($(this).scrollTop() &gt; 500) {
+			$('#back-top').fadeIn();
+		} else {
+			$('#back-top').fadeOut();
+		}
+	});
+	// scroll body to 0px on click
+	$('#back-top a').click(function() {
+		$('body,html').animate({
+			scrollTop: 0
+		}, 800);
+		return false;
+	});
+});
+&lt;/script&gt;
+&lt;p id="back-top" style="display:none"&gt;&lt;a href="#top"&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;</pre>
+</div>
+<p><span style="font-size: 16px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220203327904-1706257636.png" alt="" /></span></p>
+<h2>8. 美化博客内容</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">/* 设置博客正文一二三级标题格式 */
+/* 一级标题 */
+#cnblogs_post_body h1 {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: black;
+    margin: 10px 0;
+}
+/* 二级标题 */
+#cnblogs_post_body h2 {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: whitesmoke;
+    background-color: royalblue;
+    margin: 10px 0;
+}
+/* 三级标题 */
+#cnblogs_post_body h3 {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: whitesmoke;
+    background-color: dimgrey;
+}
+/*  正文 */
+#cnblogs_post_body p {
+    font-size: 12pt;
+}</pre>
+</div>
+<p><span style="font-size: 16px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220204126227-1082504886.png" alt="" /></span></p>
+<h2>9. 屏蔽广告</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">/* adblock */
+#ad_t2 {
+    display: none;
+}
+.c_ad_block {
+    display: none;
+}</pre>
+</div>
+<p><span style="font-size: 16px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190220210153578-322902008.png" alt="" /></span></p>
+<h2>10. 添加版权信息</h2>
+<p><span style="font-size: 16px;">在&ldquo;管理&rdquo;-&gt;&ldquo;博客签名&rdquo;，进入到制作签名的页面。在&ldquo;内容&rdquo;的文本框输入如下信息并替换相应的文字</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;div&gt;作者：&lt;a href="http://www.cnblogs.com/kailugaji/" target="_blank"&gt;凯鲁嘎吉&lt;/a&gt;&lt;/div&gt;
+&lt;div&gt;出处：&lt;a href="http://www.cnblogs.com/kailugaji/" target="_blank"&gt;http://www.cnblogs.com/kailugaji/&lt;/a&gt;&lt;/div&gt;
+&lt;div&gt;本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须在文章页面给出原文链接，否则保留追究法律责任的权利。 &lt;/div&gt;
+</pre>
+</div>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">#MySignature{　　
+ border:solid 1px #E5E5E5;
+ padding:10px;
+ background:#E5EEF7 url(http://images.cnblogs.com/cnblogs_com/grenet/226272/o_o_o_info.png) no-repeat scroll 15px 50%;
+ padding-left:80px;}
+
+#MySignature div{
+  line-height: 20px;
+}</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221111100924-1672426859.png" alt="" /></p>
+<h2>11. 推荐与反对框</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">/*推荐和反对 粘在CSS框*/
+#div_digg {
+    padding: 10px;
+    position: fixed;
+    _position: absolute;
+    z-index: 1000;
+    bottom: 5px;
+    right: 0;
+    _right: 10px;
+    border: 1px solid #D9DBE1;
+    background-color: #FFFFFF;
+    filter: alpha(Opacity=80);
+    -moz-opacity: 0.8;
+    opacity: 0.8;
+}
+
+.icon_favorite {
+    background: transparent url('http://files.cnblogs.com/files/jackson0714/kj.gif') no-repeat 0 0;
+    padding-left: 5px;
+}
+
+#blog_post_info_block a {
+    text-decoration: none;
+    color: #5B9DCA;
+    padding: 3px;
+}
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221134209098-644432951.png" alt="" /></p>
+<h2>12. 隐藏反对框</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中写入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">.buryit { 
+  display: none;
+} 
+.comment_bury {  
+  display: none; 
+}</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221142345049-706193152.png" alt="" /></p>
+<h2>13. 侧边栏小老鼠控件</h2>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）&rdquo;中写入</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;!-- 小老鼠游戏控件 --&gt;
+&lt;div className="sidebarMouse"&gt;&lt;object type="application/x-shockwave-flash" style="outline:none;" data="https://files.cnblogs.com/files/jingmoxukong/mouse.swf?up_bodyColor=f0e9cc&amp;up_feetColor=D4C898&amp;up_eyeColor=000567&amp;up_wheelSpokeColor=DEDEDE&amp;up_wheelColor=FFFFFF&amp;up_waterColor=E0EFFF&amp;up_earColor=b0c4de&amp;up_wheelOuterColor=FF4D4D&amp;up_snoutColor=F7F4E9&amp;up_bgColor=F0E4E4&amp;up_foodColor=cba920&amp;up_wheelCenterColor=E4EB2F&amp;up_tailColor=E6DEBE&amp;" width="200" height="160"&gt;&lt;param name="movie" value="https://files.cnblogs.com/files/jingmoxukong/mouse.swf?up_bodyColor=f0e9cc&amp;up_feetColor=D4C898&amp;up_eyeColor=000567&amp;up_wheelSpokeColor=DEDEDE&amp;up_wheelColor=FFFFFF&amp;up_waterColor=E0EFFF&amp;up_earColor=b0c4de&amp;up_wheelOuterColor=FF4D4D&amp;up_snoutColor=F7F4E9&amp;up_bgColor=F0E4E4&amp;up_foodColor=cba920&amp;up_wheelCenterColor=E4EB2E&amp;up_tailColor=E6DEBE&amp;"&gt;&lt;param name="AllowScriptAccess" value="always"&gt;&lt;param name="wmode" value="opaque"&gt;&lt;/object&gt;&lt;/div&gt;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221144135820-1357952315.png" alt="" /></p>
+<h2>14. 天气插件</h2>
+<p><span style="font-size: 16px;">注册<a href="https://www.seniverse.com/widget/create" target="_blank">心知天气</a>账户，创建天气</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221173353943-961058107.png" alt="" width="883" height="320" /></p>
+<p style="text-align: left;"><span style="font-size: 16px;">自动生成安装代码</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221173437177-1817172698.png" alt="" /></p>
+<p><span style="font-size: 16px;">将其复制到&ldquo;设置&rdquo;-&gt;&ldquo;页脚Html代码<span id="jsPermissionArea">&rdquo;中</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&lt;script&gt;(function(T,h,i,n,k,P,a,g,e){g=function(){P=h.createElement(i);a=h.getElementsByTagName(i)[0];P.src=k;P.charset="utf-8";P.async=1;a.parentNode.insertBefore(P,a)};T["ThinkPageWeatherWidgetObject"]=n;T[n]||(T[n]=function(){(T[n].q=T[n].q||[]).push(arguments)});T[n].l=+new Date();if(T.attachEvent){T.attachEvent("onload",g)}else{T.addEventListener("load",g,false)}}(window,document,"script","tpwidget","//widget.seniverse.com/widget/chameleon.js"))&lt;/script&gt;
+&lt;script&gt;tpwidget("init", {
+    "flavor": "bubble",
+    "location": "WWE0TGW4PX6N",
+    "geolocation": "enabled",
+    "position": "top-right",
+    "margin": "10px 10px",
+    "language": "zh-chs",
+    "unit": "c",
+    "theme": "chameleon",
+    "uid": "U7723B164C",
+    "hash": "554f0133ab6532c8a7724fcc5cc06361"
+});
+tpwidget("show");&lt;/script&gt;
+</pre>
+</div>
+<p>　　<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201902/1027447-20190221173623160-1726169460.png" alt="" /></p>
+<h2>15. 音乐插件</h2>
+<p><span style="font-size: 16px;">在<a href="https://music.163.com/#" target="_blank">网易云音乐</a>中搜索一首自己喜欢的音乐，生成外链播放器，复制代码即可。我选取的是<a href="https://music.163.com/#/song?id=411259676" target="_blank"><span class="f-ff2">Fade国风古典(Dodie Remix)</span></a></span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201904/1027447-20190421105011558-680282403.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201904/1027447-20190421105117075-261152879.png" alt="" /></p>
+<p><span style="font-size: 16px;">将代码复制到&ldquo;设置&rdquo;-&gt;&ldquo;博客侧边栏公告（支持HTML代码）<span id="jsPermissionArea">（支持JS代码）&rdquo;中</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;!-- 网易云音乐 --&gt;
+&lt;embed src="//music.163.com/style/swf/widget.swf?sid=411259676&amp;type=2&amp;auto=0&amp;width=200&amp;height=66" width="220" height="86"  allowNetworking="all"&gt;&lt;/embed&gt;
+</pre>
+</div>
+<p><span style="font-size: 16px;">最终效果如下所示，有一个缺陷：网易云音乐这个插件没法调整宽度，显示不完整。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201904/1027447-20190421105435844-1421054936.png" alt="" /></p>
+<h2>16. 图片弹出放大</h2>
+<p><span style="font-size: 16px;">在<a href="https://github.com/fat/zoom.js" target="_blank">https://github.com/fat/zoom.js</a>中下载zoom.js与zoom.css文件，上传到&ldquo;管理&rdquo;-&gt;&ldquo;文件&rdquo;中</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191227084805082-1019626327.png" alt="" /></p>
+<p><span style="font-size: 16px;">&nbsp;在&ldquo;设置&rdquo;-&gt;&ldquo;页面定制CSS代码&rdquo;中添加</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:css;gutter:true;"> /*溢出隐藏设置*/
+ #topics, #mainContent {
+     overflow: visible;
+ }
+ #postDesc {
+     float: none;
+ }
+</pre>
+</div>
+<p><span style="font-size: 16px;">在&ldquo;设置&rdquo;-&gt;&ldquo;页脚Html代码&rdquo;中添加</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:css;gutter:true;">&lt;!-- zoom.js 的样式 --&gt;
+&lt;link rel="stylesheet" type="text/css" href="https://blog-static.cnblogs.com/files/kailugaji/zoom.css"&gt;
+&lt;!-- jQuery 的 cdn --&gt;
+&lt;script src="https://cdn.bootcss.com/jquery/1.8.3/jquery.min.js"&gt;&lt;/script&gt;
+&lt;!-- Bootstrap 的 transition.js cdn（过渡动画插件）--&gt;
+&lt;script src="https://cdn.bootcss.com/bootstrap/3.2.0/js/transition.js"&gt;&lt;/script&gt;
+&lt;!-- zoom.js 核心代码 --&gt;
+&lt;script src="https://blog-static.cnblogs.com/files/kailugaji/zoom.js"&gt;&lt;/script&gt;
+&lt;script type='text/javascript'&gt;$('#cnblogs_post_body img').attr('data-action', 'zoom');&lt;/script&gt;
+</pre>
+</div>
+<p><span style="font-size: 16px;">注意：可以将zoom.css与zoom.js的路径换成自己的。这样就实现了图片的弹出功能，压缩的图片会实现放大功能，原图不会实现放大。</span></p>
+<p><span style="font-size: 16px;">比如上图点击后的结果如下：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191227085441578-358622864.png" alt="" /></p>

@@ -1,0 +1,180 @@
+<h1 style="text-align: center;" align="justify">动手动脑课堂练习</h1>
+<h2 align="justify">一、<strong>原码、反码和补码</strong></h2>
+<p align="justify">（出处：<a href="http://www.cnblogs.com/zhangziqiu/">http://www.cnblogs.com/zhangziqiu/</a>&nbsp;<span style="font-family: 宋体;">）</span></p>
+<h3 align="justify">1<span style="font-family: 宋体;">、</span><strong>机器数和真值</strong></h3>
+<p align="justify"><span style="font-family: 宋体;">在学习原码</span>, <span style="font-family: 宋体;">反码和补码之前</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">需要先了解机器数和真值的概念</span><span style="font-family: Calibri;">.</span></p>
+<p align="justify"><span style="font-family: 宋体;">（</span>1<span style="font-family: 宋体;">）、机器数</span></p>
+<p align="justify"><span style="font-family: 宋体;">一个数在计算机中的二进制表示形式</span>,&nbsp; <span style="font-family: 宋体;">叫做这个数的机器数。机器数是带符号的，在计算机用一个数的最高位存放符号</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">正数为</span><span style="font-family: Calibri;">0, </span><span style="font-family: 宋体;">负数为</span><span style="font-family: Calibri;">1.</span><span style="font-family: 宋体;">比如，十进制中的数</span> +3 <span style="font-family: 宋体;">，计算机字长为</span><span style="font-family: Calibri;">8</span><span style="font-family: 宋体;">位，转换成二进制就是</span><span style="font-family: Calibri;">00000011</span><span style="font-family: 宋体;">。如果是 </span><span style="font-family: Calibri;">-3 </span><span style="font-family: 宋体;">，就是 </span><span style="font-family: Calibri;">10000011 </span><span style="font-family: 宋体;">。</span><span style="font-family: 宋体;">那么，这里的</span> 00000011 <span style="font-family: 宋体;">和 </span><span style="font-family: Calibri;">10000011 </span><span style="font-family: 宋体;">就是机器数。</span></p>
+<p align="justify"><span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）、真值</span></p>
+<p align="justify"><span style="font-family: 宋体;">因为第一位是符号位，所以机器数的形式值就不等于真正的数值。例如上面的有符号数</span> 10000011<span style="font-family: 宋体;">，其最高位</span><span style="font-family: Calibri;">1</span><span style="font-family: 宋体;">代表负，其真正数值是 </span><span style="font-family: Calibri;">-3 </span><span style="font-family: 宋体;">而不是形式值</span><span style="font-family: Calibri;">131</span><span style="font-family: 宋体;">（</span><span style="font-family: Calibri;">10000011</span><span style="font-family: 宋体;">转换成十进制等于</span><span style="font-family: Calibri;">131</span><span style="font-family: 宋体;">）。所以，为区别起见，将带符号位的机器数对应的真正数值称为机器数的真值。</span><span style="font-family: 宋体;">例：</span>0000 0001<span style="font-family: 宋体;">的真值 </span><span style="font-family: Calibri;">= +000 0001 = +1</span><span style="font-family: 宋体;">，</span><span style="font-family: Calibri;">1000 0001</span><span style="font-family: 宋体;">的真值</span><span style="font-family: Calibri;">=</span><span style="font-family: 宋体;">&ndash;</span><span style="font-family: Calibri;">000 0001 =</span><span style="font-family: 宋体;">&ndash;</span><span style="font-family: Calibri;">1</span></p>
+<h3 align="justify">2<span style="font-family: 宋体;">、</span><strong>原码</strong></h3>
+<p align="justify"><span style="font-family: 宋体;">原码就是符号位加上真值的绝对值</span>, <span style="font-family: 宋体;">即用第一位表示符号</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">其余位表示值</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">比如如果是</span><span style="font-family: Calibri;">8</span><span style="font-family: 宋体;">位二进制</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify">[+1]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= 0000 0001</span></p>
+<p align="justify">[-1]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= 1000 0001</span></p>
+<p align="justify"><span style="font-family: 宋体;">第一位是符号位</span>. <span style="font-family: 宋体;">因为第一位是符号位</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">所以</span><span style="font-family: Calibri;">8</span><span style="font-family: 宋体;">位二进制数的取值范围就是</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify">[1111 1111 , 0111 1111]</p>
+<p align="justify">即[-127 , 127]</p>
+<p align="justify"><span style="font-family: 宋体;">原码是人脑最容易理解和计算的表示方式</span>.</p>
+<h3 align="justify">3<span style="font-family: 宋体;">、</span><strong>反码</strong></h3>
+<p align="justify"><span style="font-family: 宋体;">反码的表示方法是</span>:</p>
+<p align="justify">正数的反码是其本身</p>
+<p align="justify"><span style="font-family: 宋体;">负数的反码是在其原码的基础上</span>, <span style="font-family: 宋体;">符号位不变，其余各个位取反</span><span style="font-family: Calibri;">.</span></p>
+<p align="justify">[+1] = [00000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [00000001]</span><span style="font-family: 宋体;">反</span></p>
+<p align="justify">[-1] = [10000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [11111110]</span><span style="font-family: 宋体;">反</span></p>
+<p align="justify"><span style="font-family: 宋体;">可见如果一个反码表示的是负数</span>, <span style="font-family: 宋体;">人脑无法直观的看出来它的数值</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">通常要将其转换成原码再计算</span><span style="font-family: Calibri;">.</span></p>
+<h3 align="justify">4<span style="font-family: 宋体;">、</span><strong>补码</strong></h3>
+<p align="justify"><span style="font-family: 宋体;">补码的表示方法是</span>:</p>
+<p align="justify">正数的补码就是其本身</p>
+<p align="justify"><span style="font-family: 宋体;">负数的补码是在其原码的基础上</span>, <span style="font-family: 宋体;">符号位不变</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">其余各位取反</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">最后</span><span style="font-family: Calibri;">+1. (</span><span style="font-family: 宋体;">即在反码的基础上</span><span style="font-family: Calibri;">+1)</span></p>
+<p align="justify">[+1] = [00000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [00000001]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [00000001]</span><span style="font-family: 宋体;">补</span></p>
+<p align="justify">[-1] = [10000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [11111110]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [11111111]</span><span style="font-family: 宋体;">补</span></p>
+<p align="justify"><span style="font-family: 宋体;">对于负数</span>, <span style="font-family: 宋体;">补码表示方式也是人脑无法直观看出其数值的</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">通常也需要转换成原码在计算其数值</span><span style="font-family: Calibri;">.</span></p>
+<h3 align="justify">&nbsp;5<span style="font-family: 宋体;">、</span><strong>Java<span style="font-family: 宋体;">对正负数进行各种位操作使用的是补码</span></strong></h3>
+<p align="justify"><span style="font-family: 宋体;">现在我们知道了计算机可以有三种编码方式表示一个数</span>. <span style="font-family: 宋体;">对于正数因为三种编码方式的结果都相同</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify">[+1] = [00000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [00000001]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [00000001]</span><span style="font-family: 宋体;">补</span></p>
+<p align="justify"><span style="font-family: 宋体;">所以不需要过多解释</span>. <span style="font-family: 宋体;">但是对于负数</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify">[-1] = [10000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [11111110]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [11111111]</span><span style="font-family: 宋体;">补</span></p>
+<p align="justify"><span style="font-family: 宋体;">可见原码</span>, <span style="font-family: 宋体;">反码和补码是完全不同的</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">既然原码才是被人脑直接识别并用于计算表示方式</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">为何还会有反码和补码呢</span><span style="font-family: Calibri;">?</span></p>
+<p align="justify"><span style="font-family: 宋体;">首先</span>, <span style="font-family: 宋体;">因为人脑可以知道第一位是符号位</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">在计算的时候我们会根据符号位</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">选择对真值区域的加减</span><span style="font-family: Calibri;">. (</span><span style="font-family: 宋体;">真值的概念在本文最开头</span><span style="font-family: Calibri;">). </span><span style="font-family: 宋体;">但是对于计算机</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">加减乘数已经是最基础的运算</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">要设计的尽量简单</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">计算机辨别</span><span style="font-family: Calibri;">"</span><span style="font-family: 宋体;">符号位</span><span style="font-family: Calibri;">"</span><span style="font-family: 宋体;">显然会让计算机的基础电路设计变得十分复杂</span><span style="font-family: Calibri;">! </span><span style="font-family: 宋体;">于是人们想出了将符号位也参与运算的方法</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">我们知道</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">根据运算法则减去一个正数等于加上一个负数</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">即</span><span style="font-family: Calibri;">: 1-1 = 1 + (-1) = 0 , </span><span style="font-family: 宋体;">所以机器可以只有加法而没有减法</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">这样计算机运算的设计就更简单了</span><span style="font-family: Calibri;">.</span><span style="font-family: 宋体;">于是人们开始探索</span> <span style="font-family: 宋体;">将符号位参与运算</span>, <span style="font-family: 宋体;">并且只保留加法的方法</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">首先来看原码</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify"><span style="font-family: 宋体;">计算十进制的表达式</span>: 1-1=0</p>
+<p align="justify">1 - 1 = 1 + (-1) = [00000001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;+ [10000001]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [10000010]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= -2</span></p>
+<p align="justify"><span style="font-family: 宋体;">如果用原码表示</span>, <span style="font-family: 宋体;">让符号位也参与计算</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">显然对于减法来说</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">结果是不正确的</span><span style="font-family: Calibri;">.</span><span style="font-family: 宋体;">这也就是为何计算机内部不使用原码表示一个数</span><span style="font-family: Calibri;">.</span></p>
+<p align="justify"><span style="font-family: 宋体;">为了解决原码做减法的问题</span>, <span style="font-family: 宋体;">出现了反码</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify"><span style="font-family: 宋体;">计算十进制的表达式</span>: 1-1=0</p>
+<p align="justify">1 - 1 = 1 + (-1) = [0000 0001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;+ [1000 0001]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">= [0000 0001]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;+ [1111 1110]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [1111 1111]</span><span style="font-family: 宋体;">反</span><span style="font-family: Calibri;">&nbsp;= [1000 0000]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= -0</span></p>
+<p align="justify"><span style="font-family: 宋体;">发现用反码计算减法</span>, <span style="font-family: 宋体;">结果的真值部分是正确的</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">而唯一的问题其实就出现在</span><span style="font-family: Calibri;">"0"</span><span style="font-family: 宋体;">这个特殊的数值上</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">虽然人们理解上</span><span style="font-family: Calibri;">+0</span><span style="font-family: 宋体;">和</span><span style="font-family: Calibri;">-0</span><span style="font-family: 宋体;">是一样的</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">但是</span><span style="font-family: Calibri;">0</span><span style="font-family: 宋体;">带符号是没有任何意义的</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">而且会有</span><span style="font-family: Calibri;">[0000 0000]</span><span style="font-family: 宋体;">原和</span><span style="font-family: Calibri;">[1000 0000]</span><span style="font-family: 宋体;">原两个编码表示</span><span style="font-family: Calibri;">0.</span></p>
+<p align="justify"><span style="font-family: 宋体;">于是补码的出现</span>, <span style="font-family: 宋体;">解决了</span><span style="font-family: Calibri;">0</span><span style="font-family: 宋体;">的符号以及两个编码的问题</span><span style="font-family: Calibri;">:</span></p>
+<p align="justify">1-1 = 1 + (-1) = [0000 0001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;+ [1000 0001]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [0000 0001]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">&nbsp;+ [1111 1111]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">&nbsp;= [0000 0000]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">=[0000 0000]</span><span style="font-family: 宋体;">原</span></p>
+<p align="justify"><span style="font-family: 宋体;">这样</span>0<span style="font-family: 宋体;">用</span><span style="font-family: Calibri;">[0000 0000]</span><span style="font-family: 宋体;">表示</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">而以前出现问题的</span><span style="font-family: Calibri;">-0</span><span style="font-family: 宋体;">则不存在了</span><span style="font-family: Calibri;">.</span><span style="font-family: 宋体;">而且可以用</span><span style="font-family: Calibri;">[1000 0000]</span><span style="font-family: 宋体;">表示</span><span style="font-family: Calibri;">-128:</span></p>
+<p align="justify">(-1) + (-127) = [1000 0001]<span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;+ [1111 1111]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">&nbsp;= [1111 1111]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">&nbsp;+ [1000 0001]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">&nbsp;= [1000 0000]</span><span style="font-family: 宋体;">补</span></p>
+<p align="justify">-1-127<span style="font-family: 宋体;">的结果应该是</span><span style="font-family: Calibri;">-128, </span><span style="font-family: 宋体;">在用补码运算的结果中</span><span style="font-family: Calibri;">, [1000 0000]</span><span style="font-family: 宋体;">补</span><span style="font-family: Calibri;">&nbsp;</span><span style="font-family: 宋体;">就是</span><span style="font-family: Calibri;">-128. </span><span style="font-family: 宋体;">但是注意因为实际上是使用以前的</span><span style="font-family: Calibri;">-0</span><span style="font-family: 宋体;">的补码来表示</span><span style="font-family: Calibri;">-128, </span><span style="font-family: 宋体;">所以</span><span style="font-family: Calibri;">-128</span><span style="font-family: 宋体;">并没有原码和反码表示</span><span style="font-family: Calibri;">.(</span><span style="font-family: 宋体;">对</span><span style="font-family: Calibri;">-128</span><span style="font-family: 宋体;">的补码表示</span><span style="font-family: Calibri;">[1000 0000]</span><span style="font-family: 宋体;">补算出来的原码是</span><span style="font-family: Calibri;">[0000 0000]</span><span style="font-family: 宋体;">原</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">这是不正确的</span><span style="font-family: Calibri;">)</span></p>
+<p align="justify"><span style="font-family: 宋体;">使用补码</span>, <span style="font-family: 宋体;">不仅仅修复了</span><span style="font-family: Calibri;">0</span><span style="font-family: 宋体;">的符号以及存在两个编码的问题</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">而且还能够多表示一个最低数</span><span style="font-family: Calibri;">. </span><span style="font-family: 宋体;">这就是为什么</span><span style="font-family: Calibri;">8</span><span style="font-family: 宋体;">位二进制</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">使用原码或反码表示的范围为</span><span style="font-family: Calibri;">[-127, +127], </span><span style="font-family: 宋体;">而使用补码表示的范围为</span><span style="font-family: Calibri;">[-128, 127].</span></p>
+<p align="justify"><span style="font-family: 宋体;">因为机器使用补码</span>, <span style="font-family: 宋体;">所以对于编程中常用到的</span><span style="font-family: Calibri;">32</span><span style="font-family: 宋体;">位</span><span style="font-family: Calibri;">int</span><span style="font-family: 宋体;">类型</span><span style="font-family: Calibri;">, </span><span style="font-family: 宋体;">可以表示范围是</span><span style="font-family: Calibri;">: [-231, 231-1] </span><span style="font-family: 宋体;">因为第一位表示的是符号位</span><span style="font-family: Calibri;">.</span><span style="font-family: 宋体;">而使用补码表示时又可以多保存一个最小值</span><span style="font-family: Calibri;">.</span></p>
+<h2 align="justify"><strong><span style="font-family: 宋体;">二、仔细阅读示例</span>: EnumTest.java<span style="font-family: 宋体;">，运行它，分析运行结果？</span></strong><strong>你能得到什么结论？</strong></h2>
+<h3 align="justify">1、源程序</h3>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;EnumTest {</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args) {</p>
+<p>Size s=Size.<strong><em>SMALL</em></strong>;</p>
+<p>Size t=Size.<strong><em>LARGE</em></strong>;</p>
+<p>&nbsp;//s和t引用同一个对象？</p>
+<p>System.<strong><em>out</em></strong>.println(s==t); &nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//是原始数据类型吗？</p>
+<p>System.<strong><em>out</em></strong>.println(s.getClass().isPrimitive());</p>
+<p>//从字符串中转换</p>
+<p>Size u=Size.<em>valueOf</em>("SMALL");</p>
+<p>System.<strong><em>out</em></strong>.println(s==u); &nbsp;// //列出它的所有值</p>
+<p><strong>for</strong>(Size value:Size.<em>values</em>()){</p>
+<p>System.<strong><em>out</em></strong>.println(value);</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p>&nbsp;<strong>enum</strong>&nbsp;Size{<strong><em>SMALL</em></strong>,<strong><em>MEDIUM</em></strong>,<strong><em>LARGE</em></strong>};</p>
+<h3><strong>2、结果</strong></h3>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233502270-1273773852.png" alt="" /></p>
+<p>&nbsp;</p>
+<h3 align="justify">3、<strong>结果分析</strong></h3>
+<p align="justify">枚举类型的表示方法：enum Size{ SMALL , MEDIUM , LARGE }</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 使用方法：Size s=Size.SMALL;</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //<span style="font-family: 宋体;">从字串转换为枚举</span></p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Size t=Size.valueof(&ldquo;SMALL&rdquo;<span style="font-family: 宋体;">）</span><span style="font-family: 'Times New Roman';">;</span></p>
+<p align="justify"><span style="font-family: 宋体;">枚举类型是引用类型</span>，枚举不属于原始数据类型，它的每个具体值都引用一<span style="font-family: 宋体;">个特定的对象。相同的值则引用同一个对象。可以使用</span>&ldquo;<span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;和</span><span style="font-family: 'Times New Roman';">equals()</span><span style="font-family: 宋体;">方法直接比对枚举变量的值，换句话说，对于枚举类型的变量，&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;和</span><span style="font-family: 'Times New Roman';">equals()</span><span style="font-family: 宋体;">方法执行的结果是等价的。当判断两个赋值是否相同时，输出结果只能是</span><span style="font-family: 'Times New Roman';">ture</span><span style="font-family: 宋体;">或</span><span style="font-family: 'Times New Roman';">false</span><span style="font-family: 宋体;">。当输出</span><span style="font-family: 'Times New Roman';">value</span><span style="font-family: 宋体;">时，需要</span><span style="font-family: 'Times New Roman';">Size value:Size.values()</span><span style="font-family: 宋体;">循环类型的数量的次数。</span><span style="font-family: 'Times New Roman';">enum Size{SMALL,MEDIUM,LARGE};</span><span style="font-family: 宋体;">语句可以写在程序的最后，也可以写在前面，但必须自己引用。枚举的赋值可以有两种表示方法：</span><span style="font-family: 'Times New Roman';">1.Size s=Size.SMALL;&nbsp; 2.Size t=Size.valueof(</span><span style="font-family: 宋体;">&ldquo;</span><span style="font-family: 'Times New Roman';">SMALL</span><span style="font-family: 宋体;">&rdquo;）。</span></p>
+<h2 align="justify"><strong><span style="font-family: 宋体;">三、</span> Java变量遵循&ldquo;同名变量的屏蔽原则&rdquo;，请课后阅读相关资料弄清楚相关知识，然后自己编写一些测试代码，就象本示例一样，有意识地在不同地方定义一些同名变量，看看输出的到底是哪个值。</strong></h2>
+<h3 align="justify">1、源程序</h3>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;My1 {</p>
+<p><strong>private</strong>&nbsp;<strong>static</strong>&nbsp;<strong>int</strong>&nbsp;<em>value</em>=1;</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args){</p>
+<p><strong>int</strong>&nbsp;value=2;</p>
+<p>System.<strong><em>out</em></strong>.println(value);</p>
+<p>}</p>
+<p>}</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">结果：</span>2</p>
+<h3 align="justify">2、源程序</h3>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;My1 {</p>
+<p><strong>private</strong>&nbsp;<strong>static</strong>&nbsp;<strong>int</strong>&nbsp;<em>value</em>=10;</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args){</p>
+<p><strong>int</strong>&nbsp;value=6;</p>
+<p>System.<strong><em>out</em></strong>.println(value);</p>
+<p>}</p>
+<p>}</p>
+<p align="justify"><span style="font-family: 宋体;">结果：</span>6</p>
+<h3 align="justify">3<span style="font-family: 宋体;">、结论</span></h3>
+<p align="justify"><span style="font-family: 宋体;">&nbsp; 在函数里面的赋值优先于在函数外赋值，属于局部变量。函数外的赋值可以赋给类中的多个函数，属于全局变量。如果函数里面没有重复的赋值，那么函数的值为函数外的。</span></p>
+<h2 align="justify"><span style="font-family: 宋体;">四、看着这个图，再查查</span>Java中每个数据类型所占的位数，和表示数值的范围，你能得出什么结论？</h2>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233622926-102172196.png" alt="" />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p align="justify">答：自动类型转换是安全的，强制类型转换时，可能会引起信息的损失。实线代表无精度损失，虚线代表有精度损失，一般来说在实线两端都是由低精度指向高精度的类型，所占的位数从低到高，范围从小到大，所以可得出，低精度向高精度转化不丢失精度，反之，从高精度传向低精度则会损失。</p>
+<h2 align="justify"><strong><span style="font-family: 宋体;">五、请运行以下代码（</span>TestDouble.java），你看到了什么样的输出，意外吗？</strong></h2>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233647379-157516396.png" alt="" /></p>
+<p align="justify">答：结果为</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233739223-1117640505.png" alt="" /></p>
+<p>&nbsp;</p>
+<p align="justify"><span style="font-family: 宋体;">感到意外，使用</span>double<span style="font-family: 宋体;">类型的数值进行计算，</span> <span style="font-family: 宋体;">其结果是不精确的。计算机只能识别二进制，一切的数据最后都要转换为二进制。例如源程序中的</span>0.05<span style="font-family: 宋体;">是十进制的，要转换为二进制，但</span><span style="font-family: Calibri;">0.05</span><span style="font-family: 宋体;">的二进制不是精确的</span><span style="font-family: Calibri;">0.05</span><span style="font-family: 宋体;">，只是接近</span><span style="font-family: Calibri;">0.05</span><span style="font-family: 宋体;">，实际为</span><span style="font-family: Calibri;">0.04999&nbsp;999&nbsp;999&nbsp;999&nbsp;999</span><span style="font-family: 宋体;">，浮点数由两部分组成：指数和尾数，再进行浮点数的二进制与十进制的转换时，浮点数参与了计算，那么转换过程就变的不可预测，并且变得不可逆。</span></p>
+<h2 align="justify"><strong><span style="font-family: 宋体;">六、在构建</span>BigDecimal对象时应使用字符串而不是double数值，否则，仍有可能引发计算精度问题。（为什么会这样呢？）</strong></h2>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>import</strong>&nbsp;java.math.BigDecimal;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;TestBigDecimal</p>
+<p>{</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args)</p>
+<p>{</p>
+<p>BigDecimal f1&nbsp;= <strong>new</strong>&nbsp;BigDecimal("0.05");</p>
+<p>BigDecimal f2&nbsp;= BigDecimal.<em>valueOf</em>(0.01);</p>
+<p>BigDecimal f3&nbsp;= <strong>new</strong>&nbsp;BigDecimal(0.05);</p>
+<p>System.<strong><em>out</em></strong>.println("下面使用String作为BigDecimal构造器参数<span style="font-family: 'Times New Roman';">的计算结果：</span>");</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 + 0.01 = "&nbsp;+ f1.add(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 - 0.01 = "&nbsp;+ f1.subtract(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 * 0.01 = "&nbsp;+ f1.multiply(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 / 0.01 = "&nbsp;+ f1.divide(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("下面使用double作为BigDecimal构造器参数<span style="font-family: 'Times New Roman';">的计算结果：</span>");</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 + 0.01 = "&nbsp;+ f3.add(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 - 0.01 = "&nbsp;+ f3.subtract(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 * 0.01 = "&nbsp;+ f3.multiply(f2));</p>
+<p>System.<strong><em>out</em></strong>.println("0.05 / 0.01 = "&nbsp;+ f3.divide(f2));</p>
+<p>}</p>
+<p>}</p>
+<p align="justify">答：结果为</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233817348-1739293872.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">由此可见，构建</span>BigDecimal<span style="font-family: 宋体;">对象可以解决不精确的问题。但是使用时应使用字符串而不是</span><span style="font-family: Calibri;">double</span><span style="font-family: 宋体;">数值，否则，仍有可能引发计算精度问题。</span></p>
+<h2 align="justify"><strong>七、以下代码的输出结果是什么？</strong></h2>
+<p align="justify"><strong>int X=100;</strong></p>
+<p align="justify"><strong>int Y=200;</strong></p>
+<p align="justify"><strong>System.out.println("X+Y="+X+Y);</strong></p>
+<p align="justify"><strong>System.out.println(X+Y+"=X+Y");</strong></p>
+<p align="justify"><strong>为什么会有这样的输出结果？</strong></p>
+<p align="justify">答：源程序：</p>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;Youxi { &nbsp;&nbsp;</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args){</p>
+<p><strong>int</strong>&nbsp;X=100;</p>
+<p><strong>int</strong>&nbsp;Y=200;</p>
+<p>System.<strong><em>out</em></strong>.println("X+Y="+X+Y);</p>
+<p>System.<strong><em>out</em></strong>.println(X+Y+"=X+Y");</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>}</p>
+<p align="justify">结果：</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233849457-946711202.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">在</span>System.out.println()<span style="font-family: 宋体;">中，如果在</span><span style="font-family: Calibri;">string</span><span style="font-family: 宋体;">字符串后面是</span><span style="font-family: Calibri;">+</span><span style="font-family: 宋体;">和变量，会把变量转换成</span><span style="font-family: Calibri;">string</span><span style="font-family: 宋体;">类型，加号起连接作用，然后把两个字符串连接成一个新的字符串输出；如果先有变量的加减运算再有字符串，那么会从左到右先计算变量的加减，然后再与后面的</span><span style="font-family: Calibri;">string</span><span style="font-family: 宋体;">结合成一个新的字符串。也就是说加号只有在两个</span><span style="font-family: Calibri;">string</span><span style="font-family: 宋体;">类型或者其中一个是</span><span style="font-family: Calibri;">string</span><span style="font-family: 宋体;">类型的时候才起到连接作用，否则仍然是运算符。</span></p>
+<h2 align="justify">八、<strong>Java中出现0的情况</strong></h2>
+<p align="justify"><strong>&nbsp;&nbsp;&nbsp;&nbsp;</strong><span style="font-family: 宋体;">答：</span>0.0/0.0&nbsp;得到的结果是NaN(not an number的简称，即"不是数字")。通过Double.isNaN(double x)来判断。</p>
+<p align="justify">&nbsp; &nbsp; &nbsp;正数/0.0&nbsp;得到的结果是正无穷大，即Infenity</p>
+<p align="justify">&nbsp; &nbsp; &nbsp;负数/0.0&nbsp;得到的结果是负无穷大，即Infenity。通过Double.isInfinite(double x)来判断。</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">源程序：</span></p>
+<p><strong>package</strong>&nbsp;demo;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;My3{</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args) {</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>double</strong>&nbsp;&nbsp;&nbsp;&nbsp;a=0,</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b=50,</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c=-50;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("0/50= \n"+(a/b)); &nbsp; &nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("0/(-50)= \n"+(a/c));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("-50/0= \n"+(c/a));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("0/0= \n"+(a/a));</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("50/0= \n"+(b/a));</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p align="justify">}</p>
+<p align="justify">结果：&nbsp; &nbsp; &nbsp; &nbsp;</p>
+<p align="justify">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201610/1027447-20161005233926020-134893501.png" alt="" /></p>
+<p>&nbsp;</p>
+<p align="justify">&nbsp;</p>
+<p align="justify">&nbsp;</p>

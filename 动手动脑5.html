@@ -1,0 +1,258 @@
+<p>1、</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ClassAndObjectTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">创建类的实例，定义一个对象变量引用这一实例</span>
+        MyClass obj = <span style="color: #0000ff;">new</span><span style="color: #000000;"> MyClass();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">通过对象变量调用类的公有方法</span>
+        obj.myMethod("Hello"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">给属性赋值</span>
+        obj.setValue(100<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出属性的当前值</span>
+<span style="color: #000000;">        System.out.println(obj.getValue());
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">直接访问对象公有字段</span>
+        obj.Information = "Information"<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">输出对象公有字段的当前值</span>
+<span style="color: #000000;">        System.out.println(obj.Information);
+    }
+}
+</span><span style="color: #008000;">/**</span><span style="color: #008000;">
+ * 自定义Java类的示例
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> MyClass {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 公有字段</span>
+    <span style="color: #0000ff;">public</span> String Information = ""<span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 自定义公有Java实例方法</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> myMethod(String argu) {
+        System.out.println(argu);
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义属性：私有字段+get方法+set方法</span>
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> value;
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> getValue() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> value;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> setValue(<span style="color: #0000ff;">int</span><span style="color: #000000;"> value) {
+        </span><span style="color: #0000ff;">this</span>.value =<span style="color: #000000;"> value;
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173537971-110905609.png" alt="" /></p>
+<p><span style="font-family: 宋体;">从上</span>述<span style="font-family: 宋体;">示例中，我们可以总结出以下知识点：</span></p>
+<p>（1）<span style="font-family: 宋体;">我们需要定义一个对象变量</span>;</p>
+<p>（2）<span style="font-family: 宋体;">然后</span>&ldquo;<span style="font-family: 宋体;">创建（</span><span style="font-family: 'Times New Roman';">new</span><span style="font-family: 宋体;">）</span><span style="font-family: 'Times New Roman';">&rdquo;</span><span style="font-family: 宋体;">一个对象，赋值给对象变量</span>;</p>
+<p>（3）<span style="font-family: 宋体;">现在就可以通过对象变量使用对象，主要方式有：</span></p>
+<p><span style="font-family: 宋体;">（</span>a<span style="font-family: 宋体;">）直接调用类的方法；</span></p>
+<p><span style="font-family: 宋体;">（</span>b<span style="font-family: 宋体;">）存取类的字段。</span></p>
+<p>2<span style="font-family: 宋体;">、早期我们经常这样定义变量</span></p>
+<p>int value=100;</p>
+<p>&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">前面的示例中这样定义变量</span></p>
+<p>MyClass obj = new MyClass();</p>
+<p>&nbsp;<span style="font-family: 宋体;">这两种方式定义的变量是一样的吗？</span></p>
+<p><span style="font-family: 宋体;">答：不一样。如</span>int<span style="font-family: 宋体;">，</span><span style="font-family: 'Times New Roman';">float</span><span style="font-family: 宋体;">之类的变量称为&ldquo;原始数据类型&rdquo;的变量</span><span style="font-family: 'Times New Roman';">)</span><span style="font-family: 宋体;">。</span></p>
+<p><span style="font-family: 宋体;">定义一个原始类型的变量时</span>,<span style="font-family: 宋体;">会马上给其分配内存；&ldquo;引用&rdquo;一个对象的</span></p>
+<p><span style="font-family: 宋体;">变量称为</span>&ldquo;引用类型&rdquo;的变量，有时又简称为&ldquo;对象变量&rdquo;。当声明一</p>
+<p><span style="font-family: 宋体;">个对象类型的变量时</span>,<span style="font-family: 宋体;">实际上并没有创建一个对象，此变量</span><span style="font-family: 'Times New Roman';">=null</span><span style="font-family: 宋体;">。</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173603955-1072449889.png" alt="" /></span></p>
+<p>3<span style="font-family: 宋体;">、对于原始数据类型的变量（比如</span><span style="font-family: 'Times New Roman';">int)</span><span style="font-family: 宋体;">，可以直接使用&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;判断两变量值是否相等，对象变量也可以使用&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;判断两变量值是否相等吗？</span></p>
+<p><span style="font-family: 宋体;"><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173629315-1971063568.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">请输入并运行以下代码，得到什么结果</span>?</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173651940-1761395648.png" alt="" /></p>
+<p><span style="font-family: 宋体;">答案是</span>false.<span style="font-family: 宋体;">当&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;施加于原始数据类型变量时，是比较变量所保存的数据是否相等，当&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;施加于引用类型变量时，是比较这两个变量是否引用同一对象。引用代表地址，所以&ldquo;</span><span style="font-family: 'Times New Roman';">==</span><span style="font-family: 宋体;">&rdquo;实际上相当于比较两个引用类型变量中保存的对象地址是否相同。</span></p>
+<p>4、ObjectEquals.java</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ObjectEquals {
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {       
+        MyTestClass obj1</span>=<span style="color: #0000ff;">new</span> MyTestClass(100<span style="color: #000000;">);       
+        MyTestClass obj2</span>=<span style="color: #0000ff;">new</span> MyTestClass(100<span style="color: #000000;">);
+                System.out.println(obj1</span>==obj2);<span style="color: #008000;">//</span><span style="color: #008000;">判断对象是否相同      </span>
+        System.out.println(obj1.equals(obj2));<span style="color: #008000;">//</span><span style="color: #008000;">判断属性是否相同   </span>
+<span style="color: #000000;">    }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> MyTestClass
+{    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> Value;    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">注意：只有参数类型为Object的，才是重写了Object的equals方法  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">参数类型为MyTestClass的，仅仅是Overload了equals方法。
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">   @Override</span>
+      <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(Object obj)    
+   {    
+    </span><span style="color: #0000ff;">return</span> ((MyTestClass)obj).Value==<span style="color: #0000ff;">this</span><span style="color: #000000;">.Value;    
+    }   
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(MyTestClass obj)   
+    {       
+        </span><span style="color: #0000ff;">return</span> obj.Value==<span style="color: #0000ff;">this</span><span style="color: #000000;">.Value;   
+    }    
+    </span><span style="color: #0000ff;">public</span> MyTestClass(<span style="color: #0000ff;">int</span> initValue)<span style="color: #008000;">//</span><span style="color: #008000;">构造方法可以进行方法重载 初始化，不能进行其他操作    </span>
+<span style="color: #000000;">    {       
+        Value</span>=<span style="color: #000000;">initValue;    
+    }
+}</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173823236-1949269290.png" alt="" /></p>
+<p><span style="font-family: 宋体;">请总结一下，这个方法有哪些</span>&ldquo;与众不同之处&rdquo;，你能列出几条？</p>
+<p><span style="font-family: 宋体;">上述所标出的方法，称为类的</span>&ldquo;构造方法&rdquo;，有时也习惯称为&ldquo;构造函数&rdquo;。当创建一个对象时，它的构造方法会被自动调用。构造方法与类名相同，没有返回值。如果类没有定义构造函数，<span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">编译器在编译时会自动给它提供一个没有参数的&ldquo;默认构造方法&rdquo;。</span></p>
+<p>5、以下代码为何无法通过编译？哪儿出错了？</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173849174-842960245.png" alt="" /></p>
+<p><span style="font-family: 宋体;">结果显示</span>Foo<span style="font-family: 宋体;">是未定义的。如果类提供了一个自定义的构造方法，将导致系统不再提供默认构造方法。</span></p>
+<p>6<span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">InitializeBlockDemo.java</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> InitializeBlockDemo {
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> args
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        
+        InitializeBlockClass obj</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> InitializeBlockClass();
+        System.out.println(obj.field);
+        
+        obj</span>=<span style="color: #0000ff;">new</span> InitializeBlockClass(300<span style="color: #000000;">);
+        System.out.println(obj.field);
+    }
+
+}
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> InitializeBlockClass{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">下面这句在初始化块之前与之后，会影响到field字段的初始值
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">public int field=100;</span>
+<span style="color: #000000;">    
+    {
+        field</span>=200<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> field=100<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">public</span> InitializeBlockClass(<span style="color: #0000ff;">int</span><span style="color: #000000;"> value){
+        </span><span style="color: #0000ff;">this</span>.field=<span style="color: #000000;">value;
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> InitializeBlockClass(){
+        
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106173942533-1248153118.png" alt="" /></p>
+<p>总结：类字段的初始化顺序：</p>
+<p><span style="font-family: 宋体;">（</span>1<span style="font-family: 宋体;">）执行类成员定义时指定的默认值或类的初始化块，到底执行哪一个要看哪一个&ldquo;排在前面&rdquo;。</span></p>
+<p><span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）执行类的构造函数。</span></p>
+<p><span style="font-family: 宋体;">类的初始化块不接收任何的参数，而且只要一创建类的对象，它们就会被执行。因此，适合于封装那些</span>&ldquo;对象创建时必须执行的代码&rdquo;。</p>
+<p>7<span style="font-family: 宋体;">、请运行</span><span style="font-family: 'Times New Roman';">TestStaticInitializeBlock.java</span><span style="font-family: 宋体;">示例，观察输出结果，总结出&ldquo;静态初始化块的执行顺序&rdquo;。</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Root
+{
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;">{
+        System.out.println(</span>"Root的静态初始化块"<span style="color: #000000;">);
+    }
+    {
+        System.out.println(</span>"Root的普通初始化块"<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Root()
+    {
+        System.out.println(</span>"Root的无参数的构造器"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Mid <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Root
+{
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;">{
+        System.out.println(</span>"Mid的静态初始化块"<span style="color: #000000;">);
+    }
+    {
+        System.out.println(</span>"Mid的普通初始化块"<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Mid()
+    {
+        System.out.println(</span>"Mid的无参数的构造器"<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Mid(String msg)
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">通过this调用同一类中重载的构造器</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">();
+        System.out.println(</span>"Mid的带参数构造器，其参数值：" +<span style="color: #000000;"> msg);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Leaf <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Mid
+{
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;">{
+        System.out.println(</span>"Leaf的静态初始化块"<span style="color: #000000;">);
+    }
+    {
+        System.out.println(</span>"Leaf的普通初始化块"<span style="color: #000000;">);
+    }    
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Leaf()
+    {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">通过super调用父类中有一个字符串参数的构造器</span>
+        <span style="color: #0000ff;">super</span>("Java初始化顺序演示"<span style="color: #000000;">);
+        System.out.println(</span>"执行Leaf的构造器"<span style="color: #000000;">);
+    }
+
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestStaticInitializeBlock
+{
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) 
+    {
+        </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Leaf();
+        
+
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174032408-1180590422.png" alt="" /></p>
+<p>总结：静态初始化块的执行顺序</p>
+<p><span style="font-family: 宋体;">（</span>1<span style="font-family: 宋体;">）静态初始化块只执行一次。</span></p>
+<p><span style="font-family: 宋体;">（</span>2<span style="font-family: 宋体;">）创建子类型的对象时，也会导致父类型的静态初始化块的执行。</span></p>
+<p>8<span style="font-family: 宋体;">、静态方法中只允许访问静态数据，那么，如何在静态方法中访问类的实例成员（即没有附加</span><span style="font-family: 'Times New Roman';">static</span><span style="font-family: 宋体;">关键字的字段或方法）</span><span style="font-family: 'Times New Roman';">?</span></p>
+<p>请编写代码验证你的想法。</p>
+<p>答：可采用类的对象实例化进行访问。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">类的对象实例化
+</span><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/10/16</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SquareIntTest {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {    
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span>  x=1; x &lt;= 10; x++<span style="color: #000000;">) {
+            SquareIntTest obj;   </span><span style="color: #008000;">//</span><span style="color: #008000;">创建类的示例obj</span>
+            obj=<span style="color: #0000ff;">new</span><span style="color: #000000;"> SquareIntTest();
+              </span><span style="color: #0000ff;">int</span> result =<span style="color: #000000;"> obj.square(x);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Math库中也提供了求平方数的方法
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> result=(int)Math.pow(x,2);</span>
+            System.out.println("The square of " + x + " is " + result + "\n"<span style="color: #000000;">);
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 自定义求平方数的静态方法</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span> square(<span style="color: #0000ff;">int</span><span style="color: #000000;"> y) {        
+        </span><span style="color: #0000ff;">return</span> y *<span style="color: #000000;"> y;
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174115065-561405740.png" alt="" /></p>
+<p>9<span style="font-family: 宋体;">、使用类的静态字段和构造函数，我们可以跟踪某个类所创建对象的个数。请写一个类，在任何时候都可以向它查询&ldquo;你已经创建了多少个对象？&rdquo;。</span></p>
+<p>源程序：</p>
+<div class="cnblogs_code">
+<pre> <span style="color: #008000;">//</span><span style="color: #008000;">王荣荣 2016/10/21</span>
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Newclass {
+     </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+         a1 b1 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> a1();
+         a1 b2 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> a1();
+         a1 b3 </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> a1();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">我已经创建了3个对象，接下来调用a1类的静态变量查询创建了多少对象</span>
+         System.out.println("我已经创建的对象个数为： "+<span style="color: #000000;">a1.value);
+     }
+}
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> a1 { 
+</span><span style="color: #008000;">//</span><span style="color: #008000;">将用来计次的变量value赋予初始值为0 </span>
+   <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> value=0<span style="color: #000000;">; 
+    a1() { 
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">构造函数，每创建一个实例value就增加1 </span>
+       value=value+1<span style="color: #000000;">; 
+     }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174155986-875302818.png" alt="" /></p>
+<p>&nbsp;</p>

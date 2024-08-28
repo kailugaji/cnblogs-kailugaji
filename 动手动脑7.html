@@ -1,0 +1,486 @@
+<p align="justify"><span style="font-family: 宋体;">一、请编写一个程序将一个整数转换为汉字读法字符串。比如</span>&ldquo;1123&rdquo;转换为&ldquo;一千一百二十三&rdquo;。</p>
+<p>源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 王荣荣2016/11/6</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Daxie
+{
+    </span><span style="color: #0000ff;">private</span> String[] hanArr = {"零" , "一" , "二" , "三" , "四"<span style="color: #000000;"> ,
+        </span>"五" , "六" , "七" , "八" , "九"<span style="color: #000000;">};
+    </span><span style="color: #0000ff;">private</span> String[] unitArr = {"十" , "百" , "千","万","十万","百万"<span style="color: #000000;">};
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 把一个四位的数字字符串变成汉字字符串
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> numStr 需要被转换的四位的数字字符串
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 四位的数字字符串被转换成的汉字字符串。
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String toHanStr(String numStr)
+    {
+        String result </span>= ""<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> numLen =<span style="color: #000000;"> numStr.length();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">依次遍历数字字符串的每一位数字</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0 ; i &lt; numLen ; i++<span style="color: #000000;"> )
+        {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">把char型数字转换成的int型数字，因为它们的ASCII码值恰好相差48
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">因此把char型数字减去48得到int型数字，例如'4'被转换成4。</span>
+            <span style="color: #0000ff;">int</span> num = numStr.charAt(i) - 48<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果不是最后一位数字，而且数字不是零，则需要添加单位（千、百、十）</span>
+            <span style="color: #0000ff;">if</span> ( i != numLen - 1 &amp;&amp; num != 0<span style="color: #000000;">)
+            {
+                result </span>+= hanArr[num] + unitArr[numLen - 2 -<span style="color: #000000;"> i];
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">否则不要添加单位</span>
+            <span style="color: #0000ff;">else</span><span style="color: #000000;">
+            {               
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">上一个数是否为&ldquo;零&rdquo;，不为&ldquo;零&rdquo;时就添加</span>
+                <span style="color: #0000ff;">if</span>(result.length()&gt;0 &amp;&amp; hanArr[num].equals("零") &amp;&amp; result.charAt(result.length()-1)=='零'<span style="color: #000000;">)
+                    </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                result </span>+=<span style="color: #000000;"> hanArr[num];
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">只有个位数，直接返回</span>
+        <span style="color: #0000ff;">if</span>(result.length()==1<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;        
+        </span><span style="color: #0000ff;">int</span> index=result.length()-1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span>(result.charAt(index)=='零'<span style="color: #000000;">){
+            index</span>--<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span>(index!=result.length()-1<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> result.substring(0,index+1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+        }
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args)
+    {       
+        Daxie nr </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Daxie();
+        Scanner scan</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        System.out.println(</span>"请输入整数（只支持整数（0~百万））:"<span style="color: #000000;">);
+        String number</span>=<span style="color: #000000;"> scan.next();
+        System.out.println(</span>"\n"+number+"的汉字读法为:"+<span style="color: #000000;">nr.toHanStr(number));
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106174712252-861621189.png" alt="" /></p>
+<p align="justify">3、<span style="font-family: 宋体;">更进一步，能否将数字表示的金额改为</span>&ldquo;汉字表达？ 比如将&ldquo;￥<span style="font-family: 'Times New Roman';">123.52</span><span style="font-family: 宋体;">&rdquo;转换为&ldquo;壹佰贰拾叁元伍角贰分&rdquo;。</span></p>
+<p>源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 王荣荣2016/11/6</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Daxie2
+{
+    </span><span style="color: #0000ff;">private</span> String[] hanArr = {"零" , "壹" , "贰" , "叁" , "肆"<span style="color: #000000;"> , 
+            </span>"伍" , "陆" , "柒" , "捌" , "玖"<span style="color: #000000;">};
+    </span><span style="color: #0000ff;">private</span> String[] unitArr = {"十" , "百" , "千","万","十万","百万"<span style="color: #000000;">};
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 把一个四位的数字字符串变成汉字字符串
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> numStr 需要被转换的四位的数字字符串
+     * </span><span style="color: #808080;">@return</span><span style="color: #008000;"> 四位的数字字符串被转换成的汉字字符串。
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">private</span><span style="color: #000000;"> String toHanStr(String numStr)
+    {
+        String result </span>= ""<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> numLen =<span style="color: #000000;"> numStr.length();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">依次遍历数字字符串的每一位数字</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0 ; i &lt; numLen ; i++<span style="color: #000000;"> )
+        {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">把char型数字转换成的int型数字，因为它们的ASCII码值恰好相差48
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">因此把char型数字减去48得到int型数字，例如'4'被转换成4。</span>
+            <span style="color: #0000ff;">int</span> num = numStr.charAt(i) - 48<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果不是最后一位数字，而且数字不是零，则需要添加单位（千、百、十）</span>
+            <span style="color: #0000ff;">if</span> ( i != numLen - 1 &amp;&amp; num != 0<span style="color: #000000;">)
+            {
+                result </span>+= hanArr[num] + unitArr[numLen - 2 -<span style="color: #000000;"> i];
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">否则不要添加单位</span>
+            <span style="color: #0000ff;">else</span><span style="color: #000000;">
+            {               
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">上一个数是否为&ldquo;零&rdquo;，不为&ldquo;零&rdquo;时就添加</span>
+                <span style="color: #0000ff;">if</span>(result.length()&gt;0 &amp;&amp; hanArr[num].equals("零") &amp;&amp; result.charAt(result.length()-1)=='零'<span style="color: #000000;">)
+                    </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+                result </span>+=<span style="color: #000000;"> hanArr[num];
+            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">只有个位数，直接返回</span>
+        <span style="color: #0000ff;">if</span>(result.length()==1<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;        
+        </span><span style="color: #0000ff;">int</span> index=result.length()-1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">while</span>(result.charAt(index)=='零'<span style="color: #000000;">){
+            index</span>--<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span>(index!=result.length()-1<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> result.substring(0,index+1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+        }
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args)
+    {       
+        Daxie2 nr </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Daxie2();
+        Scanner scan</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        System.out.println(</span>"请输入整数（只支持整数（0~百万））:"<span style="color: #000000;">);
+        String number</span>=<span style="color: #000000;"> scan.next();
+        System.out.println(</span>"\n"+number+"的汉字读法为:"+nr.toHanStr(number)+"元"<span style="color: #000000;">);
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175025033-1242847192.png" alt="" /></p>
+<p align="justify">&nbsp;<span style="font-family: 宋体;">二、前面几讲介绍过</span>JDK所提供的BigInteger能完成大数计算，如果不用它，直接使用数组表达大数，你能实现相同的功能吗?</p>
+<p align="justify">要求：</p>
+<p align="justify"><span style="font-family: 宋体;">（</span>1）用你的大数类实现加和减两个功能</p>
+<p align="justify"><span style="font-family: 宋体;">（</span>2）阅读BigInteger类源码，弄清楚它是使用什么算法实现加减乘除四种运算的？</p>
+<p align="justify"><span style="font-family: 宋体;">（</span>3）通过互联网查找大数运算的相关资料，给你的大数类添加乘、除、求阶乘等其它功能。</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;1、数组大数类实现加法运算源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">王荣荣2016/11/6</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Sum{
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span>[]add(<span style="color: #0000ff;">int</span> []a,<span style="color: #0000ff;">int</span><span style="color: #000000;"> []b){
+            </span><span style="color: #0000ff;">int</span> digit=0;<span style="color: #008000;">//</span><span style="color: #008000;">位数</span>
+            <span style="color: #0000ff;">int</span>[]c=<span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[a.length];
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=a.length-1;i&gt;=0;i--<span style="color: #000000;">)
+            {
+                c[i]</span>=a[i]+b[i]+<span style="color: #000000;">digit;
+                </span><span style="color: #0000ff;">if</span>(c[i]&lt;10<span style="color: #000000;">)
+                    digit</span>=0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                {
+                    c[i]</span>=c[i]-10<span style="color: #000000;">;
+                    digit</span>=1<span style="color: #000000;">;
+                }
+            }
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+    }
+        </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> []sub(<span style="color: #0000ff;">int</span> []a,<span style="color: #0000ff;">int</span>[]b,<span style="color: #0000ff;">int</span><span style="color: #000000;"> w)
+        {
+            </span><span style="color: #0000ff;">int</span> digit=0<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">int</span>[]c=<span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[a.length];
+            </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=a.length-1;i&gt;=0;i--<span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">if</span>(w&lt;=0<span style="color: #000000;">)
+                {
+                    c[i]</span>=b[i]-a[i]-<span style="color: #000000;">digit;
+                    </span><span style="color: #0000ff;">if</span>(c[i]&gt;=0<span style="color: #000000;">)
+                    {   digit</span>=0<span style="color: #000000;">;}
+                    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    {
+                        c[i]</span>=c[i]+10<span style="color: #000000;">;
+                        digit</span>=1<span style="color: #000000;">;
+                    }
+                }
+                    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    {
+                        c[i]</span>=a[i]-b[i]-<span style="color: #000000;">digit;
+                        </span><span style="color: #0000ff;">if</span>(c[i]&gt;=0<span style="color: #000000;">)
+                        {digit</span>=0<span style="color: #000000;">;}
+                        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                        {
+                            c[i]</span>=c[i]+10<span style="color: #000000;">;
+                            digit</span>=1<span style="color: #000000;">;
+                        }
+                 }
+             }
+                </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+            }
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[]args){
+                </span><span style="color: #0000ff;">int</span> a[]=<span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[50<span style="color: #000000;">];
+                </span><span style="color: #0000ff;">int</span> b[]=<span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[50<span style="color: #000000;">];
+                </span><span style="color: #0000ff;">int</span> m=0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> n=0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> s=0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">int</span> t=0;<span style="color: #0000ff;">int</span> w=0<span style="color: #000000;">;
+                Scanner in</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+                System.out.println(</span>"请输入第一个大数:"<span style="color: #000000;">);
+                String aa</span>=<span style="color: #000000;">in.next();
+                System.out.println(</span>"请输入第二个大数:"<span style="color: #000000;">);
+                String bb</span>=<span style="color: #000000;">in.next();
+                m</span>=a.length-<span style="color: #000000;">aa.length();
+                n</span>=b.length-<span style="color: #000000;">bb.length();
+                </span><span style="color: #0000ff;">if</span>(aa.length()&gt;<span style="color: #000000;">bb.length())
+                {
+                    w</span>=1<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (aa.length()&lt;<span style="color: #000000;">bb.length())
+                {
+                    w</span>=-1<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                    {w </span>=<span style="color: #000000;"> aa.compareTo(bb);}
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; aa.length(); i++<span style="color: #000000;">)
+                {
+                    a[m</span>++] = aa.charAt(i) - 48<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 0; j &lt; bb.length(); j++<span style="color: #000000;">)
+                {
+                    b[n</span>++] = bb.charAt(j) - 48<span style="color: #000000;">;
+                }
+                    </span><span style="color: #0000ff;">int</span>[] c =<span style="color: #000000;"> Test1.add(a, b);
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; c.length; k++<span style="color: #000000;">)
+                    {
+                        </span><span style="color: #0000ff;">if</span> (c[k] &gt; 0<span style="color: #000000;">)
+                        {
+                        s </span>=<span style="color: #000000;"> k;
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        }
+                    }
+                    System.out.print(</span>"大数相加的结果为："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = s; i &lt; c.length; i++<span style="color: #000000;">) {
+                    System.out.print(c[i]);
+                    }
+                    System.out.println();
+                    </span><span style="color: #0000ff;">int</span>[] d =<span style="color: #000000;"> Test1.sub(a, b, w);
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; d.length; k++<span style="color: #000000;">)
+                    {
+                        </span><span style="color: #0000ff;">if</span> (d[k] &gt; 0<span style="color: #000000;">)
+                        {
+                        t </span>=<span style="color: #000000;"> k;
+                        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                        }
+                    }
+                    System.out.print(</span>"大数相减的结果为："<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">if</span> (w &lt; 0<span style="color: #000000;">)
+                    System.out.print(</span>"-"<span style="color: #000000;">);
+                    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = t; i &lt; d.length; i++<span style="color: #000000;">)
+                    {
+                        System.out.print(d[i]);
+                    }
+                    System.out.println();
+                    System.out.println();
+                    System.out.println();
+                    System.out.println();
+ 
+ 
+                    }
+}</span></pre>
+</div>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175439049-708058312.png" alt="" /></p>
+<p>2、上网百度的用数组大数类实现加减乘运算源程序：</p>
+<p align="justify">&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">/*</span><span style="color: #008000;">自定义大数类，用数组实现任意超大整数的加减乘运算</span><span style="color: #008000;">*/</span>  
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Random;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;  
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Bignumber {  
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[] num;  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 无参构造函数  </span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Bignumber() {  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 有参构造函数  </span>
+    <span style="color: #0000ff;">public</span> Bignumber(<span style="color: #0000ff;">int</span><span style="color: #000000;"> i) {  
+        num </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[i];  
+        Random random </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Random();  
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> j;  
+        </span><span style="color: #0000ff;">for</span> (j = 0; j &lt; i; j++<span style="color: #000000;">)  
+            num[j] </span>= random.nextInt(10<span style="color: #000000;">);  
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 当生成的数首位是0的话，让重新生成  </span>
+        <span style="color: #0000ff;">while</span> (num[i - 1] == 0<span style="color: #000000;">) {  
+            num[i </span>- 1] = random.nextInt(10<span style="color: #000000;">);  
+        }  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 加法  </span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Bignumber add(Bignumber bigA, Bignumber bigB) {  
+        </span><span style="color: #0000ff;">int</span> alen =<span style="color: #000000;"> bigA.num.length;  
+        </span><span style="color: #0000ff;">int</span> blen =<span style="color: #000000;"> bigB.num.length;  
+        </span><span style="color: #0000ff;">int</span> clen =<span style="color: #000000;"> Math.max(alen, blen);  
+        Bignumber result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bignumber();  
+        result.num </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[clen];  
+        </span><span style="color: #0000ff;">if</span> (alen &gt;=<span style="color: #000000;"> blen) {  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; blen; i++<span style="color: #000000;">)  
+                result.num[i] </span>= bigA.num[i] +<span style="color: #000000;"> bigB.num[i];  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = blen; j &lt; alen; j++<span style="color: #000000;">)  
+                result.num[j] </span>=<span style="color: #000000;"> bigA.num[j];  
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; alen; i++<span style="color: #000000;">)  
+                result.num[i] </span>= bigA.num[i] +<span style="color: #000000;"> bigB.num[i];  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = alen; j &lt; blen; j++<span style="color: #000000;">)  
+                result.num[j] </span>=<span style="color: #000000;"> bigB.num[j];  
+        }  
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; clen - 1; k++<span style="color: #000000;">) {  
+            </span><span style="color: #0000ff;">if</span> (result.num[k] &gt;= 10<span style="color: #000000;">) {  
+                result.num[k] </span>-= 10<span style="color: #000000;">;  
+                result.num[k </span>+ 1]++<span style="color: #000000;">;  
+            }  
+        }  
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 减法  </span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Bignumber subtract(Bignumber bigA, Bignumber bigB) {  
+        </span><span style="color: #0000ff;">int</span> alen =<span style="color: #000000;"> bigA.num.length;  
+        </span><span style="color: #0000ff;">int</span> blen =<span style="color: #000000;"> bigB.num.length;  
+        </span><span style="color: #0000ff;">int</span> clen =<span style="color: #000000;"> Math.max(alen, blen);  
+        Bignumber result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bignumber();  
+        result.num </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[clen];  
+        </span><span style="color: #0000ff;">if</span> (alen &gt;<span style="color: #000000;"> blen) {  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; blen; i++<span style="color: #000000;">)  
+                result.num[i] </span>= bigA.num[i] -<span style="color: #000000;"> bigB.num[i];  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = blen; j &lt; alen; j++<span style="color: #000000;">)  
+                result.num[j] </span>=<span style="color: #000000;"> bigA.num[j];  
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (alen &lt;<span style="color: #000000;"> blen) {  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; alen; i++<span style="color: #000000;">)  
+                result.num[i] </span>= bigB.num[i] -<span style="color: #000000;"> bigA.num[i];  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = alen; j &lt; blen; j++<span style="color: #000000;">)  
+                result.num[j] </span>=<span style="color: #000000;"> bigB.num[j];  
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isBigger(bigA, bigB)) {  
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; clen; i++<span style="color: #000000;">) {  
+                    result.num[i] </span>= bigA.num[i] -<span style="color: #000000;"> bigB.num[i];  
+                }  
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+                </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; clen; i++<span style="color: #000000;">) {  
+                    result.num[i] </span>= bigB.num[i] -<span style="color: #000000;"> bigA.num[i];  
+                }  
+            }  
+        }  
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; clen - 1; k++<span style="color: #000000;">) {  
+            </span><span style="color: #0000ff;">if</span> (result.num[k] &lt; 0<span style="color: #000000;">) {  
+                result.num[k] </span>+= 10<span style="color: #000000;">;  
+                result.num[k </span>+ 1]--<span style="color: #000000;">;  
+            }  
+        }  
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 乘法  </span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Bignumber multiply(Bignumber bigA, Bignumber bigB) {  
+        </span><span style="color: #0000ff;">int</span> alen =<span style="color: #000000;"> bigA.num.length;  
+        </span><span style="color: #0000ff;">int</span> blen =<span style="color: #000000;"> bigB.num.length;  
+        </span><span style="color: #0000ff;">int</span> clen = alen +<span style="color: #000000;"> blen;  
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> t;  
+        Bignumber result </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bignumber();  
+        result.num </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[clen];  
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = 0; i &lt; alen; i++<span style="color: #000000;">) {  
+            Bignumber temp </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Bignumber();  
+            temp.num </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span><span style="color: #000000;">[clen];  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> j = 0; j &lt; blen; j++<span style="color: #000000;">) {  
+                temp.num[i </span>+ j] = bigA.num[i] *<span style="color: #000000;"> bigB.num[j];  
+            }  
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> k = 0; k &lt; clen; k++<span style="color: #000000;">) {  
+                </span><span style="color: #0000ff;">if</span> (temp.num[k] &gt;= 10<span style="color: #000000;">) {  
+                    t </span>=<span style="color: #000000;"> temp.num[k];  
+                    temp.num[k] </span>= t % 10<span style="color: #000000;">;  
+                    temp.num[k </span>+ 1] += t / 10<span style="color: #000000;">;  
+                }  
+            }  
+            result </span>=<span style="color: #000000;"> add(result, temp);  
+        }  
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断两个位数相同的BigNumber那个大,前面的大于或者等于返回true,后面的大返回false  </span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> isBigger(Bignumber bigA, Bignumber bigB) {  
+        </span><span style="color: #0000ff;">boolean</span> flag = <span style="color: #0000ff;">true</span><span style="color: #000000;">;  
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = bigA.num.length - 1; i &gt;= 0; i--<span style="color: #000000;">) {  
+            </span><span style="color: #0000ff;">if</span> (bigA.num[i] &lt;<span style="color: #000000;"> bigB.num[i]) {  
+                flag </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;  
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;  
+            }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(bigA.num[i] &gt;<span style="color: #000000;"> bigB.num[i]){  
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;  
+            }</span><span style="color: #0000ff;">else</span>  
+                <span style="color: #0000ff;">continue</span><span style="color: #000000;">;  
+        }  
+          
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> flag;  
+    }  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打印  </span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> print() {  
+        </span><span style="color: #0000ff;">if</span> (num[num.length - 1] != 0<span style="color: #000000;">)  
+            System.out.print(num[num.length </span>- 1<span style="color: #000000;">]);  
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = num.length - 2; i &gt;= 0; i--<span style="color: #000000;">)  
+            System.out.print(num[i]);  
+        System.out.println();  
+    }  
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {  
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> TODO Auto-generated method stub  </span>
+       Bignumber a = <span style="color: #0000ff;">new</span> Bignumber(10<span style="color: #000000;">); 
+       System.out.println(</span>"第一个数是:"<span style="color: #000000;">);  
+        a.print();  
+        Bignumber b </span>= <span style="color: #0000ff;">new</span> Bignumber(20<span style="color: #000000;">);  
+        System.out.println(</span>"第二个数是:"<span style="color: #000000;">);  
+        b.print();  
+        System.out.println(</span>"它们的和为:"<span style="color: #000000;">);  
+        add(a, b).print();  
+        System.out.println(</span>"它们的差为:"<span style="color: #000000;">);  
+        subtract(a, b).print();  
+        System.out.println(</span>"它们的乘积为:"<span style="color: #000000;">);  
+        multiply(a, b).print();  
+    }  
+}  </span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175543705-1218951169.png" alt="" /></p>
+<p>3、上网百度了求阶乘源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.Scanner;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Bignumber {
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span>[] resultArray = <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span>[10000000<span style="color: #000000;">]; 
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">int</span> resultJinwei = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">long</span> index = 0<span style="color: #000000;">;    
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.println(</span>"请输入要求阶乘的N的值："<span style="color: #000000;">);
+        Scanner sin </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Scanner(System.in);
+        </span><span style="color: #0000ff;">int</span> number =<span style="color: #000000;"> sin.nextInt();
+        </span><span style="color: #0000ff;">long</span> maxIndex =<span style="color: #000000;"> method(number);
+        System.out.println(</span>"阶乘为:"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">long</span> i = maxIndex-1; i &gt;= 0; i--<span style="color: #000000;">) {
+            System.out.print(resultArray[(</span><span style="color: #0000ff;">int</span><span style="color: #000000;">) i]);
+            </span><span style="color: #0000ff;">if</span>(i % 100 == 0) { <span style="color: #008000;">//</span><span style="color: #008000;">此处对输出格式做处理时因为eclipse编译器的控制台每行输出的长度有限定，所以处理成每行输出100个数</span>
+<span style="color: #000000;">                System.out.println();
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">long</span> method(<span style="color: #0000ff;">long</span><span style="color: #000000;"> number) {
+        </span><span style="color: #0000ff;">long</span> maxIndex = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> temp = 0<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">int tempMaxIndex = 0;</span>
+        resultArray[0] = 1<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">long</span> i = 1; i &lt;= number; i++<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">long</span> j = 0; j &lt; maxIndex; j++<span style="color: #000000;">) {
+                resultArray[(</span><span style="color: #0000ff;">int</span>) j] *=<span style="color: #000000;"> i;
+                resultArray[(</span><span style="color: #0000ff;">int</span>) j] +=<span style="color: #000000;"> resultJinwei;
+                temp </span>= resultArray[(<span style="color: #0000ff;">int</span><span style="color: #000000;">) j];
+                </span><span style="color: #0000ff;">if</span> (temp &gt;= 10<span style="color: #000000;">) {
+                    resultArray[(</span><span style="color: #0000ff;">int</span>) index] = temp % 10<span style="color: #000000;">;
+                    resultJinwei </span>= temp / 10<span style="color: #000000;">;
+                    index</span>++<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span>(maxIndex&lt;index+1<span style="color: #000000;">)
+                        maxIndex </span>= index+1<span style="color: #000000;">;                    
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    index</span>++<span style="color: #000000;">;
+                    resultJinwei </span>= 0<span style="color: #000000;">;
+                }                
+            }
+            index </span>= 0<span style="color: #000000;">;            
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> maxIndex;
+    }    
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175654299-279350068.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">三、随机生成</span>10个数，填充一个数组，然后用消息框显示数组内容，接着计算数组元素的和，将结果也显示在消息框中。要求将设计思路、程序流程图、源程序代码、结果截图、编程总结等发表到博客园，并备份到课堂派。</p>
+<p align="justify">1、程序设计思想：先定义一个一维数组，用for循环存放十个随机生成的0~100之间的数字，再逐个输出并求和。</p>
+<p align="justify">2、程序流程图：</p>
+<p align="justify"><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175716580-1750063323.png" alt="" /></p>
+<p>3、源代码：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> 王荣荣2016/11/6</span>
+<span style="color: #0000ff;">import</span> javax.swing.*<span style="color: #000000;">;
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Sum {
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+     String output</span>= "随机生成的10个数为：\n"<span style="color: #000000;">;
+     </span><span style="color: #0000ff;">int</span> sum=0<span style="color: #000000;">;
+     </span><span style="color: #0000ff;">int</span> a[]=<span style="color: #0000ff;">new</span> <span style="color: #0000ff;">int</span> [10<span style="color: #000000;">];
+     </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = 0;i&lt;10;i++<span style="color: #000000;">)
+      {
+          a[i]</span>=(<span style="color: #0000ff;">int</span>) (Math.random()*100<span style="color: #000000;">);
+          output </span>+= " "+a[i]+"\n"<span style="color: #000000;">;
+          sum</span>=sum+<span style="color: #000000;">a[i];
+      }
+          output </span>+="这十个数的和为："+<span style="color: #000000;">sum;
+          JOptionPane.showMessageDialog(</span><span style="color: #0000ff;">null</span>,output,"结果"<span style="color: #000000;">,JOptionPane.PLAIN_MESSAGE);
+
+   }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161106175808252-1948412197.png" alt="" /></p>
+<p>&nbsp;</p>
