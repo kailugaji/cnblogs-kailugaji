@@ -1,0 +1,109 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">最优化&mdash;&mdash;无约束最优化方法(Unconstrained Optimization Algorithms)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本篇介绍最优化方法(运筹学)里面的无约束优化方法，包括：线搜索法、信赖域法、以及最小二乘法。更多优化问题，请看标签：<a href="https://www.cnblogs.com/kailugaji/tag/%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98/" target="_blank">优化问题 - 凯鲁嘎吉</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 引言</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">包括：无约束优化方法分类、无约束非线性规划问题陈述与最优性条件。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202444358-1799124986.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202456437-1015649753.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202504244-753597988.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220810092610611-1086281756.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202518130-1506090162.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;线搜索准则</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202600075-1461816357.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1&nbsp;Armijo准则</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202618330-972754346.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202631918-2126418460.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.2&nbsp;Goldstein准则</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202701774-907808604.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.3&nbsp;Wolfe准则</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202729019-135068432.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;梯度法与次梯度法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.1&nbsp;最速下降法(Steepest Descent Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202829915-262294414.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202855426-484438032.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202903351-349420232.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.2&nbsp;Barzilar-Borwein方法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809202937596-56526398.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220810095415804-379776135.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.3&nbsp;次梯度法(Subgradient Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203016348-1790519870.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4.&nbsp;共轭梯度法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.1&nbsp;共轭方向法(Conjugate Direction Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203101788-272248429.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203109162-1066902544.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.2&nbsp;共轭梯度法(Conjugate Gradient Methods)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203211531-1517255901.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203220609-113148188.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203229215-208178861.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 牛顿类法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.1&nbsp;经典牛顿法(Newton&rsquo;s Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203319632-871653367.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203327693-1540516807.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.2&nbsp;修正牛顿法(Modified Newton&rsquo;s Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203337015-305301786.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203409486-1859101898.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220810171357815-1027438683.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220810171852859-1336332217.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203436509-486755689.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.3&nbsp;非精确牛顿法(Inexact Newton&rsquo;s Method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203444787-1110812695.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203530289-1499316136.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6.&nbsp;拟牛顿类法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">6.1&nbsp;拟牛顿法(Quasi-Newton Methods)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203539600-606289784.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203627752-843298003.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203637175-1635211417.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203645505-761894865.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">6.2&nbsp;秩一更新(SR1)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203654888-519170386.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">6.3 BFGS公式</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203733773-1583179734.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">6.4 DFP公式与Broyden算法族</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203804072-1268737890.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">7.&nbsp;信赖域方法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">7.1&nbsp;信赖域方法(Trust-Region Algorithm)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202211/1027447-20221114210700329-263193022.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220909082843680-431294026.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203939246-768414630.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203947063-409940748.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">7.2 信赖域子问题求解1&mdash;&mdash;迭代法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809203954457-149219030.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204053910-1017899508.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204102140-1612014060.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">7.3 信赖域子问题求解2&mdash;&mdash;截断共轭梯度法(Truncated Conjugate Gradient)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204110693-651008226.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204156533-811501571.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">8. 最小二乘法(Least-Squares Method)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">8.1 最小二乘问题与线性最小二乘问题</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204204840-2026022319.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204246037-417112394.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">8.2 非线性最小二乘问题(Gauss-Newton法与Marquardt修正算法)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204253253-522661970.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204301874-638479082.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204311122-500180889.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204358610-976723312.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809204407865-830200338.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">9. 参考文献</span></h2>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">刁在筠, 等, 运筹学(第三版), 高等教育出版社, 2007. (引言, 最速下降法, 牛顿法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">马昌凤, <a href="https://book.sciencereading.cn/shop/book/Booksimple/show.do?id=BEA6D2FC5AB454ACDB5A988D821F4C4E3000" target="_blank">最优化方法及其Matlab程序设计</a>, 科学出版社, 2010. (引言, 信赖域方法, 共轭梯度法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">陈宝林, 最优化理论与算法, 清华大学出版社, 2005. <a href="https://deitacloud.github.io/site/机器学习/" target="_blank">https://deitacloud.github.io/site/机器学习/</a>. (直接法, 最小二乘法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Jorge Nocedal, Stephen J. Wright, <a href="https://www.math.uci.edu/~qnie/Publications/NumericalOptimization.pdf" target="_blank">Numerical Optimization</a>, Springer New York, NY, 2006. (部分插图, 共轭梯度法, 信赖域方法) </span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">文再文, 最优化：建模、算法与理论/最优化计算方法, <a href="https://bicmr.pku.edu.cn/~wenzw/optbook.html" target="_blank">https://bicmr.pku.edu.cn/~wenzw/optbook.html</a> (线搜索准则, 牛顿法与拟牛顿法, Barzilar-Borwein方法, 次梯度法, 信赖域方法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Prof. L. Vandenberghe, ECE236C - Optimization Methods for Large-Scale Systems, 2022. <a href="http://www.seas.ucla.edu/~vandenbe/236C/" target="_blank">http://www.seas.ucla.edu/~vandenbe/236C/</a> (次梯度法插图)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">高立, 数值最优化方法, 北京大学出版社, 2014. (牛顿法插图)</span></p>
+</li>
+</ul>

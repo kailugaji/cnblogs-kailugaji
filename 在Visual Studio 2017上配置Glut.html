@@ -1,0 +1,51 @@
+<h1 style="text-align: center;">&nbsp;在Visual Studio 2017上配置Glut</h1>
+<p><strong>作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></strong></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp;<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/10502825.html">在Visual Studio 2017上配置并使用OpenGL</a>已经介绍了如何配置OpenGL，但缺点是每次新建一个项目时，都应重新安</span><span style="font-size: 16px; font-family: 'times new roman', times;">装 &ldquo;nupengl.core.redist&rdquo; 与 &ldquo;nupengl.core&rdquo; 这两个文件，这在有网的情况下还是可以实现的，但不是一个长久之计。现在介绍另一种方法，用Glut库的一个开源替代品：Freeglut，它是由Pawel W. Olszta在1999年12月创建，最新版本为2015年3月的3.0版本。</span></p>
+<h2><span style="font-family: 'times new roman', times;">1. FreeGlut的获取</span></h2>
+<p>&nbsp; &nbsp; <span style="font-size: 16px; font-family: 'times new roman', times;">以VS 2017为编程环境，在<a href="https://www.transmissionzero.co.uk/software/freeglut-devel/" target="_blank">freeglut Windows Development Libraries</a>上下载MSVC包，点击下载地址<a title="freeglut 3.0.0 for MSVC" type="application/zip" href="https://www.transmissionzero.co.uk/files/software/development/GLUT/freeglut-MSVC.zip">Download freeglut 3.0.0 for MSVC</a>进行下载3.0版本，并解压缩。</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320190427477-2089618369.png" alt="" /></span></p>
+<h2><span style="font-family: 'times new roman', times;">2. FreeGlut的配置</span></h2>
+<h3><span style="font-family: 'times new roman', times;">（1）头文件</span></h3>
+<p>&nbsp; <span style="font-family: 'times new roman', times; font-size: 16px;">&nbsp; 将&ldquo;E:\下载\freeglut-MSVC-3.0.0-2.mp\freeglut\include\GL&rdquo;文件夹复制到VS 2017的安装目录&ldquo;D:\VS2017\VC\Tools\MSVC\14.16.27023\include&rdquo;下;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320183427366-2112567438.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320183509617-1438875493.png" alt="" /></p>
+<h3><span style="font-family: 'times new roman', times;">（2）库文件</span></h3>
+<p>&nbsp; &nbsp;<span style="font-family: 'times new roman', times; font-size: 16px;"> 将&ldquo;E:\下载\freeglut-MSVC-3.0.0-2.mp\freeglut\lib\freeglut.lib&rdquo;文件复制到&ldquo;D:\VS2017\VC\Tools\MSVC\14.16.27023\lib\x86&rdquo;目录下;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320183610220-1085416221.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320183742417-863943075.png" alt="" /></p>
+<p>&nbsp; &nbsp;<span style="font-family: 'times new roman', times; font-size: 16px;"> 将&ldquo;E:\下载\freeglut-MSVC-3.0.0-2.mp\freeglut\lib\x64\freeglut.lib&rdquo;文件复制到&ldquo;D:\VS2017\VC\Tools\MSVC\14.16.27023\lib\x64&rdquo;目录下;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184013316-1180181544.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320183856268-1191703939.png" alt="" /></p>
+<h3><span style="font-family: 'times new roman', times;">（3）DLL文件</span></h3>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">64位Windows系统：</span><br /><span style="font-family: 'times new roman', times; font-size: 16px;">　　将&ldquo;E:\下载\freeglut-MSVC-3.0.0-2.mp\freeglut\bin\freeglut.dll&rdquo;文件复制到&ldquo;C:\Windows\SysWOW64&rdquo;目录下;</span><br /><span style="font-family: 'times new roman', times; font-size: 16px;">　　将freeglut\bin\x64\freeglut.dll文件复制到c:\Windows\System32目录下;</span><br /><span style="font-family: 'times new roman', times; font-size: 16px;">32位Windows系统：</span><br /><span style="font-family: 'times new roman', times; font-size: 16px;">　　将&ldquo;E:\下载\freeglut-MSVC-3.0.0-2.mp\freeglut\bin\freeglut.dll&rdquo;文件复制到&ldquo;C:\Windows\System32&rdquo;目录下;</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">以64位Windows系统为例：</span><br /><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184147064-606180385.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184431072-831320867.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184304566-209386610.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184637952-2009943612.png" alt="" /></p>
+<h2><span style="font-family: 'times new roman', times;">3. 测试案例</span></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('74066201-8008-42db-a850-5a569a2b152a')"><img id="code_img_closed_74066201-8008-42db-a850-5a569a2b152a" class="code_img_closed" src="http://images.cnblogs.com/OutliningIndicators/ContractedBlock.gif" alt="" /><img id="code_img_opened_74066201-8008-42db-a850-5a569a2b152a" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('74066201-8008-42db-a850-5a569a2b152a',event)" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt="" />
+<div id="cnblogs_code_open_74066201-8008-42db-a850-5a569a2b152a" class="cnblogs_code_hide">
+<pre><span style="color: #008080;"> 1</span> #include &lt;GL/glut.h&gt;
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">void</span> myDisplay(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">    glClear(GL_COLOR_BUFFER_BIT);
+</span><span style="color: #008080;"> 5</span>     glRectf(-<span style="color: #800080;">0.5f</span>, -<span style="color: #800080;">0.5f</span>, <span style="color: #800080;">0.5f</span>, <span style="color: #800080;">0.5f</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    glFlush();
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 8</span>  
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">argv[])
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">11</span>     glutInit(&amp;<span style="color: #000000;">argc, argv);
+</span><span style="color: #008080;">12</span>     glutInitDisplayMode(GLUT_RGB |<span style="color: #000000;"> GLUT_SINGLE);
+</span><span style="color: #008080;">13</span>     glutInitWindowPosition(<span style="color: #800080;">100</span>, <span style="color: #800080;">100</span><span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>     glutInitWindowSize(<span style="color: #800080;">400</span>, <span style="color: #800080;">400</span><span style="color: #000000;">);
+</span><span style="color: #008080;">15</span>     glutCreateWindow(<span style="color: #800000;">"</span><span style="color: #800000;">第一个OpenGL程序</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>     glutDisplayFunc(&amp;<span style="color: #000000;">myDisplay);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">    glutMainLoop();
+</span><span style="color: #008080;">18</span>     <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">19</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190320184929981-2037588000.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">参考文献：&nbsp;<a href="https://blog.csdn.net/wpxu08/article/details/87785547" target="_blank">FreeGlut配置简介 - 图形学与可视化 - CSDN博客</a></span></p>
+<p>&nbsp;</p>

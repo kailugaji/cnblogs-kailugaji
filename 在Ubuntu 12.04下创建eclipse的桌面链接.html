@@ -1,0 +1,29 @@
+<h1 style="text-align: center;">&nbsp;在Ubuntu 12.04下创建eclipse的桌面链接</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 16px;">在<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/10149440.html">Ubuntu 12.04上安装Hadoop并运行</a>中已介绍如何安装jdk与eclipse，这篇文章将介绍如何在桌面创建快捷方式并使用eclipse。</span></p>
+<p><span style="font-size: 16px;">Ubuntu 12.04使用了Unity界面，在桌面左侧侧多了一个启动器栏。我们可以将自己常用的软件在启动器栏放一个图标，实现快速地启动。启动器栏的每一个图标实际上都对应了/usr/share/applications目录下的一个文件。</span></p>
+<p><span style="font-size: 16px;">输入以下：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ sudo su
+[sudo] password for wrr: 
+root@ubuntu:/home/wrr# gedit /usr/share/applications/eclipse.desktop
+</pre>
+</div>
+<p><span style="font-size: 16px;">在eclipse.desktop文件里输入如下内容：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">[Desktop Entry]
+Name=Eclipse
+Comment=Eclipse SDK
+Encoding=UTF-8
+Exec=/home/wrr/java/eclipse/eclipse
+Icon=/home/wrr/java/eclipse/icon.xpm
+Terminal=false
+Type=Application
+Categories=Application;Development;
+</pre>
+</div>
+<p><span style="font-size: 16px;">保存并关闭文件，即可创建成功。在Dash home中输入eclipse，即可打开程序。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220151617165-208653279.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220151733898-779201190.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220151836921-2124558872.png" alt="" /></p>
+<p>&nbsp;</p>

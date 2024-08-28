@@ -1,0 +1,55 @@
+<h1 style="text-align: center;">&nbsp;在Visual Studio 2017上配置并使用OpenGL</h1>
+<p><strong>作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></strong></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">首先在Windows下安装Visual Studio 2017，参考<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/10499994.html">Visual Studio 2017的安装与使用</a>。</span></p>
+<h2><span style="font-family: 'times new roman', times;">1. 下载glut库文件</span></h2>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">在GLUT - The OpenGL Utility Toolkit：<span style="text-decoration: underline;"><a href="https://www.opengl.org/resources/libraries/glut/glut_downloads.php#windows">https://www.opengl.org/resources/libraries/glut/glut_downloads.php#windows</a></span>中点击&ldquo;<a href="#windows">GLUT for Microsoft Windows 95 &amp; NT users</a>&rdquo;，选择&ldquo;If you want just the GLUT header file, the&nbsp;.LIB, and&nbsp;.DLL&nbsp;files all pre-compiled for Intel platforms, you can simply download the&nbsp;<a href="https://www.opengl.org/resources/libraries/glut/glutdlls37beta.zip">glutdlls37beta.zip</a>&nbsp;file (149 kilobytes).&rdquo;并点击下载。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309194826170-1403646005.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309194837123-1024853157.png" alt="" /></p>
+<p><span style="font-size: 16px;">下载完并解压之后，会出现如下几个文件：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309194904195-1643097955.png" alt="" /></p>
+<h2><span style="font-family: 'times new roman', times;">2. 配置glut库文件</span></h2>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">找到vs2017的安装目录，我的安装路径为D:\VS2017\VC\Tools\MSVC\14.16.27023\include\，创建一个名为gl的文件夹，并将解压的glut.h文件复制其中。</span></p>
+<p><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195104066-1411151914.png" alt="" /></span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">再找到路径为 D:\VS2017\VC\Tools\MSVC\14.16.27023\lib\x86，将解压到的glut.lib，glut32.lib复制其中。</span></p>
+<p><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195134198-1641292222.png" alt="" /></span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">最后把解压到的glut.dll和glut32.dll复制到C:\Windows\System32文件夹内（32位系统）或C:\Windows\SysWOW64(64位系统）。</span></p>
+<p><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195206297-47525173.png" alt="" /></span></p>
+<h2><span style="font-family: 'times new roman', times;">3. 安装Nuget程序包</span></h2>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">新建项目&ldquo;Windows桌面向导&rdquo;，选择&ldquo;空项目&rdquo;。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195627290-1803952023.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195505054-1250851183.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">&ldquo;项目&rdquo;-&gt;&ldquo;管理Nuget程序包&rdquo;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309201716717-643380503.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">&ldquo;浏览&rdquo;-&gt;&ldquo;搜索nupengl&rdquo;</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309200120173-603026867.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">将&ldquo;nupengl.core.redist&rdquo;与&ldquo;nupengl.core&rdquo;下载下来。&nbsp;</span></p>
+<h2><span style="font-family: 'times new roman', times;">4. 运行程序</span></h2>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">&ldquo;项目&rdquo;-&gt;&ldquo;添加新项&rdquo;-&gt;&ldquo;C++文件&rdquo;，新建一个&ldquo;.cpp&rdquo;文件。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309195724286-1566277478.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">编写第一个OpenGL程序，并按&ldquo;F5&rdquo;键运行。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">#include &lt;GL/glut.h&gt;
+void myDisplay(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glRectf(-0.5f, -0.5f, 0.5f, 0.5f);
+	glFlush();
+}
+
+int main(int argc, char *argv[])
+{
+	glutInit(&amp;argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+	glutInitWindowPosition(100, 100);
+	glutInitWindowSize(400, 400);
+	glutCreateWindow("第一个OpenGL程序");
+	glutDisplayFunc(&amp;myDisplay);
+	glutMainLoop();
+	return 0;
+}
+</pre>
+</div>
+<p><span style="font-size: 16px;">显示出一个黑色背景上的白色矩形图。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190309201033674-1516710842.png" alt="" /></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;"><span style="color: #ff0000;"><strong>注意：</strong></span>每次新建一个项目时，都应重新安装&ldquo;nupengl.core.redist&rdquo;与&ldquo;nupengl.core&rdquo;这两个文件。</span></p>
+<p><span style="font-family: 'times new roman', times; font-size: 16px;">后续：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/10566884.html">在Visual Studio 2017上配置Glut</a></span></p>

@@ -1,0 +1,97 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">最优化&mdash;&mdash;约束优化方法(Constrained Optimization Algorithms)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本篇介绍最优化方法(运筹学)里面的约束优化方法，包括：直接搜索法(随机方向法、约束坐标轮换法、复合形法、以及可行方向法)与间接搜索法(惩罚函数法与序列二次规划)。更多优化问题，请看标签：<a href="https://www.cnblogs.com/kailugaji/tag/%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98/" rel="noopener" target="_blank">优化问题 - 凯鲁嘎吉</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 引言</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">包括约束非线性规划问题陈述、约束优化方法分类、最优性条件。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195141070-976712578.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195202413-244809414.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195209559-23452946.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195216883-1585467465.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195223913-1490103783.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195232681-150587620.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195241755-1627488106.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195249579-1182227742.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;直接搜索法(Direct Search Methods)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1&nbsp;随机方向法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195358978-35765135.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195406009-1666590118.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195413696-307723488.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195421380-1611778142.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.2&nbsp;约束坐标轮换法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195502265-849758969.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.3&nbsp;复合形法(complex method)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195539533-1593360442.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195548552-3353581.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195558301-788415576.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;可行方向法(Feasible Directions Methods)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.1&nbsp;Zoutendijk可行方向法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195606325-1414647032.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195731583-677069281.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195739906-1646233361.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195805134-541215130.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.2&nbsp;Rosen梯度投影法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195844471-1946915023.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195852883-971948871.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195900262-126793563.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.3&nbsp;Wolfe简约梯度法(Reduced Gradient, RG)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809195956401-1214227187.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200003759-647140601.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200013276-448557229.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200022118-1572974235.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200031826-1698806198.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200041845-129499763.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.4&nbsp;广义简约梯度法(Generalized Reduced Gradient, GRG)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200052498-2012851345.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200146793-1463733583.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200155539-929289426.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200205256-1723947269.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.5&nbsp;Frank-Wolfe方法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200214672-275815383.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200302622-2085828159.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4.&nbsp;惩罚函数法(Penalty Function Methods)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.1&nbsp;外点法/罚函数法(Exterior Penalty Function)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200311856-1796281976.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200400417-378860079.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200408434-1491458340.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.2&nbsp;内点法/障碍函数法(Interior Penalty Function)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200420773-248288185.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200457105-1302758180.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200505547-1667733573.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200515499-1235352018.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4.3 乘子法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200527060-563509547.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200557719-1707633933.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200608178-1989851221.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5.&nbsp;序列二次规划(Sequential Quadratic Programming)</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.1&nbsp;Lagrange-Newton法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200616716-1804520132.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200759574-819237657.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200808195-239550622.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200818755-272015300.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200827804-1537397885.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.2&nbsp;Wilson-Han-Powell法(也称SQP)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200836347-1520041662.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200918191-985143433.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200925564-1465274236.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202208/1027447-20220809200933741-1364856091.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6. 参考文献</span></h2>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">刁在筠, 等, 运筹学(第三版), 高等教育出版社, 2007. (引言，外点法与内点法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">唐焕文, 等, 实用最优化方法, 大连理工大学社, 2004. <a href="http://www.wenqujingdian.com/Public/editor/attached/file/14/C0043739.pdf" target="_blank">http://www.wenqujingdian.com/Public/editor/attached/file/14/C0043739.pdf</a>. (引言)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">孙靖民, 等, 机械优化设计, 机械工业出版社, 2006. (直接搜索法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">陈宝林, 最优化理论与算法, 清华大学出版社, 2005. <a href="https://deitacloud.github.io/site/机器学习/" target="_blank">https://deitacloud.github.io/site/机器学习/</a>. (可行方向法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">凯鲁嘎吉, 交替方向乘子法(Alternating Direction Method of Multipliers),博客园, <a href="https://www.cnblogs.com/kailugaji/p/12676095.html" target="_blank">https://www.cnblogs.com/kailugaji/p/12676095.html</a> (乘子法)</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">高立, 数值最优化方法, 北京大学出版社, 2014. (序列二次规划)</span></p>
+</li>
+</ul>

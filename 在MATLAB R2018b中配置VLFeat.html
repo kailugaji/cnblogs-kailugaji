@@ -1,0 +1,21 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">在MATLAB R2018b中配置VLFeat</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p style="text-align: center;"><span style="font-size: 18px;"><strong><span style="font-family: 'comic sans ms', sans-serif;">VLFeat官网：<a href="http://www.vlfeat.org/" target="_blank">http://www.vlfeat.org</a></span></strong></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; VLFeat&nbsp;开源库专注于实现当前最为流行的图像理解和局部特征提取和匹配的计算机视觉算法。算法包括Fisher向量，VLAD，SIFT，MSER，k均值，分层k均值，聚集信息瓶颈，SLIC超像素，快速移位超像素，大规模SVM训练等。它是用C编写的，以提高效率和兼容性，并带有MATLAB的接口，以易于使用，并在全文中提供详细的文档。它支持Windows，Mac OS X和Linux。<a href="http://www.vlfeat.org/download/vlfeat-0.9.21-bin.tar.gz" target="_blank">最新版本的VLFeat</a>是0.9.21。下面讲解一下VLFeat库在MATLAB中的配置。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 下载最新版本的VLFeat 0.9.21</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231193154124-949302622.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 解压到某一路径，比如：D:\Program Files\MATLAB\vlfeat-0.9.21-bin</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231193321292-794400959.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 打开D:\Program Files\MATLAB\R2018b\toolbox\local，新建startup.m文件，写入run('D:\Program Files\MATLAB\vlfeat-0.9.21-bin\toolbox\vl_setup')并保存</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231193508608-367153045.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 将D:\Program Files\MATLAB\R2018b\toolbox中的local整个文件夹及其里面的文件全部添加到路径</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 在当前文件夹中找到local文件夹，右击local文件夹，先从路径中删除local文件夹及子文件夹，然后再右击local，全部添加到路径，这样startup.m文件就添加到路径中了，打开MATLAB会自动运行该文件。当然也可以把startup.m文件放到其他位置，只要文件添加到路径中即可。</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231193830046-225816017.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231193855682-1620018116.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 关闭MATLAB，再重新打开MATLAB，在命令行窗口输入vl_version，如果出现版本号，则说明配置成功</span></h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201912/1027447-20191231194110342-1166106871.png" alt="" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif; color: #ffff00;">6. 注意</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">1). startup.m文件是用户自己定义的，MATLAB中没有的，要自己新建脚本文件，写进程序。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2). 关闭MATLAB，再重新打开MATLAB，运行vl_version，如果提示未找到文件，多半是因为startup.m文件没有添加到路径，找到startup.m文件存放的文件夹，添加文件夹及其子文件到路径中即可。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">3). VLFeat库文件可以存放到其他位置，相应地startup.m中的路径要改，startup.m文件也可以存放到其他位置，相应地startup.m所在的文件夹要添加到路径中。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">4).&nbsp;VLFeat.org<a href="http://www.vlfeat.org/index.html" target="_blank">官网</a>中提供了<a href="http://www.vlfeat.org/overview/tut.html" target="_blank">教程</a>以及<a href="http://www.vlfeat.org/matlab/matlab.html" target="_blank">MATLAB API</a>，方便查询。</span></p>
