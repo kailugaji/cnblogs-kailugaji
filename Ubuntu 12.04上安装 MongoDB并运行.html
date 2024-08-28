@@ -1,0 +1,159 @@
+<h1 style="text-align: center;">Ubuntu 12.04上安装 MongoDB并运行</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 18px;">在Terminal输入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+sudo apt-get update
+sudo apt-get install mongodb-10gen
+</pre>
+</div>
+<p><span style="font-size: 18px;">结果显示如下：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+[sudo] password for wrr: 
+Executing: gpg --ignore-time-conflict --no-options --no-default-keyring --secret-keyring /tmp/tmp.vcN87sDcVF --trustdb-name /etc/apt/trustdb.gpg --keyring /etc/apt/trusted.gpg --primary-keyring /etc/apt/trusted.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+gpg: requesting key 7F0CEB10 from hkp server keyserver.ubuntu.com
+gpg: key 7F0CEB10: public key "Totally Legit Signing Key &lt;mallory@example.org&gt;" imported
+gpg: key 7F0CEB10: public key "Richard Kreuter &lt;richard@10gen.com&gt;" imported
+gpg: no ultimately trusted keys found
+gpg: Total number processed: 2
+gpg:               imported: 2  (RSA: 2)
+wrr@ubuntu:~$ echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
+deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen
+wrr@ubuntu:~$ sudo apt-get update
+wrr@ubuntu:~$ sudo apt-get install mongodb-10gen
+</pre>
+</div>
+<p><span style="font-size: 18px;">下载完成后，查看版本号</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ mongo -version
+MongoDB shell version: 2.4.14
+</pre>
+</div>
+<p><span style="font-size: 18px;">如果不行，执行下面操作</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ sudo rm /var/cache/apt/archives/lock
+wrr@ubuntu:~$ sudo rm /var/lib/dpkg/lock
+wrr@ubuntu:~$ sudo apt-get update
+</pre>
+</div>
+<p><span style="font-size: 18px;">然后在查看版本号即可。以下命令为启动与关闭MongoDB。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">sudo service mongodb start
+sudo service mongodb stop
+</pre>
+</div>
+<p><span style="font-size: 18px;">以下为启动MongoDB并进行简单操作。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ sudo service mongodb start
+mongodb start/running, process 4004
+wrr@ubuntu:~$ pgrep mongo -l
+4004 mongod
+wrr@ubuntu:~$ mongo
+MongoDB shell version: 2.4.14
+connecting to: test
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+Wed Dec 19 13:11:44.276 [initandlisten] 
+Wed Dec 19 13:11:44.276 [initandlisten] ** NOTE: This is a 32 bit MongoDB binary.
+Wed Dec 19 13:11:44.276 [initandlisten] **       32 bit builds are limited to less than 2GB of data (or less with --journal).
+Wed Dec 19 13:11:44.276 [initandlisten] **       Note that journaling defaults to off for 32 bit and is currently off.
+Wed Dec 19 13:11:44.276 [initandlisten] **       See http://dochub.mongodb.org/core/32bit
+Wed Dec 19 13:11:44.276 [initandlisten] 
+&gt; show dbs
+local	0.03125GB
+</pre>
+</div>
+<p><span style="font-size: 18px;">创建数据库School以及集合teacher与student</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ sudo service mongodb start
+start: Job is already running: mongodb
+wrr@ubuntu:~$ mongo
+MongoDB shell version: 2.4.14
+connecting to: test
+Server has startup warnings: 
+Wed Dec 19 13:11:44.276 [initandlisten] 
+Wed Dec 19 13:11:44.276 [initandlisten] ** NOTE: This is a 32 bit MongoDB binary.
+Wed Dec 19 13:11:44.276 [initandlisten] **       32 bit builds are limited to less than 2GB of data (or less with --journal).
+Wed Dec 19 13:11:44.276 [initandlisten] **       Note that journaling defaults to off for 32 bit and is currently off.
+Wed Dec 19 13:11:44.276 [initandlisten] **       See http://dochub.mongodb.org/core/32bit
+Wed Dec 19 13:11:44.276 [initandlisten] 
+&gt; show dbs
+School	0.0625GB
+local	0.03125GB
+test	(empty)
+&gt; use School
+switched to db School
+&gt; db.createCollection('teacher')
+{ "ok" : 1 }
+&gt; db.createCollection('student')
+{ "ok" : 1 }
+&gt; show collections
+student
+system.indexes
+teacher
+</pre>
+</div>
+<p><span style="font-size: 18px;">插入数据</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&gt; db.student.insert({_id:2018001, sname:'zhangsan', sage:20})
+&gt; db.student.save({_id:2018002, sname:'lisi', sage:22})
+&gt; db.student.find()
+{ "_id" : 2018001, "sname" : "zhangsan", "sage" : 20 }
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 22 }
+</pre>
+</div>
+<p><span style="font-size: 18px;">查找数据</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&gt; db.student.find({sname:'lisi'})
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 22 }
+&gt; db.student.find({},{sname:1, sage:1})
+{ "_id" : 2018001, "sname" : "zhangsan", "sage" : 20 }
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 22 }
+&gt; db.student.find({sname:'zhangsan', sage:22})
+&gt; db.student.find({$or: [{sage: 22},{sage:25}]})
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 22 }
+</pre>
+</div>
+<p><span style="font-size: 18px;">修改数据</span></p>
+<p><span style="font-size: 16px;">将李四的年龄修改为30</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&gt; db.student.find().pretty()
+{ "_id" : 2018001, "sname" : "zhangsan", "sage" : 20 }
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 22 }
+&gt; db.student.update({sname:'lisi'},{$set:{sage:30}},false,true)
+&gt; db.student.find({sname:'lisi'})
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 30 }</pre>
+</div>
+<p><span style="font-size: 18px;">删除数据</span></p>
+<p><span style="font-size: 16px;">删除一条学生记录</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&gt; db.student.remove({sname:'zhangsan'})
+&gt; db.student.find()
+{ "_id" : 2018002, "sname" : "lisi", "sage" : 30 }
+</pre>
+</div>
+<p><span style="font-size: 16px;">删除学生数据集</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">&gt; db.student.drop()
+true
+&gt; show collections
+system.indexes
+teacher
+</pre>
+</div>
+<p><span style="font-size: 18px;">退出</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">exit
+</pre>
+</div>
+<p><span style="font-size: 18px;">如果想看更详细的解读，请看<a href="http://dblab.xmu.edu.cn/blog/mongodb/" target="_blank">Ubuntu下MongoDB安装与使用教程_厦大数据库实验室博客</a></span></p>
+<p>&nbsp;</p>
+<p><em id="__mceDel">&nbsp;</em></p>
+<p>&nbsp;</p>

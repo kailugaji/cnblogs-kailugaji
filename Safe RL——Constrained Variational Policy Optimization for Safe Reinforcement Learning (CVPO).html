@@ -1,0 +1,202 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Safe RL&mdash;&mdash;Constrained Variational Policy Optimization for Safe Reinforcement Learning (CVPO)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 强化学习可以看作为概率推断问题。通过阅读2022年发表在ICML上的论文《<a href="https://arxiv.org/pdf/2201.11927v3.pdf" target="_blank">Constrained Variational Policy Optimization for Safe Reinforcement Learning</a>》，并简要做一下阅读笔记。这篇文章将强化学习问题转换为变分推断的思想进行求解，之前写过类似的博文，如<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15562366.html">RL&mdash;&mdash;Deep Reinforcement Learning amidst Continual/Lifelong Structured Non-Stationarity</a>，思路都是一样的，只是本文这篇CVPO主要是针对安全强化学习而言，因此引入了安全约束，作者将其嵌入在辅助分布q里面，用来限制q的分布范围。文章大体框架是利用类似期望最大化的思想进行求解，在E步，固定&theta;，求q，而在M步，固定q，求&theta;。在求解期间也用到了信赖域的思想，类似于<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15388913.html">信赖域策略优化(Trust Region Policy Optimization, TRPO)</a>，将KL散度约束项放到约束条件中，并定义信赖域半径进行求解。本文主要涉及概率统计的相关知识，在看本文之前，可以先阅读相关博文：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/12463966.html">变分推断与变分自编码器</a>以及最后参考文献中列出的几篇博文。更多有关强化学习的内容，请看<a href="https://www.cnblogs.com/kailugaji/category/2038931.html" target="_blank">随笔分类&nbsp;</a></span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.cnblogs.com/kailugaji/category/2038931.html" target="_blank">- Reinforcement Learning</a>。(补充：阅读这篇文章之前，也可以先看<a href="https://openreview.net/pdf?id=S1ANxQW0b" target="_blank">Maximum a Posteriori Policy Optimisation</a>&nbsp;(MPO)算法。本文这篇其实就是在MPO(非参数化版本)的基础上引入了安全约束，原先的约束条件又被进一步转化为用拉格朗日求解，而其他的设置，包括先验等，都和MPO一模一样。其实也可以用参数化的方法，那样的话就不需要M步了，直接将q得到的&theta;当做待求的&theta;进行下一步更新就行，这样就和CPO没太大区别了。)<a href="https://www.cnblogs.com/kailugaji/category/2038931.html" target="_blank"><br /></a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. Introduction</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">介绍共轭先验(Conjugate Priors)与常见的共轭先验分布、参数估计、贝叶斯估计、变分推断、Jensen不等式、平均场理论、Fisher信息量、两个高斯分布的交叉熵与KL散度及其推导、论文的研究背景、现有方法存在的问题以及本文的主要贡献。</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160738228-1778109958.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160744241-1137578450.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160749848-1945041552.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160755811-843877719.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160801495-1463279048.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160807314-1590561633.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160813046-1490392120.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">KL散度与Fisher信息量的联系：</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202210/1027447-20221007202608289-1466402064.png" alt="" width="1382" height="498" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160818905-374230516.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160824858-1241466255.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160830631-1089498670.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160837461-973138045.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160843838-272208217.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;Constrained Variational Policy Optimization (CVPO)</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">主要介绍论文的核心内容，包括Constrained Markov Decision Processes、Primal-Dual View vs Inference View、Constrained RL as Inference、Constrained E-step&mdash;&mdash;固定&theta;，求q、M-step&mdash;&mdash;固定q，求&theta;、以及算法流程。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160914541-1871417491.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160921597-706974295.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">拓展：为什么&alpha;会被称为温度参数，这就类比于<a href="https://www.cnblogs.com/kailugaji/p/9648903.html" target="_blank">模拟退火算法</a>，在温度T下，分子停留在状态r满足<strong>波尔兹曼</strong>概率分布。这里的&alpha;就相当于模拟退火中的T。只不过T是一直在变的，而&alpha;可能设为固定值。</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160934854-376182443.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160942559-1807793845.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160948730-1263211416.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908160954905-1648316048.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161002014-304453163.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161009324-558711807.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161016742-1429376780.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161024258-1738620364.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161030215-903367574.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Critic网络出来的是Q值，和普通的Actor-Critic中的Critic网络一样。</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161039156-2035537383.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161055894-371938024.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220921143900603-854934675.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Actor网络出来的是均值与协方差矩阵，而不是直接出来策略的概率。有了均值与协方差矩阵，策略&pi;再根据正态分布的公式计算得出。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">这里面还涉及到一个问题，就是共轭先验(conjugate priors)。由于假设了似然分布${{\pi }_{\theta }}(a|s)$为正态分布，其中均值方差均未知，则其共轭先验分布$p(\theta )$可以为正态分布/Gamma分布，这里为了求解方便，选取了正态分布作为共轭先验。如果似然分布换成了其他的分布形式，相应的先验也应换成与之对应的共轭先验分布。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">公式：$p(X|\theta )p(\theta )\propto p(\theta |X)$，即似然函数*先验分布$\propto $后验分布。例如：beta分布叫做二项分布的共轭先验分布，即二项分布*beta分布$\propto $beta分布。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161113156-863877514.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161119811-852479794.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;Experiments</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908161142570-285778575.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908171357658-234610143.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908171405251-2047175062.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908171412926-582549000.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908171420099-1501609141.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202209/1027447-20220908171426443-1922317439.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：超参数有点多，序列二次规划方法<a href="https://www.cnblogs.com/kailugaji/p/16567454.html#_label3_0_4_1" target="_blank">https://www.cnblogs.com/kailugaji/p/16567454.html#_label3_0_4_1</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：为什么M-step被称为监督学习，这和前向KL与逆向KL散度有关，E-step用的是逆向KL，变分推断经典使用方法，而M-step已知了q之后，相当于用的是前向KL，类似于监督学习。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202210/1027447-20221008093039961-58970272.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 参考文献</span></h2>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Zuxin Liu, Zhepeng Cen, Vladislav Isenbaev, Wei Liu, Steven Wu, Bo Li, Ding Zhao. Constrained Variational Policy Optimization for Safe Reinforcement Learning. ICML, 2022.</span>
+<ul>
+<li><span style="font-size: 16px;">Paper: <a href="https://proceedings.mlr.press/v162/liu22b.html" target="_blank">https://proceedings.mlr.press/v162/liu22b.html</a></span></li>
+<li><span style="font-size: 16px;">Code: <a href="https://github.com/liuzuxin/cvpo-safe-rl" target="_blank">https://github.com/liuzuxin/cvpo-safe-rl</a></span></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+<li><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px;">Annie Xie, James Harrison, Chelsea Finn. Deep Reinforcement Learning amidst Continual/Lifelong Structured Non-Stationarity. ICML, 2021.&nbsp;</span></span>
+<ul>
+<li><span style="font-size: 16px;">Paper and Code: <a href="http://proceedings.mlr.press/v139/xie21c.html" target="_blank">http://proceedings.mlr.press/v139/xie21c.html</a></span></li>
+<li><span style="font-size: 16px;">论文笔记：<a href="https://www.cnblogs.com/kailugaji/p/15562366.html" target="_blank">https://www.cnblogs.com/kailugaji/p/15562366.html</a></span></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">John S., Sergey L., Pieter A., Michael J., Philipp M., Trust Region Policy Optimization. ICML, 2015.&nbsp;<a href="https://www.cnblogs.com/kailugaji/p/15388913.html" target="_blank">https://www.cnblogs.com/kailugaji/p/15388913.html</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变分推断与变分自编码器 <a href="https://www.cnblogs.com/kailugaji/p/12463966.html" target="_blank">https://www.cnblogs.com/kailugaji/p/12463966.html</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">变分深度嵌入(Variational Deep Embedding, VaDE) <a href="https://www.cnblogs.com/kailugaji/p/12882812.html" target="_blank">https://www.cnblogs.com/kailugaji/p/12882812.html</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">相关文章：A. Abdolmaleki, J. T. Springenberg, Y. Tassa, et al. <a href="https://openreview.net/pdf?id=S1ANxQW0b" target="_blank">Maximum a Posteriori Policy Optimisation</a>. ICLR, 2018.</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Nasim Zolaktaf, Conjugate Priors, Uninformative Priors, 2016. <a href="https://www.cs.ubc.ca/labs/lci/mlrg/slides/Conjugate.pdf" target="_blank">https://www.cs.ubc.ca/labs/lci/mlrg/slides/Conjugate.pdf</a></span></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>

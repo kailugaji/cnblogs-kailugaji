@@ -1,0 +1,88 @@
+<h1 style="text-align: center;">&nbsp;Ubuntu 12.04上安装MySQL并运行</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 18px;">安装MySQL数据库</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">sudo apt-get update  
+sudo apt-get install mysql-server 
+</pre>
+</div>
+<p><span style="font-size: 18px;">确认是否安装成功</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">sudo netstat -tap | grep mysql
+</pre>
+</div>
+<p><span style="font-size: 18px;">当mysql节点处于LISTEN状态表示启动成功</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220190028923-650323198.png" alt="" /></p>
+<p><span style="font-size: 18px;">登录数据库</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql -u root -p
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220190142493-873544865.png" alt="" /></p>
+<p><span style="font-size: 18px;">MySQL数据库常用操作</span></p>
+<p><span style="font-size: 18px;">1.显示所有数据库<span style="font-size: 16px; color: #ff0000;">（注意后面一定要有分号，表示一句话的结束）</span></span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220190257575-1905525983.png" alt="" /></p>
+<p><span style="font-size: 18px;">2.创建新数据库</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; create database WRR;
+</pre>
+</div>
+<p><span style="font-size: 18px;">3.创建新的表</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; use WRR;
+mysql&gt; create table Student(pid varchar(20) primary key, password varchar(20), status int);
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220191927318-1535561675.png" alt="" /></p>
+<p><span style="font-size: 18px;">4.插入数据</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; insert into Student values("2018001","2018001",0);
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192024102-533571579.png" alt="" /></p>
+<p><span style="font-size: 18px;">5.修改数据</span></p>
+<p><span style="font-size: 16px;">（1）修改表名</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; alter table Student rename Student1;
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192219529-2069935970.png" alt="" /></p>
+<p><span style="font-size: 16px;">（2）修改表中某列的名字</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; alter table Student1 change column status status1 int;
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192502722-1887220922.png" alt="" /></p>
+<p><span style="font-size: 16px;">（3）修改某一学生的数据</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; update Student1 set status1=1 where pid="2018001";
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192710345-1154293146.png" alt="" /></p>
+<p><span style="font-size: 18px;">6.删除数据</span></p>
+<p><span style="font-size: 16px;">（1）删除学生数据</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; delete from Student1 where pid="2018002";</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192826601-1239598378.png" alt="" /></p>
+<p><span style="font-size: 16px;">（2）删除学生表</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; drop table Student1;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220192937240-943195828.png" alt="" /></p>
+<p><span style="font-size: 16px;">（3）删除数据库</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; drop database WRR;</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220193049677-898441152.png" alt="" /></p>
+<p><span style="font-size: 18px;">7.查看MySQL版本</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220193335793-1701059971.png" alt="" /></p>
+<p><span style="font-size: 18px;">8.退出MySQL</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">mysql&gt; quit</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220193154412-1270928325.png" alt="" /></p>
+<p><span style="font-size: 16px;">如果想了解更多内容，请看<a href="http://dblab.xmu.edu.cn/blog/install-mysql/" target="_blank">Ubuntu安装MySQL及常用操作_厦大数据库实验室博客</a>与<a href="https://www.2cto.com/database/201701/582074.html" target="_blank">Ubuntu安装mysql及常用SQL操作语句 - mysql数据库栏目 - 红黑联盟</a>。</span></p>
+<p><em id="__mceDel">&nbsp;</em></p>
+<p><em id="__mceDel">&nbsp;</em></p>
+<p>&nbsp;</p>

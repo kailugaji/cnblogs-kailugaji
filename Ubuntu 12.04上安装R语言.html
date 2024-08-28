@@ -1,0 +1,33 @@
+<h1 style="text-align: center;">Ubuntu 12.04上安装R语言</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 16px;">R的安装</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">sudo gedit  /etc/apt/sources.list
+</pre>
+</div>
+<p><span style="font-size: 16px;">在sources.list文件后面添加一行</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">deb http://ftp.ctex.org/mirrors/CRAN/bin/linux/ubuntu maverick/
+</pre>
+</div>
+<p><span style="font-size: 16px;">保存并关闭文件</span></p>
+<p><span style="font-size: 16px;">更新软件源</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">sudo apt-get update
+</pre>
+</div>
+<p><span style="font-size: 16px;">安装软件</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">sudo apt-get install r-base r-base-dev
+</pre>
+</div>
+<p><span style="font-size: 16px;">安装完成后，输入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ R
+</pre>
+</div>
+<p><span style="font-size: 16px;">出现以下结果则成功</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181221143710461-466655518.png" alt="" /></p>
+<p><span style="font-size: 16px;">退出R</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181221143817046-81092276.png" alt="" /></p>
+<p>&nbsp;</p>

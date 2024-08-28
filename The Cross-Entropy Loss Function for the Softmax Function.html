@@ -1,0 +1,143 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">The Cross-Entropy Loss Function for the Softmax Function</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文介绍含有softmax函数的交叉熵损失函数的求导过程，并介绍一种交叉熵损失的等价形式，从而解决因log(0)而出现数值为NaN的问题。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. softmax函数求导</span></h2>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230411094446457-1932174087.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 交叉熵损失求导(含softmax)</span></h2>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230411094536593-2120656240.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 交叉熵损失函数(含softmax函数)的等价形式</span></h2>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230411094624820-849886061.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230411094631284-1815438213.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. Python验证${p_i}\left( {{a_i} - \sum\limits_{j = 1}^K {{p_{ij}}{a_{ij}}} } \right) = 0$</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 验证E(X-EX)=0</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 6</span> a = np.random.rand(5<span style="color: #000000;">)
+</span><span style="color: #008080;"> 7</span> p = np.random.rand(5<span style="color: #000000;">)
+</span><span style="color: #008080;"> 8</span> p = p / p.sum(axis=0, keepdims=<span style="color: #000000;">True)
+</span><span style="color: #008080;"> 9</span> b =<span style="color: #000000;"> (np.dot(p, a)).sum()
+</span><span style="color: #008080;">10</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">a: </span><span style="color: #800000;">'</span><span style="color: #000000;">, a)
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">p: </span><span style="color: #800000;">'</span><span style="color: #000000;">, p)
+</span><span style="color: #008080;">12</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">b: </span><span style="color: #800000;">'</span><span style="color: #000000;">, b)
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">结果: </span><span style="color: #800000;">'</span>, (p * (a - b)).sum())</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/向量间的距离度量/test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+a:  [</span>0.90457897 0.08975555 0.6955031  0.74161145 0.50095907<span style="color: #000000;">]
+p:  [</span>0.02797057 0.09509987 0.27454503 0.273575   0.32880953<span style="color: #000000;">]
+b:  </span>0.5923907183986392<span style="color: #000000;">
+结果:  </span>5.204170427930421e-17<span style="color: #000000;">
+
+Process finished with exit code 0</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. Python验证$L_1$与$L_2$等价</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Softmax classification with cross-entropy</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 8</span> plt.rc(<span style="color: #800000;">'</span><span style="color: #800000;">font</span><span style="color: #800000;">'</span>,family=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">def</span> sinkhorn(scores, eps = 5.0, n_iter = 3<span style="color: #000000;">):
+</span><span style="color: #008080;">11</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> remove_infs(x):
+</span><span style="color: #008080;">12</span>         mm =<span style="color: #000000;"> x[torch.isfinite(x)].max().item()
+</span><span style="color: #008080;">13</span>         x[torch.isinf(x)] =<span style="color: #000000;"> mm
+</span><span style="color: #008080;">14</span>         x[x==0] = 1e-38
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> x
+</span><span style="color: #008080;">16</span>     scores =<span style="color: #000000;"> torch.tensor(scores)
+</span><span style="color: #008080;">17</span>     n, m =<span style="color: #000000;"> scores.shape
+</span><span style="color: #008080;">18</span>     scores1 = scores.view(n*<span style="color: #000000;">m)
+</span><span style="color: #008080;">19</span>     Q = torch.softmax(-scores1/eps, dim=<span style="color: #000000;">0)
+</span><span style="color: #008080;">20</span>     Q =<span style="color: #000000;"> remove_infs(Q).view(n,m).T
+</span><span style="color: #008080;">21</span>     r, c = torch.ones(n), torch.ones(m) * (n /<span style="color: #000000;"> m)
+</span><span style="color: #008080;">22</span>     <span style="color: #0000ff;">for</span> _ <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(n_iter):
+</span><span style="color: #008080;">23</span>         u = (c/torch.sum(Q, dim=1<span style="color: #000000;">))
+</span><span style="color: #008080;">24</span>         Q *= remove_infs(u).unsqueeze(1<span style="color: #000000;">)
+</span><span style="color: #008080;">25</span>         v = (r/torch.sum(Q,dim=<span style="color: #000000;">0))
+</span><span style="color: #008080;">26</span>         Q *=<span style="color: #000000;"> remove_infs(v).unsqueeze(0)
+</span><span style="color: #008080;">27</span>     bsum = torch.sum(Q, dim=0, keepdim=<span style="color: #000000;">True)
+</span><span style="color: #008080;">28</span>     Q = Q /<span style="color: #000000;"> remove_infs(bsum)
+</span><span style="color: #008080;">29</span>     P =<span style="color: #000000;"> Q.T
+</span><span style="color: #008080;">30</span>     <span style="color: #0000ff;">assert</span> torch.isnan(P.sum())==<span style="color: #000000;">False
+</span><span style="color: #008080;">31</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> P
+</span><span style="color: #008080;">32</span> 
+<span style="color: #008080;">33</span> n = 128
+<span style="color: #008080;">34</span> m = 64
+<span style="color: #008080;">35</span> loss_1 =<span style="color: #000000;"> []
+</span><span style="color: #008080;">36</span> loss_2 =<span style="color: #000000;"> []
+</span><span style="color: #008080;">37</span> <span style="color: #0000ff;">for</span> _ <span style="color: #0000ff;">in</span> range(20<span style="color: #000000;">):
+</span><span style="color: #008080;">38</span>     a =<span style="color: #000000;"> torch.rand(n, m)
+</span><span style="color: #008080;">39</span>     a = a ** 4
+<span style="color: #008080;">40</span>     a = a / a.sum(dim = -1, keepdim =<span style="color: #000000;"> True)
+</span><span style="color: #008080;">41</span>     P = torch.softmax(a, dim=1<span style="color: #000000;">)
+</span><span style="color: #008080;">42</span>     b =<span style="color: #000000;"> np.random.rand(n, m)
+</span><span style="color: #008080;">43</span>     b = b ** 1.5
+<span style="color: #008080;">44</span>     Q = sinkhorn(b, 0.5, 10<span style="color: #000000;">)
+</span><span style="color: #008080;">45</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 方法1：</span>
+<span style="color: #008080;">46</span>     loss_11 = -(Q * torch.log(P)).sum(-1<span style="color: #000000;">).mean()
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">    loss_1.append(loss_11)
+</span><span style="color: #008080;">48</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 方法2：</span>
+<span style="color: #008080;">49</span>     loss_22 = ((P - Q) * a).sum(-1<span style="color: #000000;">).mean()
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">    loss_2.append(loss_22)
+</span><span style="color: #008080;">51</span> 
+<span style="color: #008080;">52</span> loss_1, index =<span style="color: #000000;"> torch.sort(torch.tensor(loss_1), 0)
+</span><span style="color: #008080;">53</span> loss_2 =<span style="color: #000000;"> np.array(loss_2)[index]
+</span><span style="color: #008080;">54</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法1--损失：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.array(loss_1))
+</span><span style="color: #008080;">55</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法2--损失：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, loss_2)
+</span><span style="color: #008080;">56</span> grad_1 =<span style="color: #000000;"> np.gradient(np.array(loss_1))
+</span><span style="color: #008080;">57</span> grad_2 =<span style="color: #000000;"> np.gradient(np.array(loss_2))
+</span><span style="color: #008080;">58</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法1--梯度：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.array(grad_1))
+</span><span style="color: #008080;">59</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法2--梯度：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.array(grad_2))
+</span><span style="color: #008080;">60</span> plt.subplots(1, 2, figsize=(16, 7<span style="color: #000000;">))
+</span><span style="color: #008080;">61</span> plt.subplot(1, 2, 1<span style="color: #000000;">)
+</span><span style="color: #008080;">62</span> plt.plot(loss_1, loss_2, color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">63</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">Loss 1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">64</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">Loss 2</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">65</span> plt.subplot(1, 2, 2<span style="color: #000000;">)
+</span><span style="color: #008080;">66</span> plt.scatter(grad_1*1E6, grad_2*1E6, color = <span style="color: #800000;">'</span><span style="color: #800000;">blue</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">67</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">Gradient 1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">68</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">Gradient 2</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">69</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">softmax cross-entropy loss.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">70</span> plt.show()</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/向量间的距离度量/softmax_cross_entropy_loss_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+方法1</span>--<span style="color: #000000;">损失：
+ [</span>4.15883989 4.15890663 4.15894403 4.15897117 4.15902341 4.15904347
+ 4.1590823  4.1590913  4.15910622 4.15913114 4.15913474 4.1591434
+ 4.15914856 4.15916808 4.15916826 4.15917904 4.15918445 4.15918608
+ 4.15925961 4.15926385<span style="color: #000000;">]
+方法2</span>--<span style="color: #000000;">损失：
+ [</span>0.00017298 0.00024753 0.00028277 0.00030974 0.00036783 0.0003804
+ 0.00041808 0.00043415 0.00044729 0.00047444 0.00047943 0.00048301
+ 0.00049451 0.00050864 0.00051069 0.0005161  0.00053111 0.00052533
+ 0.00060765 0.0006024<span style="color: #000000;"> ]
+方法1</span>--<span style="color: #000000;">梯度：
+ [</span>6.67441917e-05 5.20709542e-05 3.22701985e-05 3.96937794e-05
+ 3.61504422e-05 2.94408723e-05 2.39134622e-05 1.19608872e-05
+ 1.99222036e-05 1.42617498e-05 6.12662792e-06 6.90728703e-06
+ 1.23429982e-05 9.85375545e-06 5.47883732e-06 8.09470613e-06
+ 3.52000565e-06 3.75770611e-05 3.88866185e-05 4.24487449e-06<span style="color: #000000;">]
+方法2</span>--<span style="color: #000000;">梯度：
+ [ </span>7.45563606e-05  5.48997609e-05  3.11016626e-05  4.25261140e-05
+  3.53301332e-05  2.51239797e-05  2.68772106e-05  1.46074152e-05
+  2.01447210e-05  1.60698704e-05  4.28303591e-06  7.54056029e-06
+  1.28157065e-05  8.08914041e-06  3.73246714e-06  1.02123578e-05
+  4.61507539e-06  3.82697805e-05  3.85335993e-05 -5.25437451e-06<span style="color: #000000;">]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230411095044451-1338433036.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">可以看到，虽然理论上可以证明$L_1$与$L_2$的梯度相等，但实际应用时还是有点偏颇，当数据量与数据维度足够大时，$L_1$与$L_2$的数值呈现线性相关。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;<a href="https://peterroelants.github.io/posts/cross-entropy-softmax/" target="_blank">Softmax classification with cross-entropy (2/2)</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;Liu Q, Zhou Q, Yang R, et al.&nbsp;<a href="http://export.arxiv.org/abs/2302.12003v2" rel="noopener" target="_blank">Robust Representation Learning by Clustering with Bisimulation Metrics for Visual Reinforcement Learning with Distractions</a>[C]. AAAI, 2023.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3]&nbsp;<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/17251932.html">Python小练习：Sinkhorn-Knopp算法</a></span></p>

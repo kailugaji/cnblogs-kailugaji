@@ -1,0 +1,56 @@
+<h1 style="text-align: center;">Ubuntu下安装JDK详细教程</h1>
+<p><span style="font-size: 16px;">作者：凯鲁嘎吉&nbsp;-&nbsp;博客园<a target="_blank">&nbsp;http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-size: 16px;">Ubuntu版本：Ubuntu-12.04.5-desktop-i386.iso</span></p>
+<p><span style="font-size: 16px;">JDK版本：jdk1.8.0_191</span></p>
+<h2>1.解压JDK文件</h2>
+<p><span style="font-size: 16px;">&nbsp; &nbsp; 先将JDK压缩文件复制到虚拟机中的Downloads文件夹下</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125175235188-2070031436.png" alt="" /></p>
+<p><span style="font-size: 16px;">&nbsp; &nbsp; 然后点击&ldquo;Extract&rdquo;，解压到本地</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125175528442-691806498.png" alt="" /></p>
+<h2>2.在/usr/lib下创建一个新的文件夹java</h2>
+<div class="cnblogs_code">
+<pre>wrr@ubuntu:~$ cd /usr/<span style="color: #000000;">lib
+wrr@ubuntu:</span>/usr/<span style="color: #000000;">lib$ sudo mkdir java
+[sudo] password </span><span style="color: #0000ff;">for</span> wrr:</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125175012606-1404965263.png" alt="" /></p>
+<p><span style="font-size: 16px;">&nbsp; &nbsp; 查看lib目录，发现多了java这个文件夹</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125175744430-2004270021.png" alt="" /></p>
+<h2>&nbsp;3.将Downloads下的解压文件移动到/usr/lib/java下</h2>
+<div class="cnblogs_code">
+<pre>wrr@ubuntu:~<span style="color: #000000;">$ cd
+wrr@ubuntu:</span>~$ sudo mv Downloads/jdk1.8.0_191 /usr/lib/java</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180100533-710673130.png" alt="" /></p>
+<h2>4.查看java文件夹，发现多了一个文件</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180152560-1944586661.png" alt="" /></p>
+<h2>5.设置环境变量</h2>
+<h3><span style="font-size: 16px;">（1）打开.bashrc文件</span></h3>
+<div class="cnblogs_code">
+<p>wrr@ubuntu:~$ gedit ~./bashrc</p>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180258062-1111023737.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180530351-874412382.png" alt="" /></p>
+<h3><span style="font-size: 16px;">（2）在.bashrc文件末尾添加环境变量</span></h3>
+<div class="cnblogs_code">
+<pre>export JAVA_HOME=/usr/lib/java/jdk1.8<span style="color: #000000;">.0_191
+export JRE_HOME</span>=/usr/lib/java/jdk1.8.0_191/jre
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib
+export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180658699-653181512.png" alt="" /></p>
+<h3><span style="font-size: 16px;">（3）Ctrl+S保存文件</span></h3>
+<h3><span style="font-size: 16px;">（4）使.bashrc文件生效</span></h3>
+<div class="cnblogs_code">
+<pre>wrr@ubuntu:~$ source ~/.bashrc</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125180902193-714178819.png" alt="" /></p>
+<h2>6.安装完成</h2>
+<div class="cnblogs_code">
+<pre>wrr@ubuntu:~$ java -<span style="color: #000000;">version
+java version </span>"1.8.0_191"<span style="color: #000000;">
+Java(TM) SE Runtime Environment (build </span>1.8.0_191-<span style="color: #000000;">b12)
+Java HotSpot(TM) Client VM (build </span>25.191-b12, mixed mode)</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201811/1027447-20181125181028160-1575980776.png" alt="" /></p>
+<p>&nbsp;</p>

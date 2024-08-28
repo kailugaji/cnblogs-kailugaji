@@ -1,0 +1,40 @@
+<p>凯鲁嘎吉 - 博客园</p>
+<p>http://www.cnblogs.com/kailugaji/</p>
+<p>Question：</p>
+<div class="cnblogs_code">
+<pre>Given nums = [<span style="color: #800080;">2</span>, <span style="color: #800080;">7</span>, <span style="color: #800080;">11</span>, <span style="color: #800080;">15</span>], target = <span style="color: #800080;">9</span><span style="color: #000000;">,
+
+Because nums[</span><span style="color: #800080;">0</span>] + nums[<span style="color: #800080;">1</span>] = <span style="color: #800080;">2</span> + <span style="color: #800080;">7</span> = <span style="color: #800080;">9</span><span style="color: #000000;">,
+
+</span><span style="color: #0000ff;">return</span> [<span style="color: #800080;">0</span>, <span style="color: #800080;">1</span>].</pre>
+</div>
+<p>Answer：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span>* twoSum(<span style="color: #0000ff;">int</span>* nums, <span style="color: #0000ff;">int</span> numsSize, <span style="color: #0000ff;">int</span><span style="color: #000000;"> target) {
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> j, i;
+</span><span style="color: #0000ff;">int</span> *test =<span style="color: #000000;"> NULL;
+test </span>= (<span style="color: #0000ff;">int</span> )<span style="color: #0000ff;">malloc</span>(<span style="color: #800080;">2</span>*<span style="color: #0000ff;">sizeof</span>(<span style="color: #0000ff;">int</span><span style="color: #000000;">));
+ </span><span style="color: #0000ff;">for</span> (i=<span style="color: #800080;">0</span>; i&lt;numsSize ;i++<span style="color: #000000;">){
+  </span><span style="color: #0000ff;">for</span> (j=i+<span style="color: #800080;">1</span>; j&lt;numsSize ;j++<span style="color: #000000;">){
+   </span><span style="color: #0000ff;">if</span>(nums[i]+nums[j] ==<span style="color: #000000;"> target){
+    </span>*(test) =<span style="color: #000000;"> i;
+    </span>*(test+<span style="color: #800080;">1</span>) =<span style="color: #000000;"> j;
+    }
+  }
+ }
+ </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> test;
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Run Code Result:
+Your input
+[</span><span style="color: #800080;">3</span>,<span style="color: #800080;">2</span>,<span style="color: #800080;">4</span><span style="color: #000000;">]
+</span><span style="color: #800080;">6</span><span style="color: #000000;">
+Your answer
+[</span><span style="color: #800080;">1</span>,<span style="color: #800080;">2</span><span style="color: #000000;">]
+Expected answer
+[</span><span style="color: #800080;">1</span>,<span style="color: #800080;">2</span><span style="color: #000000;">]
+Show Diff
+Runtime: </span><span style="color: #800080;">4</span> ms</pre>
+</div>
+<p>&nbsp;</p>

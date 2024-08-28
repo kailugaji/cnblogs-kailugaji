@@ -1,0 +1,95 @@
+<h1 style="text-align: center;">Ubuntu 12.04上安装HBase并运行</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<h2>一、HBase的安装</h2>
+<p><span style="font-size: 16px;">在官网上下载HBase-1.1.2，将其解压到/home/wrr文件夹下</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220204643807-92545787.png" alt="" /></p>
+<p><span style="font-size: 16px;">配置环境变量</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">wrr@ubuntu:~$ sudo gedit ~/.bashrc
+[sudo] password for wrr: 
+wrr@ubuntu:~$ source ~/.bashrc
+</pre>
+</div>
+<p><span style="font-size: 16px;">在.bashrc文件最后添加</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">export PATH=$PATH:/home/wrr/hbase-1.1.2/bin
+</pre>
+</div>
+<p><span style="font-size: 16px;">查看HBase版本</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">wrr@ubuntu:~$ /home/wrr/hbase-1.1.2/bin/hbase version
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220205220259-1522412446.png" alt="" /></p>
+<p><span style="font-size: 16px;">HBase安装成功。</span></p>
+<h2>二、单机模式配置</h2>
+<h3>1.配置/home/wrr/hbase-1.1.2/conf/下的hbase-env.sh</h3>
+<p><span style="font-size: 16px;">在文件末尾添加</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">export JAVA_HOME=/home/wrr/java/jdk1.8.0_191
+export HBASE_MANAGES_ZK=true 
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220210548947-494020010.png" alt="" /></p>
+<h3>2.配置/home/wrr/hbase-1.1.2/conf/下的hbase-site.xml</h3>
+<p><span style="font-size: 16px;">新建一个文件夹hbase-tmp</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220210737707-618445745.png" alt="" /></p>
+<p><span style="font-size: 16px;">在hbase-site.xml中添加</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;configuration&gt;
+        &lt;property&gt;
+                &lt;name&gt;hbase.rootdir&lt;/name&gt;
+                &lt;value&gt;file:///home/wrr/hbase-1.1.2/hbase-tmp&lt;/value&gt;
+        &lt;/property&gt;
+&lt;/configuration&gt;
+</pre>
+</div>
+<h3>3.启动HBase</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">wrr@ubuntu:~$ cd /home/wrr/hbase-1.1.2
+wrr@ubuntu:~/hbase-1.1.2$ bin/start-hbase.sh
+wrr@ubuntu:~/hbase-1.1.2$ bin/hbase shell
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220211409616-1458758846.png" alt="" /></p>
+<h2>三、HBase简单操作</h2>
+<h3>1.新建表</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">create 'student','Sname','Ssex','Sage','Sdept','course'
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220211955777-1848163145.png" alt="" /></p>
+<h3>2.添加数据</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">hbase(main):003:0&gt; put 'student','95001','Sname','LiYing'
+hbase(main):004:0&gt; put 'student','95001','course:math','80'
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220212207311-115824297.png" alt="" /></p>
+<h3>3.删除数据</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">delete 'student','95001','Ssex'
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220212436210-126442812.png" alt="" /></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">hbase(main):007:0&gt; deleteall 'student','95001'
+</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220212554746-730546112.png" alt="" /></p>
+<h3>4.删除表</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">disable 'student'  
+drop 'student'</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220212753577-1226332132.png" alt="" /></p>
+<h3>5.退出HBase数据库表</h3>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220212915529-1764749469.png" alt="" /></p>
+<h3>6.停止HBase运行</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">hbase(main):012:0&gt; exit
+wrr@ubuntu:~/hbase-1.1.2$ bin/stop-hbase.sh</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220213038300-1925221429.png" alt="" /></p>
+<p>如果想了解更多内容，请看<a href="http://dblab.xmu.edu.cn/blog/install-hbase/" target="_blank">大数据原理与应用 第四章 分布式数据库HBase 学习指南_厦大数据库实验室博客</a></p>
+<p><em id="__mceDel">&nbsp;</em></p>
