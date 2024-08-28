@@ -1,0 +1,48 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小函数：计算KL散度与JS散度</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题：给定两个向量，计算这两个向量之间的Kullback-Leibler Divergence与Jensen-Shannon Divergence。KL散度与JS散度的计算公式参考：<a href="https://www.cnblogs.com/kailugaji/p/11911433.html#_lab2_0_4" target="_blank">相似性度量 - 凯鲁嘎吉 - 开发者的网上家园</a>&nbsp;</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [score_KL, score_JS] = KL_JS_div(vec1, vec2)
+% Input: vec1: vector 1, vec2: vector 2
+% Output: score_KL: KL divergence, source_JS: JS divergence
+% Author: kailugaji 
+% https://www.cnblogs.com/kailugaji/
+
+% Make sure vec1 and vec2 sum to 1
+if any(vec1(:))
+    vec1 = vec1/sum(vec1(:));
+end
+ 
+if any(vec2(:))
+    vec2 = vec2/sum(vec2(:));
+end
+
+% Compute Kullback-Leibler Divergence
+score_KL = sum(sum(vec1.* log(eps + vec1./(vec2+eps))));
+
+% Compute Jensen-Shannon Divergence
+score_JS = (sum(sum(vec1.* log(eps + vec1./((vec1+vec2)./2+eps))))+sum(sum(vec2.* log(eps + vec2./((vec1+vec2)./2+eps)))))./2;
+
+if vec1==vec2
+    score_KL=0;
+    score_JS=0;
+end</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; vec1=[0.2 0.4 0.4];
+&gt;&gt; vec2=[0.3 0.2 0.5];
+&gt;&gt; [score_KL, score_JS] = KL_JS_div(vec1, vec2)
+
+score_KL =
+
+   0.106908430076661
+
+
+score_JS =
+
+   0.024807303850391
+</pre>
+</div>
+<p>2020-09-30</p>

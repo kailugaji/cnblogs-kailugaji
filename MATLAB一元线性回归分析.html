@@ -1,0 +1,86 @@
+<p>MATLAB一元线性回归分析应用举例</p>
+<p>作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<p>huigui.m</p>
+<div class="cnblogs_code">
+<pre>function [b,bint,r,rint,states,sima2,p,y0,zxqj]=<span style="color: #000000;">huigui(x,y,x0)
+</span><span style="color: #339966;">%x &ndash;p元线性模型自变量的n个观测值的n&times;p矩阵，y -p元线性模型因变量的n个观测值的n&times;1向量，x0为预测值的横坐标
+%b -模型系数&beta;的最小二乘估计值，bint -模型系数&beta;的100(1-alpha)%置信区间，r -模型拟合残差，rint -模型拟合残差的100(1-alpha)%置信区间.
+%stats -包含R^2统计量、方差分析的F统计量的值、方差分析的显著性概率p值和sigama^</span><span style="color: #000000;"><span style="color: #339966;">2的估计值，y0为预测值纵坐标</span>
+format </span><span style="color: #0000ff;">short</span><span style="color: #000000;">;
+x1</span>=[ones(length(x),<span style="color: #800080;">1</span><span style="color: #000000;">),x];
+[b,bint,r,rint,states]</span>=<span style="color: #000000;">regress(y,x1);
+sima2</span>=(vpa(states(<span style="color: #800080;">4</span>),<span style="color: #800080;">20</span><span style="color: #000000;">));      
+p</span>=vpa(states(<span style="color: #800080;">3</span>),<span style="color: #800080;">20</span>);   <span style="color: #339966;">%检验的p值   p&lt;0.01,回归方程高度显著;0.0.1&lt;=p&lt;0.05,回归方程显著;p&gt;=0.05</span><span style="color: #000000;"><span style="color: #339966;">,回归方程不显著</span>
+y0</span>=b(<span style="color: #800080;">1</span>)+b(<span style="color: #800080;">2</span>)*<span style="color: #000000;">x0;
+s</span>=sqrt(states(<span style="color: #800080;">4</span><span style="color: #000000;">));
+zxqj</span>=[y0-<span style="color: #800080;">2</span>*s,y0+<span style="color: #800080;">2</span>*s];   <span style="color: #339966;">%</span><span style="color: #000000;"><span style="color: #339966;">置信区间</span>
+plot(x,y,</span><span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span><span style="color: #000000;">),lsline
+</span><span style="color: #339966;">%rcoplot(r,rint)</span>   <span style="color: #339966;">%残差分析</span></pre>
+</div>
+<p>结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; x=[<span style="color: #800080;">1</span>,<span style="color: #800080;">2</span>,<span style="color: #800080;">3</span>,<span style="color: #800080;">4</span>,<span style="color: #800080;">5</span>,<span style="color: #800080;">6</span>,<span style="color: #800080;">7</span>,<span style="color: #800080;">8</span>,<span style="color: #800080;">9</span>]<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+&gt;&gt; y=[<span style="color: #800080;">2</span>,<span style="color: #800080;">4</span>,<span style="color: #800080;">6</span>,<span style="color: #800080;">8</span>,<span style="color: #800080;">10</span>,<span style="color: #800080;">11</span>,<span style="color: #800080;">14</span>,<span style="color: #800080;">16</span>,<span style="color: #800080;">18</span>]<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+&gt;&gt; x0=<span style="color: #800080;">10</span><span style="color: #000000;">;
+</span>&gt;&gt; [b,bint,r,rint,states,sima2,p,y0,zxqj]=<span style="color: #000000;">huigui(x,y,x0)
+
+b </span>=
+
+   -<span style="color: #800080;">0.0278</span>
+    <span style="color: #800080;">1.9833</span><span style="color: #000000;">
+
+bint </span>=
+
+   -<span style="color: #800080;">0.6342</span>    <span style="color: #800080;">0.5786</span>
+    <span style="color: #800080;">1.8756</span>    <span style="color: #800080;">2.0911</span><span style="color: #000000;">
+
+r </span>=
+
+    <span style="color: #800080;">0.0444</span>
+    <span style="color: #800080;">0.0611</span>
+    <span style="color: #800080;">0.0778</span>
+    <span style="color: #800080;">0.0944</span>
+    <span style="color: #800080;">0.1111</span>
+   -<span style="color: #800080;">0.8722</span>
+    <span style="color: #800080;">0.1444</span>
+    <span style="color: #800080;">0.1611</span>
+    <span style="color: #800080;">0.1778</span><span style="color: #000000;">
+
+rint </span>=
+
+   -<span style="color: #800080;">0.6654</span>    <span style="color: #800080;">0.7543</span>
+   -<span style="color: #800080;">0.7116</span>    <span style="color: #800080;">0.8338</span>
+   -<span style="color: #800080;">0.7363</span>    <span style="color: #800080;">0.8918</span>
+   -<span style="color: #800080;">0.7426</span>    <span style="color: #800080;">0.9315</span>
+   -<span style="color: #800080;">0.7321</span>    <span style="color: #800080;">0.9543</span>
+   -<span style="color: #800080;">0.8722</span>   -<span style="color: #800080;">0.8722</span>
+   -<span style="color: #800080;">0.6611</span>    <span style="color: #800080;">0.9500</span>
+   -<span style="color: #800080;">0.5981</span>    <span style="color: #800080;">0.9203</span>
+   -<span style="color: #800080;">0.5124</span>    <span style="color: #800080;">0.8679</span><span style="color: #000000;">
+
+states </span>=
+
+   <span style="color: #800080;">1.0e+03</span> *
+
+    <span style="color: #800080;">0.0010</span>    <span style="color: #800080;">1.8941</span>    <span style="color: #800080;">0.0000</span>    <span style="color: #800080;">0.0001</span><span style="color: #000000;">
+ 
+sima2 </span>=
+ 
+<span style="color: #800080;">0.12460317460317460317</span><span style="color: #000000;">
+
+p </span>=
+ 
+<span style="color: #800080;">0.00000000088276169535500757861</span><span style="color: #000000;">
+ 
+y0 </span>=
+
+   <span style="color: #800080;">19.8056</span><span style="color: #000000;">
+
+zxqj </span>=
+
+   <span style="color: #800080;">19.0996</span>   <span style="color: #800080;">20.5115</span></pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507203633216-1300991664.png" alt="" /></p>
+<p>残差图：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507203743063-208495276.png" alt="" /></p>
+<p>&nbsp;</p>

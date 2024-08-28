@@ -1,0 +1,59 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小函数：将列向量转化为0-1矩阵</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">将列向量转化为0-1矩阵，例如</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">A =
+
+     1
+     2
+     1
+     5
+     3
+     4
+     1
+     4
+     3
+转换为：
+B =
+
+     1     0     0     0     0
+     0     1     0     0     0
+     1     0     0     0     0
+     0     0     0     0     1
+     0     0     1     0     0
+     0     0     0     1     0
+     1     0     0     0     0
+     0     0     0     1     0
+     0     0     1     0     0
+</pre>
+</div>
+<h2>1. MATLAB程序</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function B=trans_logic(A)
+% 将列向量转化为0-1矩阵
+% A=[1;2;1;5;3;4;1;4;3];
+num=size(A);
+for i=1:num
+    B(i, A(i))=1;
+end
+</pre>
+</div>
+<h2>2. 结果</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A=[1;2;1;5;3;4;1;4;3];
+&gt;&gt; B=trans_logic(A)
+
+B =
+
+     1     0     0     0     0
+     0     1     0     0     0
+     1     0     0     0     0
+     0     0     0     0     1
+     0     0     1     0     0
+     0     0     0     1     0
+     1     0     0     0     0
+     0     0     0     1     0
+     0     0     1     0     0
+</pre>
+</div>
+<p>2019-11-13</p>

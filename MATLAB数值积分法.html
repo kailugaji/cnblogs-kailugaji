@@ -1,0 +1,113 @@
+<h1 style="text-align: center;">MATLAB数值积分法</h1>
+<p>作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</p>
+<h2>一、实验目的</h2>
+<p>许多工程技术和数学研究中要用到定积分，如果无法直接算不出精确值（如含在积分方程中的积分）或计算困难但可用近似值近似时，就用数值积分法方法加以解决。常用的算法有：复化梯形、辛甫生（Simpson）、柯特斯（Cotes<span style="font-family: 宋体;">）求积法</span>; <span style="font-family: 宋体;">龙贝格</span>(Romberg)算法；高斯（Gauss）算法。</p>
+<h2>二、实验原理</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602113014196-1421735345.png" alt="" /></p>
+<h2>三、实验程序</h2>
+<p>下面给出复化Ｓimpson求积法程序（梯形及柯特斯复化求积分程序可比照编制）：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602113039243-1367121017.png" alt="" /></p>
+<h2>四、实验内容</h2>
+<p>选一可精确算值的定积分，用复化的梯形法及复化Ｓimpson求积法作近似计算，并比较结果。</p>
+<h2>五、解答</h2>
+<h3>1.(程序)</h3>
+<p>xps.m:</p>
+<div class="cnblogs_code">
+<pre>function y=<span style="color: #000000;">xps(x)
+y</span>=x^(3/2);</pre>
+</div>
+<p>复化梯形公式：</p>
+<p>&nbsp;&nbsp;&nbsp;trap.m:</p>
+<div class="cnblogs_code">
+<pre>function [T,Y,esp]=<span style="color: #000000;">trap(a,b,n)
+h</span>=(b-a)/<span style="color: #000000;">n;
+T</span>=<span style="color: #000000;">0;
+</span><span style="color: #0000ff;">for</span> i=1:(n-1<span style="color: #000000;">)
+    x</span>=a+h*<span style="color: #000000;">i;
+    T</span>=T+<span style="color: #000000;">xps(x);
+end
+T</span>=h*(xps(a)+xps(b))/2+h*<span style="color: #000000;">T;
+syms x
+Y</span>=vpa(int(xps(x),x,a,b),8<span style="color: #000000;">);
+esp</span>=abs(Y-T);</pre>
+</div>
+<p><span style="font-family: 宋体;">复化辛甫生（</span>Simpson<span style="font-family: 宋体;">）公式：</span></p>
+<p>&nbsp;&nbsp;&nbsp;simpson.m:</p>
+<div class="cnblogs_code">
+<pre>function [SI,Y,esp]=<span style="color: #000000;">simpson(a,b,m)
+</span>%a,b为区间左右端点，xps(x)为求积公式，m*<span style="color: #000000;">2等分区间长度
+h</span>=(b-a)/(2*<span style="color: #000000;">m);
+SI0</span>=xps(a)+<span style="color: #000000;">xps(b);
+SI1</span>=<span style="color: #000000;">0;
+SI2</span>=<span style="color: #000000;">0;
+</span><span style="color: #0000ff;">for</span> i=1:((2*m)-1<span style="color: #000000;">)
+    x</span>=a+i*<span style="color: #000000;">h;
+    </span><span style="color: #0000ff;">if</span> mod(i,2)==<span style="color: #000000;">0
+        SI2</span>=SI2+<span style="color: #000000;">xps(x);
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> 
+        SI1</span>=SI1+<span style="color: #000000;">xps(x);
+    end
+end
+SI</span>=h*(SI0+4*SI1+2*SI2)/3<span style="color: #000000;">;
+syms x
+Y</span>=vpa(int(xps(x),x,a,b),8<span style="color: #000000;">);
+esp</span>=abs(Y-SI);</pre>
+</div>
+<h3>2.(运算结果)</h3>
+<div class="cnblogs_code">
+<pre>&gt;&gt; [T,Y,esp]=trap(1,2,8<span style="color: #000000;">)
+
+T </span>=
+
+    1.8636<span style="color: #000000;">
+
+ 
+Y </span>=
+ 
+1.8627417<span style="color: #000000;">
+ 
+ 
+esp </span>=
+ 
+0.0008089288247354886607354274019599
+&gt;&gt; [SI,Y,esp]=simpson(1,2,8<span style="color: #000000;">)
+
+SI </span>=
+
+    1.8627<span style="color: #000000;">
+
+ 
+Y </span>=
+ 
+1.8627417<span style="color: #000000;">
+ 
+ 
+esp </span>=
+ 
+0.000000020499792974248975951923057436943</pre>
+</div>
+<p>从计算结果看：复化辛普森公式更精确。</p>
+<h3>3.(拓展（方法改进、体会等）)</h3>
+<p>MATLAB<span style="font-family: 宋体;">中</span><span style="font-family: 宋体;">有一些内置</span><span style="font-family: 宋体;">函数，用于实施自适应求积分，都是根据</span>Gander<span style="font-family: 宋体;">和</span><span style="font-family: 'Times New Roman';">Gautschi</span><span style="font-family: 宋体;">构造的算法编写的。</span></p>
+<p>quad<span style="font-family: 宋体;">：使用辛普森求积，对于低精度或者不光滑函数效率更高</span></p>
+<p>quadl<span style="font-family: 宋体;">：该函数使用了称为洛巴托求积（</span><span style="font-family: 'Times New Roman';">Lobatto Quadrature</span><span style="font-family: 宋体;">）的算法，对于高精度和光滑函数效率更高</span></p>
+<p><span style="font-family: 宋体;">使用方法：</span></p>
+<p>I=quad(func,a,b,tol);</p>
+<p>func<span style="font-family: 宋体;">是被积函数，</span><span style="font-family: 'Times New Roman';">a</span><span style="font-family: 宋体;">，</span><span style="font-family: 'Times New Roman';">b</span><span style="font-family: 宋体;">是积分限，</span><span style="font-family: 'Times New Roman';">to</span>l<span style="font-family: 宋体;">是期望的绝对误差（如果不提供，默认为</span>1e-6<span style="font-family: 宋体;">）</span></p>
+<p><span style="font-family: 宋体;">例如对于函数</span>f=xe^x<span style="font-family: 宋体;">在</span><span style="font-family: 'Times New Roman';">[0,3]</span><span style="font-family: 宋体;">上求积分，显然可以通过解析解知道结果是</span><span style="font-family: 'Times New Roman';">2e^3+1=41.171073846375336</span></p>
+<p><span style="font-family: 宋体;">先创建一个</span>M<span style="font-family: 宋体;">文件</span><span style="font-family: 'Times New Roman';">xex.m</span></p>
+<p><span style="font-family: 宋体;">内容如下：</span></p>
+<p>function f=xex(x)</p>
+<p>f=x.*exp(x);</p>
+<p><span style="font-family: 宋体;">然后调用：</span></p>
+<p>&gt;&gt; format long</p>
+<p>&gt;&gt; format compact</p>
+<p>&gt;&gt; quad(@xex,0,3)</p>
+<p>ans =</p>
+<p>&nbsp;&nbsp;41.171073850902332</p>
+<p><span style="font-family: 宋体;">可见有</span>9<span style="font-family: 宋体;">位有效数字，精度还是蛮高的。</span></p>
+<p><span style="font-family: 宋体;">如果使用</span>quadl<span style="font-family: 宋体;">：</span></p>
+<p>&gt;&gt; quadl(@xex,0,3)</p>
+<p>ans =</p>
+<p>&nbsp;&nbsp;41.171074668001779</p>
+<p><span style="font-family: 宋体;">反而只有</span>7<span style="font-family: 宋体;">位有效数字</span></p>

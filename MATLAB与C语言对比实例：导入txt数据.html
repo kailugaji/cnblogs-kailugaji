@@ -1,0 +1,613 @@
+<h1 style="text-align: center;">MATLAB与C语言对比实例：导入txt数据</h1>
+<p>作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<h2>1.MATLAB简介</h2>
+<p>&nbsp; &nbsp; MATLAB 是美国MathWorks公司出品的商业数学软件，用于算法开发、数据可视化、数据分析以及数值计算的高级技术计算语言和交互式环境。MATLAB是matrix&amp;laboratory两个词的组合，意为矩阵工厂(矩阵实验室)，是由美国mathworks公司发布的主要面对科学计算、可视化以及交互式程序设计的高科技计算环境。它将数值分析、矩阵计算、科学数据可视化以及非线性动态系统的建模和仿真等诸多强大功能集成在一个易于使用的视窗环境中，为科学研究、工程设计以及必须进行有效数值计算的众多科学领域提供了一种全面的解决方案，并在很大程度上摆脱了传统非交互式程序设计语言(如C、Fortran)的编辑模式，代表了当今国际科学计算软件的先进水平。MATLAB可以进行矩阵运算、绘制函数和数据、实现算法、创建用户界面、连接其他编程语言的程序等，主要应用于工程计算、控制设计、信号处理与通讯、图像处理、信号检测、金融建模设计与分析等领域。MATLAB的基本数据单位是矩阵，简单易学，它的指令表达式与数学、工程中常用的形式十分相似，故用MATLAB来解算问题要比用C，FORTRAN等语言完成相同的事情简捷得多。在新的版本中也加入了对C，FORTRAN，C++，JAVA的支持。总之，matlab集成了很多数学计算功能，专注于数学计算领域，而C语言，是一个更大众化的程序平台。</p>
+<h2>2.实例分析：导入txt数据</h2>
+<h3>1) 数据来源：UCI数据库中的数据</h3>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507075647147-460406086.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507075746022-775166730.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201805/1027447-20180507075822646-1457970212.png" alt="" /></p>
+<p>下面以iris数据为例</p>
+<p>iris.txt中源数据如下：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">5.1	3.5	1.4	0.2	0
+4.9	3	1.4	0.2	0
+4.7	3.2	1.3	0.2	0
+4.6	3.1	1.5	0.2	0
+5	3.6	1.4	0.2	0
+5.4	3.9	1.7	0.4	0
+4.6	3.4	1.4	0.3	0
+5	3.4	1.5	0.2	0
+4.4	2.9	1.4	0.2	0
+4.9	3.1	1.5	0.1	0
+5.4	3.7	1.5	0.2	0
+4.8	3.4	1.6	0.2	0
+4.8	3	1.4	0.1	0
+4.3	3	1.1	0.1	0
+5.8	4	1.2	0.2	0
+5.7	4.4	1.5	0.4	0
+5.4	3.9	1.3	0.4	0
+5.1	3.5	1.4	0.3	0
+5.7	3.8	1.7	0.3	0
+5.1	3.8	1.5	0.3	0
+5.4	3.4	1.7	0.2	0
+5.1	3.7	1.5	0.4	0
+4.6	3.6	1	0.2	0
+5.1	3.3	1.7	0.5	0
+4.8	3.4	1.9	0.2	0
+5	3	1.6	0.2	0
+5	3.4	1.6	0.4	0
+5.2	3.5	1.5	0.2	0
+5.2	3.4	1.4	0.2	0
+4.7	3.2	1.6	0.2	0
+4.8	3.1	1.6	0.2	0
+5.4	3.4	1.5	0.4	0
+5.2	4.1	1.5	0.1	0
+5.5	4.2	1.4	0.2	0
+4.9	3.1	1.5	0.2	0
+5	3.2	1.2	0.2	0
+5.5	3.5	1.3	0.2	0
+4.9	3.6	1.4	0.1	0
+4.4	3	1.3	0.2	0
+5.1	3.4	1.5	0.2	0
+5	3.5	1.3	0.3	0
+4.5	2.3	1.3	0.3	0
+4.4	3.2	1.3	0.2	0
+5	3.5	1.6	0.6	0
+5.1	3.8	1.9	0.4	0
+4.8	3	1.4	0.3	0
+5.1	3.8	1.6	0.2	0
+4.6	3.2	1.4	0.2	0
+5.3	3.7	1.5	0.2	0
+5	3.3	1.4	0.2	0
+7	3.2	4.7	1.4	1
+6.4	3.2	4.5	1.5	1
+6.9	3.1	4.9	1.5	1
+5.5	2.3	4	1.3	1
+6.5	2.8	4.6	1.5	1
+5.7	2.8	4.5	1.3	1
+6.3	3.3	4.7	1.6	1
+4.9	2.4	3.3	1	1
+6.6	2.9	4.6	1.3	1
+5.2	2.7	3.9	1.4	1
+5	2	3.5	1	1
+5.9	3	4.2	1.5	1
+6	2.2	4	1	1
+6.1	2.9	4.7	1.4	1
+5.6	2.9	3.6	1.3	1
+6.7	3.1	4.4	1.4	1
+5.6	3	4.5	1.5	1
+5.8	2.7	4.1	1	1
+6.2	2.2	4.5	1.5	1
+5.6	2.5	3.9	1.1	1
+5.9	3.2	4.8	1.8	1
+6.1	2.8	4	1.3	1
+6.3	2.5	4.9	1.5	1
+6.1	2.8	4.7	1.2	1
+6.4	2.9	4.3	1.3	1
+6.6	3	4.4	1.4	1
+6.8	2.8	4.8	1.4	1
+6.7	3	5	1.7	1
+6	2.9	4.5	1.5	1
+5.7	2.6	3.5	1	1
+5.5	2.4	3.8	1.1	1
+5.5	2.4	3.7	1	1
+5.8	2.7	3.9	1.2	1
+6	2.7	5.1	1.6	1
+5.4	3	4.5	1.5	1
+6	3.4	4.5	1.6	1
+6.7	3.1	4.7	1.5	1
+6.3	2.3	4.4	1.3	1
+5.6	3	4.1	1.3	1
+5.5	2.5	4	1.3	1
+5.5	2.6	4.4	1.2	1
+6.1	3	4.6	1.4	1
+5.8	2.6	4	1.2	1
+5	2.3	3.3	1	1
+5.6	2.7	4.2	1.3	1
+5.7	3	4.2	1.2	1
+5.7	2.9	4.2	1.3	1
+6.2	2.9	4.3	1.3	1
+5.1	2.5	3	1.1	1
+5.7	2.8	4.1	1.3	1
+6.3	3.3	6	2.5	2
+5.8	2.7	5.1	1.9	2
+7.1	3	5.9	2.1	2
+6.3	2.9	5.6	1.8	2
+6.5	3	5.8	2.2	2
+7.6	3	6.6	2.1	2
+4.9	2.5	4.5	1.7	2
+7.3	2.9	6.3	1.8	2
+6.7	2.5	5.8	1.8	2
+7.2	3.6	6.1	2.5	2
+6.5	3.2	5.1	2	2
+6.4	2.7	5.3	1.9	2
+6.8	3	5.5	2.1	2
+5.7	2.5	5	2	2
+5.8	2.8	5.1	2.4	2
+6.4	3.2	5.3	2.3	2
+6.5	3	5.5	1.8	2
+7.7	3.8	6.7	2.2	2
+7.7	2.6	6.9	2.3	2
+6	2.2	5	1.5	2
+6.9	3.2	5.7	2.3	2
+5.6	2.8	4.9	2	2
+7.7	2.8	6.7	2	2
+6.3	2.7	4.9	1.8	2
+6.7	3.3	5.7	2.1	2
+7.2	3.2	6	1.8	2
+6.2	2.8	4.8	1.8	2
+6.1	3	4.9	1.8	2
+6.4	2.8	5.6	2.1	2
+7.2	3	5.8	1.6	2
+7.4	2.8	6.1	1.9	2
+7.9	3.8	6.4	2	2
+6.4	2.8	5.6	2.2	2
+6.3	2.8	5.1	1.5	2
+6.1	2.6	5.6	1.4	2
+7.7	3	6.1	2.3	2
+6.3	3.4	5.6	2.4	2
+6.4	3.1	5.5	1.8	2
+6	3	4.8	1.8	2
+6.9	3.1	5.4	2.1	2
+6.7	3.1	5.6	2.4	2
+6.9	3.1	5.1	2.3	2
+5.8	2.7	5.1	1.9	2
+6.8	3.2	5.9	2.3	2
+6.7	3.3	5.7	2.5	2
+6.7	3	5.2	2.3	2
+6.3	2.5	5	1.9	2
+6.5	3	5.2	2	2
+6.2	3.4	5.4	2.3	2
+5.9	3	5.1	1.8	2
+</pre>
+</div>
+<p>　　前4列是属性取值，最后一列是分类结果</p>
+<h3>2) C语言：导入数据函数</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">iris数据</span>
+<span style="color: #0000ff;">#define</span> data_num 150
+<span style="color: #0000ff;">#define</span> data_dim 4
+<span style="color: #0000ff;">#define</span> k_max 3
+<span style="color: #0000ff;">#define</span> data_dir "iris"
+<span style="color: #0000ff;">#define</span> dataset_name "iris"<span style="color: #000000;">
+
+typedef </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> elementtype; 
+elementtype data[data_num][data_dim];    </span><span style="color: #008000;">//</span><span style="color: #008000;">数据</span>
+<span style="color: #0000ff;">int</span> data_index[data_num];  <span style="color: #008000;">//</span><span style="color: #008000;">数据分类
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">载入数据</span>
+<span style="color: #0000ff;">void</span><span style="color: #000000;"> LoadData()
+{
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j;
+    FILE </span>*fp1,*<span style="color: #000000;">fp2;
+    </span><span style="color: #0000ff;">char</span> filename1[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">char</span> filename2[<span style="color: #800080;">100</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> max,min;
+    
+    strcpy(filename1,</span><span style="color: #800000;">"</span><span style="color: #800000;">data//</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    strcat(filename1,data_dir);
+    strcat(filename1,</span><span style="color: #800000;">"</span><span style="color: #800000;">//</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    strcat(filename1,dataset_name);
+    strcat(filename1,</span><span style="color: #800000;">"</span><span style="color: #800000;">_data.txt</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    strcpy(filename2,</span><span style="color: #800000;">"</span><span style="color: #800000;">data//</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    strcat(filename2,data_dir);
+    strcat(filename2,</span><span style="color: #800000;">"</span><span style="color: #800000;">//</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    strcat(filename2,dataset_name);
+    strcat(filename2,</span><span style="color: #800000;">"</span><span style="color: #800000;">_id.txt</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">if</span>((fp1=fopen(filename1,<span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span>))==<span style="color: #000000;">NULL)
+    { 
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">can not open datafile!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        exit(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span>((fp2=fopen(filename2,<span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span>))==<span style="color: #000000;">NULL)
+    { 
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">can not open datafile!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        exit(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;data_num;i++<span style="color: #000000;">)
+    {
+        </span><span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;data_dim;j++<span style="color: #000000;">)
+            fscanf(fp1,</span><span style="color: #800000;">"</span><span style="color: #800000;">%lf</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">data[i][j]);
+        fscanf(fp2,</span><span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">data_index[i]);
+    }
+
+    </span><span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;data_dim;j++<span style="color: #000000;">)
+    {
+        max</span>=-<span style="color: #800080;">9999999999.0</span><span style="color: #000000;">;
+        min</span>=<span style="color: #800080;">9999999999.0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;data_num;i++<span style="color: #000000;">)
+        {
+            </span><span style="color: #0000ff;">if</span> (data[i][j]&gt;<span style="color: #000000;">max)
+                max</span>=<span style="color: #000000;">data[i][j];
+            </span><span style="color: #0000ff;">if</span> (data[i][j]&lt;<span style="color: #000000;">min)
+                min</span>=<span style="color: #000000;">data[i][j];
+        }
+        
+        </span><span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;data_num;i++<span style="color: #000000;">)
+            data[i][j]</span>=(data[i][j]-min)/(max-min);<span style="color: #008000;">//</span><span style="color: #008000;">利用最大-最小值规范化到[0,1]区间</span>
+<span style="color: #000000;">    }
+
+    fclose(fp1);
+    fclose(fp2);
+}</span></pre>
+</div>
+<h3>3) MATLAB语言：导入数据函数LoadData()</h3>
+<div class="cnblogs_code">
+<pre>function [data,data_num,data_dim,data_index]=<span style="color: #000000;">LoadData(data_dir,dataset_name)
+</span><span style="color: #5acc33;">%</span><span style="color: #000000;"><span style="color: #5acc33;">data是归一化属性取值，data_num是样例总数，data_dim是属性的个数，data_index是分类结果</span>
+format </span><span style="color: #0000ff;">short</span>
+<span style="color: #5acc33;">%</span><span style="color: #000000;"><span style="color: #5acc33;">载入真实数据</span>
+filename1</span>=<span style="color: #800000;">'</span><span style="color: #800000;">data/</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+filename1</span>=<span style="color: #000000;">strcat(filename1,data_dir);    
+filename1</span>=strcat(filename1,<span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+filename1</span>=<span style="color: #000000;">strcat(filename1,dataset_name);
+filename1</span>=strcat(filename1,<span style="color: #800000;">'</span><span style="color: #800000;">_data.txt</span><span style="color: #800000;">'</span><span style="color: #000000;">);     
+filename2</span>=<span style="color: #800000;">'</span><span style="color: #800000;">data/</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+filename2</span>=<span style="color: #000000;">strcat(filename2,data_dir);    
+filename2</span>=strcat(filename2,<span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+filename2</span>=<span style="color: #000000;">strcat(filename2,dataset_name);
+filename2</span>=strcat(filename2,<span style="color: #800000;">'</span><span style="color: #800000;">_id.txt</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+
+fp1</span>=fopen(filename1,<span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">if</span> fp1&lt;=<span style="color: #800080;">0</span><span style="color: #000000;">
+    print(</span><span style="color: #800000;">'</span><span style="color: #800000;">can not open datafile!\n</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    exit(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+    data</span>=<span style="color: #0000ff;">double</span>(dlmread(filename1,<span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span><span style="color: #000000;">));
+end
+
+fp2</span>=fopen(filename2,<span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">if</span> fp2&lt;=<span style="color: #800080;">0</span><span style="color: #000000;">
+    print(</span><span style="color: #800000;">'</span><span style="color: #800000;">can not open datafile!\n</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    exit(</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+    data_index</span>=dlmread(filename2,<span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+end
+
+[data_num,data_dim]</span>=<span style="color: #000000;">size(data);
+
+</span><span style="color: #0000ff;">for</span> j=<span style="color: #800080;">1</span><span style="color: #000000;">:data_dim
+    max</span>=<span style="color: #0000ff;">double</span>(-<span style="color: #800080;">9999999999.0</span><span style="color: #000000;">);
+    min</span>=<span style="color: #0000ff;">double</span>(<span style="color: #800080;">9999999999.0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">for</span> i=<span style="color: #800080;">1</span><span style="color: #000000;">:data_num
+        </span><span style="color: #0000ff;">if</span> data(i,j)&gt;<span style="color: #000000;">max
+            max</span>=<span style="color: #000000;">data(i,j);
+        end
+        </span><span style="color: #0000ff;">if</span> data(i,j)&lt;<span style="color: #000000;">min
+            min</span>=<span style="color: #000000;">data(i,j);
+        end
+    end
+    </span><span style="color: #0000ff;">for</span> i=<span style="color: #800080;">1</span><span style="color: #000000;">:data_num
+        data(i,j)</span>=<span style="color: #0000ff;">double</span>((data(i,j)-min)/(max-<span style="color: #000000;">min));
+    end
+end
+fclose(fp1);
+fclose(fp2);</span></pre>
+</div>
+<p>MATLAB结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; [data,data_num,data_dim,data_index_first]=LoadData(<span style="color: #800000;">'</span><span style="color: #800000;">iris</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">iris</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+data </span>=
+
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1111</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.7917</span>    <span style="color: #800080;">0.1186</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.0278</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.0847</span>         <span style="color: #800080;">0</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.7083</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1389</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1389</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.0678</span>         <span style="color: #800080;">0</span>
+         <span style="color: #800080;">0</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.0169</span>         <span style="color: #800080;">0</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.8333</span>    <span style="color: #800080;">0.0339</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">1.0000</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.7917</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.1186</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.1186</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.7083</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.6667</span>         <span style="color: #800080;">0</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.1186</span>    <span style="color: #800080;">0.1667</span>
+    <span style="color: #800080;">0.1389</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.1525</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1111</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1389</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.8750</span>    <span style="color: #800080;">0.0847</span>         <span style="color: #800080;">0</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.9167</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.0339</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.0678</span>         <span style="color: #800080;">0</span>
+    <span style="color: #800080;">0.0278</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.0556</span>    <span style="color: #800080;">0.1250</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.0278</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.0508</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.6250</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.2083</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.1525</span>    <span style="color: #800080;">0.1250</span>
+    <span style="color: #800080;">0.1389</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0833</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.1017</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.2778</span>    <span style="color: #800080;">0.7083</span>    <span style="color: #800080;">0.0847</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.0678</span>    <span style="color: #800080;">0.0417</span>
+    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.6271</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.7222</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.6610</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.1250</span>    <span style="color: #800080;">0.5085</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.6111</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6102</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.6271</span>    <span style="color: #800080;">0.6250</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.3898</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.6389</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.6102</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.4915</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.1944</span>         <span style="color: #800080;">0</span>    <span style="color: #800080;">0.4237</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.4444</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5424</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.5085</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.6271</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.4407</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.5763</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.5254</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.5278</span>    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.4915</span>    <span style="color: #800080;">0.4167</span>
+    <span style="color: #800080;">0.4444</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.6441</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.5085</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.6610</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6271</span>    <span style="color: #800080;">0.4583</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.5593</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.6389</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5763</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.6944</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6441</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.6780</span>    <span style="color: #800080;">0.6667</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.4237</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.4746</span>    <span style="color: #800080;">0.4167</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.4576</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.4915</span>    <span style="color: #800080;">0.4583</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.6250</span>
+    <span style="color: #800080;">0.3056</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.6250</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.6271</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.1250</span>    <span style="color: #800080;">0.5763</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5254</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.5085</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.5763</span>    <span style="color: #800080;">0.4583</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.6102</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.5085</span>    <span style="color: #800080;">0.4583</span>
+    <span style="color: #800080;">0.1944</span>    <span style="color: #800080;">0.1250</span>    <span style="color: #800080;">0.3898</span>    <span style="color: #800080;">0.3750</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.5424</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.5424</span>    <span style="color: #800080;">0.4583</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.5424</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.5278</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.5593</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.2222</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.3390</span>    <span style="color: #800080;">0.4167</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.5254</span>    <span style="color: #800080;">0.5000</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.8475</span>    <span style="color: #800080;">1.0000</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.7500</span>
+    <span style="color: #800080;">0.7778</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.8305</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.6111</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.8136</span>    <span style="color: #800080;">0.8750</span>
+    <span style="color: #800080;">0.9167</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.9492</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.1667</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.5932</span>    <span style="color: #800080;">0.6667</span>
+    <span style="color: #800080;">0.8333</span>    <span style="color: #800080;">0.3750</span>    <span style="color: #800080;">0.8983</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.8136</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.8056</span>    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.8644</span>    <span style="color: #800080;">1.0000</span>
+    <span style="color: #800080;">0.6111</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.7288</span>    <span style="color: #800080;">0.7500</span>
+    <span style="color: #800080;">0.6944</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.7627</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.3889</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.6780</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.9583</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.7288</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.6111</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.7627</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.9444</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.9661</span>    <span style="color: #800080;">0.8750</span>
+    <span style="color: #800080;">0.9444</span>    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">1.0000</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.0833</span>    <span style="color: #800080;">0.6780</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.7222</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.7966</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.3611</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6610</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.9444</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.9661</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.6610</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.7966</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.8056</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.8475</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.5278</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6441</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.6610</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.8056</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.8136</span>    <span style="color: #800080;">0.6250</span>
+    <span style="color: #800080;">0.8611</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.8644</span>    <span style="color: #800080;">0.7500</span>
+    <span style="color: #800080;">1.0000</span>    <span style="color: #800080;">0.7500</span>    <span style="color: #800080;">0.9153</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.8750</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.3333</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.5833</span>
+    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.2500</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.5417</span>
+    <span style="color: #800080;">0.9444</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.8644</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.9583</span>
+    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.7627</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.4722</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.6441</span>    <span style="color: #800080;">0.7083</span>
+    <span style="color: #800080;">0.7222</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.7458</span>    <span style="color: #800080;">0.8333</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.7797</span>    <span style="color: #800080;">0.9583</span>
+    <span style="color: #800080;">0.7222</span>    <span style="color: #800080;">0.4583</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.2917</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.7500</span>
+    <span style="color: #800080;">0.6944</span>    <span style="color: #800080;">0.5000</span>    <span style="color: #800080;">0.8305</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.5417</span>    <span style="color: #800080;">0.7966</span>    <span style="color: #800080;">1.0000</span>
+    <span style="color: #800080;">0.6667</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.7119</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.5556</span>    <span style="color: #800080;">0.2083</span>    <span style="color: #800080;">0.6780</span>    <span style="color: #800080;">0.7500</span>
+    <span style="color: #800080;">0.6111</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.7119</span>    <span style="color: #800080;">0.7917</span>
+    <span style="color: #800080;">0.5278</span>    <span style="color: #800080;">0.5833</span>    <span style="color: #800080;">0.7458</span>    <span style="color: #800080;">0.9167</span>
+    <span style="color: #800080;">0.4444</span>    <span style="color: #800080;">0.4167</span>    <span style="color: #800080;">0.6949</span>    <span style="color: #800080;">0.7083</span><span style="color: #000000;">
+
+
+data_num </span>=
+
+   <span style="color: #800080;">150</span><span style="color: #000000;">
+
+
+data_dim </span>=
+
+     <span style="color: #800080;">4</span><span style="color: #000000;">
+
+
+data_index_first </span>=
+
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">0</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">1</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span>
+     <span style="color: #800080;">2</span></pre>
+</div>
+<h2>3. 总结</h2>
+<p>&nbsp; &nbsp; MATLAB的底层是C写的，C的效率比MatLab要高，但MatLab语法简单，但执行效率不高 。MATLAB是用于特定的方面的，比如说矩阵运算方面、DSP就很有优势，而C语言不同，很多软件的底层都是C编写的。MATLAB与C语言有很多相似之处，学习了C语言后，MATLAB就会相对易学。</p>
+<p>&nbsp; &nbsp; 如函数有不足之处，望园友多多指教。</p>

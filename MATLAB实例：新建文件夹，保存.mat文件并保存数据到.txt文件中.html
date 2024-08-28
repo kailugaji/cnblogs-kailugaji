@@ -1,0 +1,33 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB实例：新建文件夹，保存.mat文件并保存数据到.txt文件中</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">用MATLAB实现：指定路径下新建文件夹，将数据保存为.mat文件存放到新建的文件夹里，并将数据写入.txt文件中，存放到新建的文件夹中。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. demo.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+n=5;
+str=num2str(n);
+A=magic(n);
+new_folder = sprintf('E:\\MATLAB\\Data_%s', str); %指定路径
+mkdir(new_folder); %新建文件夹
+savePath=[new_folder, '/Magic_',str, '.mat'];
+save(savePath, 'A');  %保存mat文件
+load(savePath);  %加载mat
+% 写入txt文件
+fid=fopen([new_folder,'/Magic(', str, ').txt'], 'w');
+for i=1:n
+    for j=1:n
+        fprintf(fid, '%d\t', A(i,j));
+    end
+    fprintf(fid, '\t\n');
+end
+fclose(fid);
+</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><span style="font-size: 16px;">运行程序前：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191120212736980-178623920.png" alt="" /></p>
+<p><span style="font-size: 16px;">运行程序后：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191120212823257-1121402748.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191120212848909-87761324.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201911/1027447-20191120212916500-2112877321.png" alt="" /></p>

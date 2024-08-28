@@ -1,0 +1,46 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小实例：读取Excel表格中多个Sheet的数据</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题描述：用MATLAB读取Excel表格中多个Sheet的数据，并将这些数据按行拆分为多组。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">clear
+clc
+% 读取一个Excel表格中多个Sheet中的数据
+% sheet中的数据按要求分为多组
+% Author：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+num=7;
+A = cell(num,1);
+for i=1:num
+    Temp=xlsread('\kailugaji.xlsx',['Sheet', num2str(i)]); % 读取每个Sheet中的数据
+    % 按个人需求划分数据为两组，如果只提取数据，不分组，写成: A{i}=Temp;
+    A{i, 1}=Temp(1:10, :);  % 第一组
+    A{i, 2}=Temp(11:20, :); % 第二组
+end
+% A{i, j}：第i个Sheet，第j组数据
+% 例如，读取第3个Sheet第2组数据：
+format short
+A{3, 2}
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">ans =
+
+    0.3327    0.2594    0.7826    0.0974    0.6867    0.5687    0.9438
+    0.5880    0.9188    0.5819    0.5249    0.9542    0.9853    0.5008
+    0.6961    0.1088    0.1364    0.9693    0.5844    0.4161    0.9908
+    0.7903    0.1572    0.8126    0.5753    0.0153    0.1295    0.7185
+    0.5201    0.3933    0.2271    0.5763    0.4741    0.5109    0.2724
+    0.8926    0.2177    0.8899    0.0187    0.3012    0.2895    0.8352
+    0.8911    0.9633    0.3503    0.0208    0.5174    0.8411    0.4009
+    0.6474    0.4883    0.0976    0.1063    0.1625    0.9997    0.8177
+    0.1213    0.5301    0.7842    0.0656    0.3539    0.2431    0.0522
+    0.8694    0.9464    0.1181    0.0617    0.7596    0.9118    0.8859
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">A的大小：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210401150328715-1921579620.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. Excel数据</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><a href="https://files-cdn.cnblogs.com/files/kailugaji/kailugaji.rar" target="_blank">kailugaji.xlsx</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Excel表格示例：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210401150827065-2062349824.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>

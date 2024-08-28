@@ -1,0 +1,37 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小技巧：字符型与数值型数据在同一个矩阵中出现</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">MATLAB中有一个<a href="https://www.mathworks.com/help/matlab/ref/cell.html" target="_blank">数据类型cell</a>，它的功能很强大，可以将不同类型，不同维度的数据存放在一起。下面给一个小例子，巧用cell数据类型。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题：欲将字符型数据和数值型数据共存在一个矩阵中。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+a_1=[1 2.5 3;4.1 5 6;7 8 9;10 11 12.3];
+[~, dim]=size(a_1);
+a_1=num2cell(a_1, dim);
+b_1={'aa'; 'bb'; 'cc'; 'dd'};
+c_1=[b_1 a_1];
+
+a_2=[1;4.1;7;10];
+a_2=num2cell(a_2);
+b_2={'aaa'; 'bb'; 'ccc'; 'dd'};
+c_2=[b_2 a_2];</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">c_1的结果</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">'aa'	1	2.50000000000000	3
+'bb'	4.10000000000000	5	6
+'cc'	7	8	9
+'dd'	10	11	12.3000000000000</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201013224320998-615474255.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">c_2的结果</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">'aaa'	1
+'bb'	4.10000000000000
+'ccc'	7
+'dd'	10
+</pre>
+</div>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201013224309558-1521195987.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>

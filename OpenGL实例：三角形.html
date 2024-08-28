@@ -1,0 +1,168 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">OpenGL实例：三角形</span></h1>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></strong></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>更多请查看：<a href="https://www.cnblogs.com/kailugaji/tag/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" target="_blank">计算机图形学</a></strong></span></p>
+<h2>1. 三角形的旋转</h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include &lt;GL/glut.h&gt;
+<span style="color: #008080;"> 2</span> typedef GLfloat point2d[<span style="color: #800080;">2</span>]; <span style="color: #008000;">//</span><span style="color: #008000;"> a point data type</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span> triangle(point2d a, point2d b, point2d c) <span style="color: #008000;">//</span><span style="color: #008000;"> display a triangle</span>
+<span style="color: #008080;"> 4</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">    glBegin(GL_TRIANGLES);
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    glVertex2fv(a);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    glVertex2fv(b);
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">    glVertex2fv(c);
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">    glEnd();
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">void</span> display(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">13</span>     point2d v[<span style="color: #800080;">3</span>] = { {-<span style="color: #800080;">1.0</span>, -<span style="color: #800080;">0.58</span>}, {<span style="color: #800080;">1.0</span>, -<span style="color: #800080;">0.58</span>}, {<span style="color: #800080;">0.0</span>, <span style="color: #800080;">1.15</span>} }; <span style="color: #008000;">//</span><span style="color: #008000;">initial triangle vertices</span>
+<span style="color: #008080;">14</span>     glClear(GL_COLOR_BUFFER_BIT); <span style="color: #008000;">//</span><span style="color: #008000;"> Clear display window</span>
+<span style="color: #008080;">15</span>     glColor3f(<span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">1.0</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> Set fill color to blue</span>
+<span style="color: #008080;">16</span>     glLoadIdentity();<span style="color: #008000;">//</span><span style="color: #008000;">应该放在此处，保证每次显示正确</span>
+<span style="color: #008080;">17</span>     glViewport(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">300</span>, <span style="color: #800080;">400</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> Set left viewport</span>
+<span style="color: #008080;">18</span>     triangle(v[<span style="color: #800080;">0</span>], v[<span style="color: #800080;">1</span>], v[<span style="color: #800080;">2</span><span style="color: #000000;">]);
+</span><span style="color: #008080;">19</span>     glColor3f(<span style="color: #800080;">1.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> Set fill color to red</span>
+<span style="color: #008080;">20</span>     glViewport(<span style="color: #800080;">300</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">300</span>, <span style="color: #800080;">400</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> Set right viewport</span>
+<span style="color: #008080;">21</span>     glRotatef(<span style="color: #800080;">90.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">1.0</span>); <span style="color: #008000;">//</span><span style="color: #008000;"> Rotate about z axis</span>
+<span style="color: #008080;">22</span>     triangle(v[<span style="color: #800080;">0</span>], v[<span style="color: #800080;">1</span>], v[<span style="color: #800080;">2</span>]); <span style="color: #008000;">//</span><span style="color: #008000;"> Display blue triangle</span>
+<span style="color: #008080;">23</span> <span style="color: #000000;">    glFlush();
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">25</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> init()
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    glMatrixMode(GL_PROJECTION);
+</span><span style="color: #008080;">28</span>     <span style="color: #008000;">//</span><span style="color: #008000;">glLoadIdentity();</span><span style="color: #008000;">//</span><span style="color: #008000;">如果放在此处，会导致第一次显示正确，再次刷新时图形旋转</span>
+<span style="color: #008080;">29</span>     gluOrtho2D(-<span style="color: #800080;">2.0</span>, <span style="color: #800080;">2.0</span>, -<span style="color: #800080;">2.0</span>, <span style="color: #800080;">2.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">    glMatrixMode(GL_MODELVIEW);
+</span><span style="color: #008080;">31</span>     glClearColor(<span style="color: #800080;">1.0</span>, <span style="color: #800080;">1.0</span>, <span style="color: #800080;">1.0</span>, <span style="color: #800080;">1.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">33</span> <span style="color: #0000ff;">void</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> **<span style="color: #000000;">argv)
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">35</span>     glutInit(&amp;<span style="color: #000000;">argc, argv);
+</span><span style="color: #008080;">36</span>     glutInitDisplayMode(GLUT_SINGLE |<span style="color: #000000;"> GLUT_RGB);
+</span><span style="color: #008080;">37</span>     glutInitWindowSize(<span style="color: #800080;">600</span>, <span style="color: #800080;">400</span><span style="color: #000000;">);
+</span><span style="color: #008080;">38</span>     glutCreateWindow(<span style="color: #800000;">"</span><span style="color: #800000;">Triangle</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    glutDisplayFunc(display);
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">    init();
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">    glutMainLoop();
+</span><span style="color: #008080;">42</span> }</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190321093142745-187261263.png" alt="" /></p>
+<p>参考网址：<a href="https://blog.csdn.net/wpxu08/article/details/77608983" target="_blank">Opengl编程实例－红蓝三角形 - 图形学与可视化 - CSDN博客</a></p>
+<h2>2. <span style="font-family: 'times new roman', times;">Sierpinski gasket</span></h2>
+<h3>方法1：非递归</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include &lt;cstdlib&gt;
+<span style="color: #008080;"> 2</span> #include &lt;gl\glut.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> GLintPoint
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 5</span> <span style="color: #0000ff;">public</span><span style="color: #000000;">:
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    GLint x;
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    GLint y;
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">    GLintPoint(GLint a, GLint b) {
+</span><span style="color: #008080;"> 9</span>         x =<span style="color: #000000;"> a;
+</span><span style="color: #008080;">10</span>         y =<span style="color: #000000;"> b;
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">};
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">void</span> myInit(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">15</span>     glClearColor(0<span style="color: #800080;">.0</span>, 0<span style="color: #800080;">.0</span>, 0<span style="color: #800080;">.0</span>, <span style="color: #800080;">0.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>     glColor3f(<span style="color: #800080;">1.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span>     glPointSize(<span style="color: #800080;">2.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">    glMatrixMode(GL_PROJECTION);
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">    glLoadIdentity();
+</span><span style="color: #008080;">20</span>     gluOrtho2D(<span style="color: #800080;">0.0</span>, <span style="color: #800080;">600.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">600.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">22</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> drawDot(GLint x, GLint y) {
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">    glBegin(GL_POINTS);
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">    glVertex2i(x, y);
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">    glEnd();
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">27</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> myDisplay() {
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">    glClear(GL_COLOR_BUFFER_BIT);
+</span><span style="color: #008080;">29</span>     GLintPoint T[<span style="color: #800080;">3</span>] = { GLintPoint(<span style="color: #800080;">10</span>, <span style="color: #800080;">10</span>), GLintPoint(<span style="color: #800080;">600</span>, <span style="color: #800080;">10</span>), GLintPoint(<span style="color: #800080;">300</span>, <span style="color: #800080;">600</span><span style="color: #000000;">) };
+</span><span style="color: #008080;">30</span>     <span style="color: #0000ff;">int</span> index = rand() % <span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">31</span>     GLintPoint point =<span style="color: #000000;"> T[index];
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">    drawDot(point.x, point.y);
+</span><span style="color: #008080;">33</span>     <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">5000</span>; i++<span style="color: #000000;">) {
+</span><span style="color: #008080;">34</span>         index = rand() % <span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">35</span>         point.x = (point.x + T[index].x) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">36</span>         point.y = (point.y + T[index].y) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">        drawDot(point.x, point.y);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    glFlush();
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">41</span> <span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> *<span style="color: #000000;">argv[])
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">43</span>     glutInit(&amp;<span style="color: #000000;">argc, argv);
+</span><span style="color: #008080;">44</span>     glutInitDisplayMode(GLUT_RGB |<span style="color: #000000;"> GLUT_SINGLE);
+</span><span style="color: #008080;">45</span>     glutInitWindowPosition(<span style="color: #800080;">100</span>, <span style="color: #800080;">100</span><span style="color: #000000;">);
+</span><span style="color: #008080;">46</span>     glutInitWindowSize(<span style="color: #800080;">500</span>, <span style="color: #800080;">400</span><span style="color: #000000;">);
+</span><span style="color: #008080;">47</span>     glutCreateWindow(<span style="color: #800000;">"</span><span style="color: #800000;">Sierphiski gasket</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">48</span>     glutDisplayFunc(&amp;<span style="color: #000000;">myDisplay);
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">    myInit();
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">    glutMainLoop();
+</span><span style="color: #008080;">51</span>     <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">52</span> }</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190321193320981-1775159127.png" alt="" /></p>
+<h3>方法2：递归</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include &lt;GL/glut.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;stdlib.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> initial triangle </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 4</span> GLfloat v[<span style="color: #800080;">3</span>][<span style="color: #800080;">2</span>] = { {<span style="color: #800080;">10.0</span>, <span style="color: #800080;">10.0</span>}, {<span style="color: #800080;">600.0</span>, <span style="color: #800080;">10.0</span>}, {<span style="color: #800080;">300.0</span>, <span style="color: #800080;">600.0</span><span style="color: #000000;">} };
+</span><span style="color: #008080;"> 5</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> n;
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">void</span> triangle(GLfloat *a, GLfloat *b, GLfloat *<span style="color: #000000;">c)
+</span><span style="color: #008080;"> 7</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> display one triangle  </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 8</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">    glVertex2fv(a);
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">    glVertex2fv(b);
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    glVertex2fv(c);
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">void</span> divide_triangle(GLfloat  *a, GLfloat *b, GLfloat *c, <span style="color: #0000ff;">int</span><span style="color: #000000;"> m)
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">15</span>     <span style="color: #008000;">/*</span><span style="color: #008000;"> triangle subdivision using vertex numbers </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">16</span>     GLfloat v0[<span style="color: #800080;">2</span>], v1[<span style="color: #800080;">2</span>], v2[<span style="color: #800080;">2</span><span style="color: #000000;">];
+</span><span style="color: #008080;">17</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> j;
+</span><span style="color: #008080;">18</span>     <span style="color: #0000ff;">if</span> (m &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">20</span>         <span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">2</span>; j++) v0[j] = (a[j] + b[j]) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">21</span>         <span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">2</span>; j++) v1[j] = (a[j] + c[j]) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">22</span>         <span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">2</span>; j++) v2[j] = (b[j] + c[j]) / <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">23</span>         divide_triangle(a, v0, v1, m - <span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">24</span>         divide_triangle(c, v1, v2, m - <span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">25</span>         divide_triangle(b, v2, v0, m - <span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">27</span>     <span style="color: #0000ff;">else</span> triangle(a, b, c); <span style="color: #008000;">/*</span><span style="color: #008000;"> draw triangle at end of recursion </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">28</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">29</span> <span style="color: #0000ff;">void</span> display(<span style="color: #0000ff;">void</span><span style="color: #000000;">)
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">    glClear(GL_COLOR_BUFFER_BIT);
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">    glBegin(GL_TRIANGLES);
+</span><span style="color: #008080;">33</span>     divide_triangle(v[<span style="color: #800080;">0</span>], v[<span style="color: #800080;">1</span>], v[<span style="color: #800080;">2</span><span style="color: #000000;">], n);
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">    glEnd();
+</span><span style="color: #008080;">35</span> <span style="color: #000000;">    glFlush();
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">37</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> myinit()
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    glMatrixMode(GL_PROJECTION);
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">    glLoadIdentity();
+</span><span style="color: #008080;">41</span>     gluOrtho2D(<span style="color: #800080;">0.0</span>, <span style="color: #800080;">600.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">600.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">    glMatrixMode(GL_MODELVIEW);
+</span><span style="color: #008080;">43</span>     glClearColor(<span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">44</span>     glColor3f(<span style="color: #800080;">1.0</span>, <span style="color: #800080;">0.0</span>, <span style="color: #800080;">0.0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">46</span> <span style="color: #0000ff;">void</span>  main(<span style="color: #0000ff;">int</span> argc, <span style="color: #0000ff;">char</span> **<span style="color: #000000;">argv)
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">48</span>     n = <span style="color: #800080;">15</span><span style="color: #000000;">;
+</span><span style="color: #008080;">49</span>     glutInit(&amp;<span style="color: #000000;">argc, argv);
+</span><span style="color: #008080;">50</span>     glutInitDisplayMode(GLUT_SINGLE |<span style="color: #000000;"> GLUT_RGB);
+</span><span style="color: #008080;">51</span>     glutInitWindowSize(<span style="color: #800080;">500</span>, <span style="color: #800080;">400</span><span style="color: #000000;">);
+</span><span style="color: #008080;">52</span>     glutCreateWindow(<span style="color: #800000;">"</span><span style="color: #800000;">Sierpinski Gasket</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">    glutDisplayFunc(display);
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">    myinit();
+</span><span style="color: #008080;">55</span> <span style="color: #000000;">    glutMainLoop();
+</span><span style="color: #008080;">56</span> 
+<span style="color: #008080;">57</span> }</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201903/1027447-20190321200029019-717793337.png" alt="" /></p>

@@ -1,0 +1,131 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小函数：找出矩阵中某一列(行)元素全相等(不等)的列(行)所在下标及对应元素值</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;找出矩阵中某一列(行)元素全相等的列(行)所在下标及对应元素值</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 给定一个矩阵，一列一列找，如果某一列中全部元素都是相同的值，则返回该列的id号。例如：aa矩阵中第2列元素值全是2.3，第5列元素值全是7，则返回列下标值2, 5与相应的元素值2.3, 7。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">aa =
+
+    5.0000    2.3000    4.0000    8.0000    7.0000
+    6.0000    2.3000    4.0000    6.0000    7.0000
+    8.0000    2.3000    1.0000    4.0000    7.0000
+    8.0000    2.3000    6.0000    4.0000    7.0000
+    1.0000    2.3000    5.0000    9.0000    7.0000
+         0    2.3000    1.0000    5.0000    7.0000
+    3.5000    2.3000    6.4000    8.6000    7.0000
+
+
+output =
+
+    2.0000    2.3000
+    5.0000    7.0000</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.1 MATLAB程序</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function output=Column_consistent(data)
+% MATLAB 找出矩阵中某一列元素全相等的列所在的下标及对应的元素值
+% Input: 数据集
+% Output:列下标号 元素值
+[~, dim]=size(data);
+index=[];
+value_col=[];
+for i=1:dim
+    result_frequency=tabulate(data(:, i));
+    value=result_frequency(result_frequency(:, 3)==100);
+    if ~isempty(value)
+        index=[index; i];
+        value_col=[value_col; value];
+    end
+end
+output=[index value_col];</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.2 结果</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; aa=[5 2.3 4 8 7; 6 2.3 4 6 7; 8 2.3 1 4 7; 8 2.3 6 4 7; 1 2.3 5 9 7;0 2.3 1 5 7; 3.5 2.3 6.4 8.6 7]
+
+aa =
+
+    5.0000    2.3000    4.0000    8.0000    7.0000
+    6.0000    2.3000    4.0000    6.0000    7.0000
+    8.0000    2.3000    1.0000    4.0000    7.0000
+    8.0000    2.3000    6.0000    4.0000    7.0000
+    1.0000    2.3000    5.0000    9.0000    7.0000
+         0    2.3000    1.0000    5.0000    7.0000
+    3.5000    2.3000    6.4000    8.6000    7.0000
+
+&gt;&gt; output=Column_consistent(aa)
+
+output =
+
+    2.0000    2.3000
+    5.0000    7.0000</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; <span style="color: #ff0000;">注意</span>：如果是找出矩阵中某一行元素全相等的行所在下标及对应元素值，只需把数据转置一下就可以，例如，bb数据集中第1行元素全为1，第4行元素全为0，则返回行下标1, 4和相应的元素值1, 0。</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; bb=[1 1 1 1; 2 5 4 7; 3 5 4 8; 0 0 0 0; 6 8 4 5]
+
+bb =
+
+     1     1     1     1
+     2     5     4     7
+     3     5     4     8
+     0     0     0     0
+     6     8     4     5
+
+&gt;&gt; output=Column_consistent(bb')
+
+output =
+
+     1     1
+     4     0</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 统计矩阵中某一列(行)元素全不等的列(行)的个数及所在下标</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1 MATLAB程序</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [index, sum_no_consistent]=Column_no_consistent(data)
+% MATLAB 统计矩阵中某一列元素全不一致的列的个数及所在下标
+% Input: 
+% data: 数据集
+% Output:
+% index: 列下标号 元素值
+% sum_no_consistent: 统计矩阵中某一列元素全不一致的列的个数
+[Num, dim]=size(data);
+index=[];
+value_col=[];
+for i=1:dim
+    result_frequency=tabulate(data(:, i));
+    value=(sum(result_frequency(:, 3)~=0)==Num);
+    if value~=0
+        index=[index; i];
+        value_col=[value_col; value];
+    end
+end
+sum_no_consistent=sum(value_col);</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.2 结果</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; cc=[5 2.3 4 8 7; 6 2.3 4 6 7; 8 2.3 1 4 7; 8.1 2.3 6 4.1 7; 1 2.3 5 9 7;0 2.3 1 5 7; 3.5 2.3 6.4 8.6 7]
+
+cc =
+
+    5.0000    2.3000    4.0000    8.0000    7.0000
+    6.0000    2.3000    4.0000    6.0000    7.0000
+    8.0000    2.3000    1.0000    4.0000    7.0000
+    8.1000    2.3000    6.0000    4.1000    7.0000
+    1.0000    2.3000    5.0000    9.0000    7.0000
+         0    2.3000    1.0000    5.0000    7.0000
+    3.5000    2.3000    6.4000    8.6000    7.0000
+
+&gt;&gt; [index, sum_no_consistent]=Column_no_consistent(cc)
+
+index =
+
+     1
+     4
+
+
+sum_no_consistent =
+
+     2</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; cc数据集里面有2列元素全不相同，分别是第1和第4列。同样，如果想统计有多少行元素全不相同，只需转置数据即可，例如，将cc改为cc'。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2020-06-04</span></p>

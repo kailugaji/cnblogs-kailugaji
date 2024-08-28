@@ -1,0 +1,115 @@
+<h1 style="text-align: center;">MATLAB线性方程组的迭代求解法</h1>
+<p>作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</p>
+<h2>一、实验目的</h2>
+<p>1．&nbsp;<span style="font-family: 宋体;">借助矩阵按模最大特征值，判断解方程组的</span>Jacobi迭代法所得迭代序列的敛散性。</p>
+<p>2．&nbsp;<span style="font-family: 宋体;">会在</span>Jacobi迭代法所得迭代序列收敛时，用修改后的Gauss-Seidel迭代法。</p>
+<p>3．&nbsp;会逐次超松驰迭代法。</p>
+<h2>二、实验原理</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602110936664-2010372463.png" alt="" /></p>
+<h2>三、实验程序</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602110958977-1626726725.png" alt="" /></p>
+<h2>四、实验内容</h2>
+<p>用上面前二种方法求解4元线性方程组的近似解，所选方程组尽可能可以用多种方法求得收敛解。</p>
+<p>注：要注意判断迭代法收敛性，方法之一就是用程序求矩阵的按模最大特征值。</p>
+<h2>五、解答</h2>
+<h3>1.(程序)</h3>
+<p>（1）Jacobi迭代法源程序：</p>
+<div class="cnblogs_code">
+<pre>function x=<span style="color: #000000;">jacobi(a,b,x0,n,tol,m)
+x</span>=zeros(n,1<span style="color: #000000;">);
+</span><span style="color: #0000ff;">for</span> k=<span style="color: #000000;">0:m
+    </span><span style="color: #0000ff;">for</span> i=1<span style="color: #000000;">:n
+        s</span>=<span style="color: #000000;">0;
+        </span><span style="color: #0000ff;">for</span> j=1<span style="color: #000000;">:n
+            </span><span style="color: #0000ff;">if</span> j~=<span style="color: #000000;">i
+                s</span>=s+a(i,j)*x0(j,1<span style="color: #000000;">);
+            end
+        end
+        x(i,</span>1)=(b(i,1)-s)/<span style="color: #000000;">a(i,i);
+        </span><span style="color: #0000ff;">if</span> norm(x-x0,inf)&lt;<span style="color: #000000;">tol
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        end
+        x0(i,</span>1)=x(i,1<span style="color: #000000;">);
+    end
+end</span></pre>
+</div>
+<p>（2）Gauss-Seidel迭代法源程序：</p>
+<div class="cnblogs_code">
+<pre>function x=<span style="color: #000000;">gauss_seidel(a,b,x0,n,tol,m)
+x</span>=zeros(n,1<span style="color: #000000;">);
+</span><span style="color: #0000ff;">for</span> k=<span style="color: #000000;">0:m
+    </span><span style="color: #0000ff;">for</span> i=1<span style="color: #000000;">:n
+        s</span>=0;s2=<span style="color: #000000;">0;
+        </span><span style="color: #0000ff;">for</span> j=1:i-1<span style="color: #000000;">
+            s2</span>=s2+a(i,j)*x(j,1<span style="color: #000000;">);
+        end
+        </span><span style="color: #0000ff;">for</span> j=i+1<span style="color: #000000;">:n
+                s</span>=s+a(i,j)*x0(j,1<span style="color: #000000;">);
+        end
+        x(i,</span>1)=(b(i,1)-s-s2)/<span style="color: #000000;">a(i,i);
+        </span><span style="color: #0000ff;">if</span> norm(x-x0,inf)&lt;<span style="color: #000000;">tol
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        end
+        x0(i,</span>1)=x(i,1<span style="color: #000000;">);
+    end
+end</span></pre>
+</div>
+<h3>2.(运算结果)</h3>
+<p>(1)求解线性方程组</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602111329289-2046442090.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; a=[8 -3 2;4 11 -1;6 3 12];b=[20 33 36]<span style="color: #800000;">'</span><span style="color: #800000;">;x0=[0 0 0]</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+</span>&gt;&gt; x=jacobi(a,b,x0,3,1e-6,50<span style="color: #000000;">)
+
+x </span>=
+
+    3.0000
+    2.0000
+    1.0000</pre>
+</div>
+<p>（2）Gauss-Seidel迭代法</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;  a=[8 -3 2;4 11 -1;6 3 12];b=[20 33 36]<span style="color: #800000;">'</span><span style="color: #800000;">;x0=[0 0 0]</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+</span>&gt;&gt; x=gauss_seidel(a,b,x0,3,1e-6,50<span style="color: #000000;">)
+
+x </span>=
+
+    3.0000
+    2.0000
+    1.0000</pre>
+</div>
+<h3>3.(拓展（方法改进、体会等）)</h3>
+<p>逐次超松驰迭代法源程序：</p>
+<div class="cnblogs_code">
+<pre>function x=<span style="color: #000000;">SOR(a,b,x0,n,w,tol,m)
+x</span>=zeros(n,1<span style="color: #000000;">);
+</span><span style="color: #0000ff;">for</span> k=<span style="color: #000000;">0:m
+    </span><span style="color: #0000ff;">for</span> i=1<span style="color: #000000;">:n
+        s</span>=0;s2=<span style="color: #000000;">0;
+        </span><span style="color: #0000ff;">for</span> j=1:i-1<span style="color: #000000;">
+            s2</span>=s2+a(i,j)*x(j,1<span style="color: #000000;">);
+        end
+        </span><span style="color: #0000ff;">for</span> j=i+1<span style="color: #000000;">:n
+                s</span>=s+a(i,j)*x0(j,1<span style="color: #000000;">);
+        end
+        x(i,</span>1)=(1-w)*x0(i,1)+w*(b(i,1)-s-s2)/<span style="color: #000000;">a(i,i);
+        </span><span style="color: #0000ff;">if</span> norm(x-x0,inf)&lt;<span style="color: #000000;">tol
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        end
+        x0(i,</span>1)=x(i,1<span style="color: #000000;">);
+    end
+end</span></pre>
+</div>
+<p>运算结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt;  a=[-4 1 1 1;1 -4 1 1;1 1 -4 1;1 1 1 -4];b=[1 1 1 1]<span style="color: #800000;">'</span><span style="color: #800000;">;x0=[0 0 0 0]</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+</span>&gt;&gt; x=SOR(a,b,x0,4,1,1e-6,20<span style="color: #000000;">)
+
+x </span>=
+
+   -1.0000
+   -1.0000
+   -1.0000
+   -1.0000</pre>
+</div>
+<p>&nbsp;</p>

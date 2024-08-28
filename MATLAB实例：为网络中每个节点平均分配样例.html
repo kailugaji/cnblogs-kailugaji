@@ -1,0 +1,428 @@
+<h1 style="text-align: center;"><span style="font-family: verdana, geneva;">MATLAB实例：为网络中每个节点平均分配样例</span></h1>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">数据见：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11594507.html">MATLAB实例：PCA降维</a>中的iris数据集，保存为：iris_data.txt与iris_id.txt。</span></p>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">Network数据见：<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11765103.html">MATLAB实例：构造网络连接图(Network Connection)及计算图的代数连通度(Algebraic Connectivity)</a></span></p>
+<h2>1. MATLAB程序</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [ sel_fea, sel_gnd, NodeSample, GroundTruth ] = splitdata_func( Network, fea, gnd ,K)
+% 为网络中的每个节点平均分配样例
+% 输入：Network：Network Connection(网络连接图)，fea：数据集，gnd：标签，groundtruth，K：类别数
+% 输出：sel_fea：选出的数据，sel_gnd：选出的与数据相对应的真实类标签，NodeSample：平均分配的每个节点的数据
+%      GroundTruth：nodegnd：每个节点中数据的真实类标签，gnd：选出的数据的真实类标签，base_align：真实的每一类数据的平均值
+    nodenum = Network.Conf.NodeNumber;  %节点个数
+    NodeSample = cell(nodenum,1);   %[节点个数*1]的元组，每一行都是一个向量
+
+    [nsample,dim] = size(fea);  %nsample：样本个数，dim：样本维度
+    split = floor(nsample/nodenum);
+    select_id = randperm(nsample, split*nodenum);
+    sel_fea = fea(select_id,:);
+    sel_gnd = gnd(select_id,:);
+    nsample = split*nodenum;  %选出的样本个数=split*nodenum，比原来的少
+    
+    sortedidx = randperm(nsample);
+    sel_fea = sel_fea(sortedidx,:);
+    sel_gnd = sel_gnd(sortedidx,:);  %重新排列，打乱顺序
+
+    base_align = zeros(dim,K);  %每一类的数据的平均值
+    for i=1:K
+        idx = find(sel_gnd==i);
+        base_align(:,i) = mean(sel_fea(idx,:),1)';
+    end
+
+    beginp = 1;
+    for i=1:nodenum    %从1到节点个数
+        endp = beginp + split-1;
+        NodeSample{i}.data = sel_fea(beginp:endp,:); %为每个节点平均分配数据      
+        GroundTruth.nodegnd{i} = sel_gnd(beginp:endp,:);
+        beginp = endp+1;
+    end
+    GroundTruth.gnd = sel_gnd;
+    GroundTruth.base_align = base_align;
+end
+</pre>
+</div>
+<h2>2. 结果</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; load('Network_1.mat')
+&gt;&gt; fea=dlmread('E:\database\UCI与非球形数据集\iris_data.txt');
+&gt;&gt; gnd=dlmread('E:\database\UCI与非球形数据集\iris_id.txt')+1;
+&gt;&gt; [ sel_fea, sel_gnd, NodeSample, GroundTruth ] = splitdata_func( Network, fea, gnd ,3)
+</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;collapse:true;;gutter:true;">sel_fea =
+
+    5.0000    2.0000    3.5000    1.0000
+    4.6000    3.6000    1.0000    0.2000
+    5.2000    3.4000    1.4000    0.2000
+    6.9000    3.1000    4.9000    1.5000
+    5.6000    2.7000    4.2000    1.3000
+    7.7000    2.6000    6.9000    2.3000
+    6.1000    3.0000    4.6000    1.4000
+    5.8000    4.0000    1.2000    0.2000
+    5.5000    2.3000    4.0000    1.3000
+    6.2000    2.2000    4.5000    1.5000
+    6.1000    2.9000    4.7000    1.4000
+    5.9000    3.0000    5.1000    1.8000
+    5.7000    2.6000    3.5000    1.0000
+    5.0000    3.5000    1.3000    0.3000
+    4.7000    3.2000    1.3000    0.2000
+    6.0000    3.4000    4.5000    1.6000
+    5.4000    3.9000    1.7000    0.4000
+    5.1000    3.3000    1.7000    0.5000
+    5.2000    4.1000    1.5000    0.1000
+    6.7000    3.1000    5.6000    2.4000
+    4.8000    3.4000    1.6000    0.2000
+    6.3000    2.3000    4.4000    1.3000
+    7.7000    2.8000    6.7000    2.0000
+    6.7000    3.1000    4.4000    1.4000
+    6.7000    3.3000    5.7000    2.5000
+    6.9000    3.1000    5.1000    2.3000
+    5.4000    3.0000    4.5000    1.5000
+    6.6000    2.9000    4.6000    1.3000
+    6.7000    2.5000    5.8000    1.8000
+    5.8000    2.6000    4.0000    1.2000
+    6.3000    2.8000    5.1000    1.5000
+    4.3000    3.0000    1.1000    0.1000
+    5.6000    3.0000    4.1000    1.3000
+    7.4000    2.8000    6.1000    1.9000
+    6.1000    2.6000    5.6000    1.4000
+    5.6000    3.0000    4.5000    1.5000
+    5.2000    2.7000    3.9000    1.4000
+    5.5000    3.5000    1.3000    0.2000
+    6.1000    2.8000    4.7000    1.2000
+    5.4000    3.7000    1.5000    0.2000
+    4.9000    2.5000    4.5000    1.7000
+    6.0000    3.0000    4.8000    1.8000
+    5.6000    2.9000    3.6000    1.3000
+    6.3000    2.9000    5.6000    1.8000
+    5.5000    2.4000    3.7000    1.0000
+    6.9000    3.2000    5.7000    2.3000
+    5.0000    2.3000    3.3000    1.0000
+    5.8000    2.7000    5.1000    1.9000
+    6.4000    3.1000    5.5000    1.8000
+    5.0000    3.6000    1.4000    0.2000
+    6.2000    2.8000    4.8000    1.8000
+    7.2000    3.0000    5.8000    1.6000
+    6.8000    3.0000    5.5000    2.1000
+    4.4000    3.2000    1.3000    0.2000
+    5.7000    2.8000    4.5000    1.3000
+    5.0000    3.0000    1.6000    0.2000
+    6.2000    2.9000    4.3000    1.3000
+    4.5000    2.3000    1.3000    0.3000
+    6.0000    2.2000    4.0000    1.0000
+    6.7000    3.0000    5.2000    2.3000
+    5.1000    3.8000    1.6000    0.2000
+    6.3000    2.5000    5.0000    1.9000
+    6.0000    2.2000    5.0000    1.5000
+    4.6000    3.1000    1.5000    0.2000
+    4.8000    3.4000    1.9000    0.2000
+    5.7000    2.9000    4.2000    1.3000
+    5.5000    2.6000    4.4000    1.2000
+    5.7000    2.8000    4.1000    1.3000
+    6.0000    2.7000    5.1000    1.6000
+    7.9000    3.8000    6.4000    2.0000
+    5.7000    2.5000    5.0000    2.0000
+    5.1000    3.8000    1.5000    0.3000
+    5.4000    3.9000    1.3000    0.4000
+    4.9000    2.4000    3.3000    1.0000
+    4.9000    3.1000    1.5000    0.1000
+    6.3000    2.5000    4.9000    1.5000
+    5.9000    3.2000    4.8000    1.8000
+    6.3000    3.3000    6.0000    2.5000
+    5.4000    3.4000    1.7000    0.2000
+    7.1000    3.0000    5.9000    2.1000
+    4.9000    3.0000    1.4000    0.2000
+    4.9000    3.6000    1.4000    0.1000
+    5.8000    2.7000    5.1000    1.9000
+    5.8000    2.7000    3.9000    1.2000
+    6.0000    2.9000    4.5000    1.5000
+    6.5000    3.2000    5.1000    2.0000
+    6.4000    3.2000    4.5000    1.5000
+    7.2000    3.2000    6.0000    1.8000
+    6.3000    2.7000    4.9000    1.8000
+    7.0000    3.2000    4.7000    1.4000
+    6.7000    3.0000    5.0000    1.7000
+    7.7000    3.0000    6.1000    2.3000
+    5.5000    2.4000    3.8000    1.1000
+    6.5000    3.0000    5.2000    2.0000
+    4.4000    3.0000    1.3000    0.2000
+    4.8000    3.0000    1.4000    0.1000
+    6.9000    3.1000    5.4000    2.1000
+    6.4000    2.8000    5.6000    2.2000
+    4.8000    3.0000    1.4000    0.3000
+    6.3000    3.3000    4.7000    1.6000
+    5.0000    3.4000    1.5000    0.2000
+    6.6000    3.0000    4.4000    1.4000
+    5.7000    4.4000    1.5000    0.4000
+    4.9000    3.1000    1.5000    0.2000
+    5.0000    3.5000    1.6000    0.6000
+    6.4000    2.8000    5.6000    2.1000
+    5.5000    2.5000    4.0000    1.3000
+    5.1000    3.8000    1.9000    0.4000
+    4.6000    3.2000    1.4000    0.2000
+    7.7000    3.8000    6.7000    2.2000
+    5.2000    3.5000    1.5000    0.2000
+    5.6000    2.8000    4.9000    2.0000
+    7.6000    3.0000    6.6000    2.1000
+    6.2000    3.4000    5.4000    2.3000
+    6.8000    3.2000    5.9000    2.3000
+    5.9000    3.0000    4.2000    1.5000
+    6.5000    2.8000    4.6000    1.5000
+    5.0000    3.3000    1.4000    0.2000
+    6.3000    3.4000    5.6000    2.4000
+    5.7000    3.0000    4.2000    1.2000
+    6.5000    3.0000    5.8000    2.2000
+    7.2000    3.6000    6.1000    2.5000
+    5.1000    3.7000    1.5000    0.4000
+    5.1000    3.5000    1.4000    0.3000
+    6.4000    2.9000    4.3000    1.3000
+    5.0000    3.2000    1.2000    0.2000
+    7.3000    2.9000    6.3000    1.8000
+    6.4000    2.7000    5.3000    1.9000
+    4.8000    3.1000    1.6000    0.2000
+    5.0000    3.4000    1.6000    0.4000
+    6.1000    2.8000    4.0000    1.3000
+    6.7000    3.3000    5.7000    2.1000
+    6.7000    3.1000    4.7000    1.5000
+    6.8000    2.8000    4.8000    1.4000
+    4.4000    2.9000    1.4000    0.2000
+    4.6000    3.4000    1.4000    0.3000
+    5.1000    3.5000    1.4000    0.2000
+    6.1000    3.0000    4.9000    1.8000
+    5.6000    2.5000    3.9000    1.1000
+    6.4000    3.2000    5.3000    2.3000
+    5.7000    3.8000    1.7000    0.3000
+    5.3000    3.7000    1.5000    0.2000
+    5.4000    3.4000    1.5000    0.4000
+    5.1000    2.5000    3.0000    1.1000
+    5.1000    3.4000    1.5000    0.2000
+    4.7000    3.2000    1.6000    0.2000
+    5.5000    4.2000    1.4000    0.2000
+    5.8000    2.7000    4.1000    1.0000
+    6.5000    3.0000    5.5000    1.8000
+    5.8000    2.8000    5.1000    2.4000
+
+
+sel_gnd =
+
+     2
+     1
+     1
+     2
+     2
+     3
+     2
+     1
+     2
+     2
+     2
+     3
+     2
+     1
+     1
+     2
+     1
+     1
+     1
+     3
+     1
+     2
+     3
+     2
+     3
+     3
+     2
+     2
+     3
+     2
+     3
+     1
+     2
+     3
+     3
+     2
+     2
+     1
+     2
+     1
+     3
+     3
+     2
+     3
+     2
+     3
+     2
+     3
+     3
+     1
+     3
+     3
+     3
+     1
+     2
+     1
+     2
+     1
+     2
+     3
+     1
+     3
+     3
+     1
+     1
+     2
+     2
+     2
+     2
+     3
+     3
+     1
+     1
+     2
+     1
+     2
+     2
+     3
+     1
+     3
+     1
+     1
+     3
+     2
+     2
+     3
+     2
+     3
+     3
+     2
+     2
+     3
+     2
+     3
+     1
+     1
+     3
+     3
+     1
+     2
+     1
+     2
+     1
+     1
+     1
+     3
+     2
+     1
+     1
+     3
+     1
+     3
+     3
+     3
+     3
+     2
+     2
+     1
+     3
+     2
+     3
+     3
+     1
+     1
+     2
+     1
+     3
+     3
+     1
+     1
+     2
+     3
+     2
+     2
+     1
+     1
+     1
+     3
+     2
+     3
+     1
+     1
+     1
+     2
+     1
+     1
+     1
+     2
+     3
+     3
+
+
+NodeSample =
+
+  50&times;1 cell 数组
+
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+    {1&times;1 struct}
+
+
+GroundTruth = 
+
+  包含以下字段的 struct:
+
+       nodegnd: {1&times;50 cell}
+           gnd: [150&times;1 double]
+    base_align: [4&times;3 double]
+</pre>
+</div>
+<h2>3. 参考文献</h2>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">[1] Hua J, Li C.&nbsp;<a href="https://huajh.github.io/papers/dvb_hua2016tsp.pdf" target="_blank">Distributed variational Bayesian algorithms over sensor networks</a>[J]. IEEE Transactions on Signal Processing, 2015, 64(3): 783-798.</span></p>
+<p><span style="font-family: verdana, geneva; font-size: 16px;">[2] Junhao Hua.&nbsp;<a href="https://github.com/huajh/dVB" target="_blank">Distributed Variational Bayesian Algorithms</a>. Github, 2017.</span></p>

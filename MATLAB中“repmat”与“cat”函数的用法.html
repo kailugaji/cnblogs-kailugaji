@@ -1,0 +1,199 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB中&ldquo;repmat&rdquo;与&ldquo;cat&rdquo;函数的用法</span></h1>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></strong></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. repmat函数</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; z=repmat(5,2,3)
+
+z =
+
+     5     5     5
+     5     5     5
+
+&gt;&gt; y=repmat([6,5;7,9],3,4)
+
+y =
+
+     6     5     6     5     6     5     6     5
+     7     9     7     9     7     9     7     9
+     6     5     6     5     6     5     6     5
+     7     9     7     9     7     9     7     9
+     6     5     6     5     6     5     6     5
+     7     9     7     9     7     9     7     9
+
+&gt;&gt; x=repmat([1:5;2:6],2,3)
+
+x =
+
+     1     2     3     4     5     1     2     3     4     5     1     2     3     4     5
+     2     3     4     5     6     2     3     4     5     6     2     3     4     5     6
+     1     2     3     4     5     1     2     3     4     5     1     2     3     4     5
+     2     3     4     5     6     2     3     4     5     6     2     3     4     5     6
+</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">repmat函数中第一个值是元素（或向量、矩阵）的值，第二个值为行数，第三个为列数。</span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">z=repmat(5,2,3)，生成2行3列元素为5的矩阵。</span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">y=repmat([6,5;7,9],3,4)，生成3行5列元素为[6,5;7,9]的分块矩阵。</span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">x=repmat([1:5;2:6],2,3)，生成3行5列元素为[1,2,3,4,5;2,3,4,5,6]的分块矩阵。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. cat函数</span></h2>
+<p><span style="font-size: 16px;">先生成一些大小相同的矩阵</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; a=repmat(5,3,5)
+
+a =
+
+     5     5     5     5     5
+     5     5     5     5     5
+     5     5     5     5     5
+
+&gt;&gt; b=repmat(6,3,5)
+
+b =
+
+     6     6     6     6     6
+     6     6     6     6     6
+     6     6     6     6     6
+
+&gt;&gt; c=repmat(7,3,5)
+
+c =
+
+     7     7     7     7     7
+     7     7     7     7     7
+     7     7     7     7     7
+
+&gt;&gt; d=repmat(8,3,5)
+
+d =
+
+     8     8     8     8     8
+     8     8     8     8     8
+     8     8     8     8     8
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">下面为cat函数的用法</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; e=cat(1,a,b,c,d)
+
+e =
+
+     5     5     5     5     5
+     5     5     5     5     5
+     5     5     5     5     5
+     6     6     6     6     6
+     6     6     6     6     6
+     6     6     6     6     6
+     7     7     7     7     7
+     7     7     7     7     7
+     7     7     7     7     7
+     8     8     8     8     8
+     8     8     8     8     8
+     8     8     8     8     8
+
+&gt;&gt; f=cat(2,a,b,c,d)
+
+f =
+
+     5     5     5     5     5     6     6     6     6     6     7     7     7     7     7     8     8     8     8     8
+     5     5     5     5     5     6     6     6     6     6     7     7     7     7     7     8     8     8     8     8
+     5     5     5     5     5     6     6     6     6     6     7     7     7     7     7     8     8     8     8     8
+
+&gt;&gt; g=cat(3,a,b,c,d)
+
+g(:,:,1) =
+
+     5     5     5     5     5
+     5     5     5     5     5
+     5     5     5     5     5
+
+
+g(:,:,2) =
+
+     6     6     6     6     6
+     6     6     6     6     6
+     6     6     6     6     6
+
+
+g(:,:,3) =
+
+     7     7     7     7     7
+     7     7     7     7     7
+     7     7     7     7     7
+
+
+g(:,:,4) =
+
+     8     8     8     8     8
+     8     8     8     8     8
+     8     8     8     8     8
+
+&gt;&gt; h=cat(4,a,b,c,d)
+
+h(:,:,1,1) =
+
+     5     5     5     5     5
+     5     5     5     5     5
+     5     5     5     5     5
+
+
+h(:,:,1,2) =
+
+     6     6     6     6     6
+     6     6     6     6     6
+     6     6     6     6     6
+
+
+h(:,:,1,3) =
+
+     7     7     7     7     7
+     7     7     7     7     7
+     7     7     7     7     7
+
+
+h(:,:,1,4) =
+
+     8     8     8     8     8
+     8     8     8     8     8
+     8     8     8     8     8
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">一般用到三维，四维及以上很少用。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">e=cat(1,a,b,c,d)，将a, b, c, d矩阵按列排。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">f=cat(2,a,b,c,d)，将a, b, c, d矩阵按行排。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">g=cat(3,a,b,c,d)，g是一个三维阵（3*5*4），前两个维度和a, b, c, d的大小一样，第三个维度为a, b, c, d矩阵的个数：4。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">h=cat(4,a,b,c,d)，h是一个四维阵，h(:,:,1,i)=h(:,:,i)。如下所示：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; h(:,:,1)
+
+ans =
+
+     5     5     5     5     5
+     5     5     5     5     5
+     5     5     5     5     5
+
+&gt;&gt; h(:,:,2)
+
+ans =
+
+     6     6     6     6     6
+     6     6     6     6     6
+     6     6     6     6     6
+
+&gt;&gt; h(:,:,3)
+
+ans =
+
+     7     7     7     7     7
+     7     7     7     7     7
+     7     7     7     7     7
+
+&gt;&gt; h(:,:,4)
+
+ans =
+
+     8     8     8     8     8
+     8     8     8     8     8
+     8     8     8     8     8
+</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">以上就是repmat与cat函数的简单用法。</span></p>
+<p><strong>&nbsp;</strong></p>

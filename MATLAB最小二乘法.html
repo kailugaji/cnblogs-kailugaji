@@ -1,0 +1,59 @@
+<h1 style="text-align: center;">&nbsp;MATLAB最小二乘法</h1>
+<p>作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112355758-1104665502.png" alt="" width="562" height="127" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112401696-1045771638.png" alt="" /></p>
+<p>三、实验程序</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112423961-1953234372.png" alt="" /></p>
+<p>四、实验内容</p>
+<p>设有如下数据：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112455493-365223662.png" alt="" /></p>
+<p><span style="font-family: 宋体;">用</span>3<span style="font-family: 宋体;">次多项式拟合这组数据</span>.</p>
+<p>五、解答（按如下顺序提交电子版）</p>
+<p>1.(程序)</p>
+<p>LSM1.m:</p>
+<div class="cnblogs_code">
+<pre>function p=LSM1(x,y,m)  %<span style="color: #000000;">x,y为序列长度相等的数据向量，m为拟合多项式次数
+format short;
+A</span>=zeros(m+1,m+1<span style="color: #000000;">);
+</span><span style="color: #0000ff;">for</span> i=<span style="color: #000000;">0:m
+    </span><span style="color: #0000ff;">for</span> j=<span style="color: #000000;">0:m
+        A(i</span>+1,j+1)=sum(x.^(i+<span style="color: #000000;">j));
+    end
+    b(i</span>+1)=sum(x.^i.*<span style="color: #000000;">y);
+end
+a</span>=A\b<span style="color: #800000;">'</span><span style="color: #800000;">;</span>
+p=fliplr(a<span style="color: #800000;">'</span><span style="color: #800000;">);</span></pre>
+</div>
+<p>2.(运算结果)</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; x=[-3,-2,-1,0,1,2,3<span style="color: #000000;">];
+</span>&gt;&gt; y=[-1.76,0.42,1.2,1.34,1.43,2.25,4.38<span style="color: #000000;">];
+</span>&gt;&gt; p=LSM1(x,y,3<span style="color: #000000;">)
+
+p </span>=
+
+    0.1133   -0.0018    0.0035    1.3300</pre>
+</div>
+<p>3.(拓展（方法改进、体会等）)</p>
+<p>MATLAB中有关于最小二乘法的现成的函数，如下编写程序：</p>
+<p>ploy1.m：</p>
+<div class="cnblogs_code">
+<pre>function [p]=<span style="color: #000000;">ploy1(x,y)  
+P</span>=polyfit(x,y,3<span style="color: #000000;">);  
+xi</span>=-4:.2:4<span style="color: #000000;">;  
+p</span>=polyfit(x,y,3<span style="color: #000000;">);
+yi</span>=<span style="color: #000000;">polyval(P,xi);  
+plot(xi,yi,x,y,</span><span style="color: #800000;">'</span><span style="color: #800000;">r*</span><span style="color: #800000;">'</span>); </pre>
+</div>
+<p>结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; x=[-3,-2,-1,0,1,2,3<span style="color: #000000;">];
+y</span>=[-1.76,0.42,1.2,1.34,1.43,2.25,4.38]; [p]=<span style="color: #000000;">ploy1(x,y)
+
+p </span>=
+
+    0.1133   -0.0018    0.0035    1.3300</pre>
+</div>
+<p><span style="font-size: 16px;">则y=0.1133*x^3-0.0018*x^2+0.0035*x+1.33</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602112900430-718392618.png" alt="" /></p>
+<p><span style="color: #ff0000; font-size: 16px;">&nbsp;注：非线性曲线拟合见：<span style="text-decoration: underline; color: #000080;"><a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/11839581.html"><span style="color: #000080; text-decoration: underline;">MATLAB实例：非线性曲线拟合</span></a></span></span></p>

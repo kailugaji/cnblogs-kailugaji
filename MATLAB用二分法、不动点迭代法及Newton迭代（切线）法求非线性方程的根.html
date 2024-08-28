@@ -1,0 +1,320 @@
+<h1 style="text-align: center;">MATLAB用二分法、不动点迭代法及Newton迭代（切线）法求非线性方程的根</h1>
+<p>作者：凯鲁嘎吉 - 博客园<br />http://www.cnblogs.com/kailugaji/</p>
+<h2>一、实验原理</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530174514727-284463815.png" alt="" /></p>
+<h2>二、实验步骤</h2>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530174610664-890162725.png" alt="" /></p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530174619446-571653275.png" alt="" /></p>
+<h2>三、实验过程</h2>
+<h3>1.(程序)</h3>
+<p>（1）二分法：求 &nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530174849461-427139178.png" alt="" />&nbsp;<span style="font-family: 宋体;">在区间（</span>1<span style="font-family: 宋体;">，</span><span style="font-family: 'Times New Roman';">2</span><span style="font-family: 宋体;">）之间的根，取<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530174908977-2045012974.png" alt="" /></span></p>
+<p><span style="font-family: 宋体;">（</span>a<span style="font-family: 宋体;">）</span><span style="font-family: 'Times New Roman';">bipart.m:</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [x,m]=bipart(fun,a0,b0,tol)
+a=a0;b=b0;
+m=1+round(round(log((b-a)/tol))/log(2));
+for k=1:m
+    p=(a+b)/2;     
+    if fun(p)*fun(b)&lt;0
+            a=p;
+    else
+            b=p;
+    end
+    x=p;
+end　</pre>
+</div>
+<p>(b)fun1.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function f=fun1(x)
+f=x^3+10*x-20;</pre>
+</div>
+<p>&nbsp;<span style="font-family: 宋体;">（</span>2）不动点迭代法：求方程<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175323774-788265482.png" alt="" />在<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175340055-1915652945.png" alt="" /><span style="font-family: 宋体;">附近的根，取<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175353649-1813450357.png" alt="" /></span></p>
+<p>&nbsp; &nbsp; <span style="color: #ff0000;">2020/10/17&nbsp; &nbsp;注：</span>这里求解用的牛顿迭代法，不是不动点迭代法，不动点迭代法的MATLAB程序请参看：<a href="https://www.cnblogs.com/kailugaji/p/13832330.html" target="_blank">MATLAB实例：不动点迭代法求一元函数方程的根 - 凯鲁嘎吉 - 博客园&nbsp;</a></p>
+<p>（a）budong.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [x,k]=budong(fun,x0,tol,m)
+for k=1:m
+    x=fun(x0);
+    if abs(x-x0)&lt;tol
+        break;
+    end
+    x0=x;
+end
+x=vpa(x,8);</pre>
+</div>
+<p>&nbsp;&nbsp;&nbsp;(b)fun.m</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function t=fun(x1)
+syms x;
+f=x^3-2*x-5;
+s=subs(diff(f,x),x,x1);
+x=x1;
+f=x^3-2*x-5;
+t=x-f/s;</pre>
+</div>
+<p><span style="font-family: 宋体;">（</span>3<span style="font-family: 宋体;">）牛顿迭代法：</span>求方程<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175407571-1876341752.png" alt="" />在<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175421821-1635611372.png" alt="" /><span style="font-family: 宋体;">附近的根，取<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175436383-152601199.png" alt="" /></span></p>
+<p>newton.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function x1=newton(t1,esp,m)
+
+syms x;
+
+fun=x^3+2*x-5;
+
+for k=1:m
+
+    if abs(subs(diff(fun,'x'),x,t1))&lt;esp
+
+        x1=t1;
+
+        break;
+
+    else
+
+        if subs(diff(fun,'x',2),x,t1)==0
+
+            break;
+
+            disp('解题失败！')
+
+        else
+
+            t0=t1;
+
+            t1=t0-subs(fun,x,t0)/subs(diff(fun,'x'),x,t0);
+
+            if abs(t1-t0)&lt;esp
+
+                x1=t1;
+
+                break;
+
+            end
+
+        end
+
+    end
+
+end
+
+x1=vpa(x1,8);</pre>
+</div>
+<h3>2.(运算结果)</h3>
+<p>（1）二分法：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; [x,m]=bipart(@fun1,1,2,0.0001)
+x =
+    1.5945
+m =
+    14</pre>
+</div>
+<p>(2)不动点迭代法：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; [x,k]=budong(@fun,2,1e-5,100)
+x =
+2.0945515
+k =
+     4
+</pre>
+</div>
+<p>(3)牛顿迭代法：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"> &gt;&gt; x1=newton(2,1e-4,20)
+     x1 =
+        1.3282689
+ 　</pre>
+</div>
+<h3>3.(拓展（方法改进、体会等）)</h3>
+<p><span style="font-family: 宋体;">对于方程的根为重根的情形，</span>newton法求重根只是线性收敛，迭代缓慢，如果对于求重根的情形，对newton法进行改进，取</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175458414-1221783273.png" alt="" />&nbsp;，</p>
+<p><span style="font-family: 宋体;">则</span> <img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175513086-849836091.png" alt="" />。用迭代法</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175528149-761800245.png" alt="" /></p>
+<p><span style="font-family: 宋体;">求</span>m重根，则具有二阶收敛性，但要知道<span style="font-family: 宋体;">的重数</span>m。</p>
+<p>&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">计算方程<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175555946-578587491.png" alt="" /><span style="line-height: 1.5;">的根<img src="http://images2015.cnblogs.com/blog/1027447/201705/1027447-20170530175615243-1449184345.png" alt="" /><span style="font-family: 宋体;">是二重根，用</span><span style="line-height: 1.5;">newton法与改进方法求根。</span></span></span></p>
+<p>源程序：</p>
+<p>newton_biroot.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function t=newton_biroot(x1)
+
+syms x;
+
+f=x^4-4*(x^2)+4;
+
+s=subs(diff(f,x),x,x1);
+
+x=x1;
+
+f=x^4-4*(x^2)+4;
+
+t=x-f/s;</pre>
+</div>
+<p>biroot1.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function t=biroot1(x1)
+
+syms x;
+
+f=x^4-4*(x^2)+4;
+
+s=subs(diff(f,x),x,x1);
+
+x=x1;
+
+f=x^4-4*(x^2)+4;
+
+t=x-2*f/s;</pre>
+</div>
+<p>budong.m:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function [x,k]=budong(fun,x0,tol,m)
+
+for k=1:m
+
+    x=fun(x0);
+
+    if abs(x-x0)&lt;tol
+
+        break;
+
+    end
+
+    x0=x;
+
+    x=vpa(x,8)
+
+end
+
+x=vpa(x,8);</pre>
+</div>
+<p><span style="font-family: 宋体;">运行结果：取初值为</span>2</p>
+<table>
+<tbody>
+<tr>
+<td valign="center" width="113">
+<p style="text-align: center;" align="center">k</p>
+</td>
+<td valign="center" width="113">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; xk</td>
+<td valign="center" width="140">
+<p align="center">newton<span style="font-family: 宋体;">法</span></p>
+</td>
+<td valign="center" width="140">
+<p align="center">改进方法</p>
+</td>
+</tr>
+<tr>
+<td valign="center" width="113">
+<p align="center">1</p>
+</td>
+<td valign="center" width="113">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x1</td>
+<td valign="center" width="140">
+<p align="center">1.75</p>
+</td>
+<td valign="center" width="140">
+<p align="center">1.5</p>
+</td>
+</tr>
+<tr>
+<td valign="center" width="113">
+<p align="center">2</p>
+</td>
+<td valign="center" width="113">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x2</td>
+<td valign="center" width="140">
+<p align="center">1.5982143</p>
+<p align="center">&nbsp;</p>
+</td>
+<td valign="center" width="140">
+<p align="center">1.4166667</p>
+<p align="center">&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="center" width="113">
+<p align="center">3</p>
+</td>
+<td valign="center" width="113">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x3</td>
+<td valign="center" width="140">
+<p align="center">1.5115099</p>
+<p align="center">&nbsp;</p>
+</td>
+<td valign="center" width="140">
+<p align="center">1.4142157</p>
+<p align="center">&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td valign="center" width="113">
+<p align="center">4</p>
+</td>
+<td valign="center" width="113">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x4</td>
+<td valign="center" width="140">
+<p align="center">1.4644275</p>
+<p align="center">&nbsp;</p>
+</td>
+<td valign="center" width="140">
+<p align="center">1.4142157</p>
+<p align="center">&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;<span style="font-family: 宋体;">计算</span>4<span style="font-family: 宋体;">步，改进方法就已经收敛，而</span><span style="font-family: 'Times New Roman';">newton</span><span style="font-family: 宋体;">法只是线性收敛，要达到同样精度需迭代</span><span style="font-family: 'Times New Roman';">17</span><span style="font-family: 宋体;">次。</span></p>
+<p>附结果：</p>
+<p>&gt;&gt; [x,k]=budong(@biroot1,2,1e-5,3)</p>
+<p>x =</p>
+<p>1.5</p>
+<p>x =</p>
+<p>1.4166667</p>
+<p>x =&nbsp;</p>
+<p>1.4142157</p>
+<p>x =</p>
+<p>1.4142157&nbsp;</p>
+<p>k =</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3</p>
+<p>&gt;&gt; [x,k]=budong(@biroot1,2,1e-5,10)</p>
+<p>x =</p>
+<p>1.5</p>
+<p>x =</p>
+<p>1.4166667</p>
+<p>x =</p>
+<p>1.4142157</p>
+<p>x =</p>
+<p>1.4142136&nbsp;</p>
+<p>k =</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4</p>
+<p>&gt;&gt; [x,k]=budong(@newton_biroot,2,1e-5,50)</p>
+<p>x =</p>
+<p>1.75</p>
+<p>x =&nbsp;</p>
+<p>1.5982143&nbsp;</p>
+<p>x =&nbsp;</p>
+<p>1.5115099&nbsp;</p>
+<p>x =&nbsp;</p>
+<p>1.4644275</p>
+<p>x =</p>
+<p>1.439751</p>
+<p>x =</p>
+<p>1.4270955</p>
+<p>x =</p>
+<p>1.4206836</p>
+<p>x =</p>
+<p>1.4174559</p>
+<p>x =</p>
+<p>1.4158366&nbsp;</p>
+<p>x =</p>
+<p>1.4150256</p>
+<p>x =</p>
+<p>1.4146197</p>
+<p>x =</p>
+<p>1.4144166</p>
+<p>x =</p>
+<p>1.4143151</p>
+<p>x =&nbsp;</p>
+<p>1.4142643&nbsp;</p>
+<p>x =</p>
+<p>1.414239</p>
+<p>x =</p>
+<p>1.4142263&nbsp;</p>
+<p>x =</p>
+<p>1.4142199</p>
+<p>k =</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;17</p>

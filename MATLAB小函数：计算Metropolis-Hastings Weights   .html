@@ -1,0 +1,66 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小函数：计算Metropolis-Hastings Weights&nbsp;</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题：已经得到一个无向连通图，知道各个节点之间的连接情况，求节点之间的Metropolis-Hastings权重。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">前提：用<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/11765103.html">MATLAB实例：构造网络连接图(Network Connection)及计算图的代数连通度(Algebraic Connectivity)</a>中的函数构造得到网络连接图，并得到Network.mat。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 网络连接图</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202009/1027447-20200921193121278-694186798.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">网络连接情况如下：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202009/1027447-20200921193149754-1162571905.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. Metropolis-Hastings Weights</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202009/1027447-20200921193357854-573255977.png" alt="" width="1109" height="521" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3.&nbsp;Metropolis_Weights.m</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">function W = Metropolis_Weights(Network)
+% Author: kailugaji
+% 凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+NodeNum= Network.Conf.NodeNumber; %节点个数
+W=zeros(NodeNum, NodeNum);
+s=0;
+for i=1:NodeNum
+    K=length(Network.Nodes.neighbors{i});
+    % i=j
+    for k=1:K
+        index=Network.Nodes.neighbors{i}(k);
+        s=s+1./(max(K,length(Network.Nodes.neighbors{index}))+1);
+    end
+    W(i, i)=1-s;
+    s=0;
+    % i~=j
+    for j=1:NodeNum
+        if (sum(Network.Nodes.neighbors{i}==j)==1) &amp;&amp; (i~=j)
+            W(i, j)=1./(max(K,length(Network.Nodes.neighbors{j}))+1);
+        elseif (sum(Network.Nodes.neighbors{i}==j)==0) &amp;&amp; (i~=j)
+            W(i, j)=0;
+        end
+    end
+end         
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">&gt;&gt; load('Network_1.mat')
+&gt;&gt; format short
+&gt;&gt; W = Metropolis_Weights(Network)
+
+W =
+
+    0.5083         0         0         0         0         0         0    0.1667    0.2000    0.1250
+         0    0.8000         0         0    0.2000         0         0         0         0         0
+         0         0    0.4750    0.1250    0.2000    0.2000         0         0         0         0
+         0         0    0.1250    0.1250    0.1250    0.1250    0.1250    0.1250    0.1250    0.1250
+         0    0.2000    0.2000    0.1250    0.3500         0         0         0         0    0.1250
+         0         0    0.2000    0.1250         0    0.3500    0.2000         0         0    0.1250
+         0         0         0    0.1250         0    0.2000    0.3833    0.1667         0    0.1250
+    0.1667         0         0    0.1250         0         0    0.1667    0.2500    0.1667    0.1250
+    0.2000         0         0    0.1250         0         0         0    0.1667    0.3833    0.1250
+    0.1250         0         0    0.1250    0.1250    0.1250    0.1250    0.1250    0.1250    0.1250
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202009/1027447-20200921193756657-815661789.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">拓展：实际上得到的Metropolis-Hastings权重是一个对称双随机矩阵，即：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px; color: #3366ff;">双随机矩阵（doubly stochastic matrix）：元素属于[0,1]，行和为1，且列和为1。</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] 构造n阶对称双随机矩阵<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/11728631.html">MATLAB实例：对称双随机矩阵</a></span></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">[2] 几种双随机权重矩阵的设计：S. Silva Pereira, &ldquo;<a href="https://upcommons.upc.edu/bitstream/handle/2117/95184/TSSP1de1.pdf?sequence=1&amp;isAllowed=y" target="_blank">Distributed consensus algorithms for wireless sensor networks: convergence analysis and optimization</a>,&rdquo; Tesi doctoral, UPC, Departament de Teoria del Senyal i Comunicacions, 2012.中的3.4.1节： Review of Common Weight Matrix Designs</span></p>

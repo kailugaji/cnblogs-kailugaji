@@ -1,0 +1,70 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB小函数：展示灰度图像数据集的部分样例</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">更多请看：<a href="https://www.cnblogs.com/kailugaji/category/1594478.html" target="_blank">MATLAB作图</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 给定一个.mat文件的灰度图像数据集，用MATLAB程序展示该图像数据集的一部分样例，每一类都展示相同数目的样例图，并将它们汇总成一幅图并保存图片。数据来源：<a href="http://www.cad.zju.edu.cn/home/dengcai/Data/FaceData.html" target="_blank">Face databases (Yale, ORL, PIE and YaleB)</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. MATLAB程序</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Image_integration.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function Image_samples=Image_integration(data, real_label, N_samples)
+% Gray image integration
+% This code only applies to square matrices
+% Input:
+% data: dataset. N*Dim
+% real_label: GroundTruth. N*1
+% N_samples: number of selected samples
+% Output:
+% Image_samples:Integrated image
+% Author: kailugaji https://www.cnblogs.com/kailugaji/
+[~, Dim]=size(data);
+[real_label, b]=sort(real_label);
+data=data(b, :);
+K=length(unique(real_label)); % number of cluster
+[~, ID]=unique(real_label);
+ID=ID-1;
+image_10=cell(N_samples, K);
+temp=cell(N_samples, K);
+Image_samples=[];
+for i=1:N_samples
+    for j=1:K
+        temp{i, j}=reshape(data(ID(j)+i, :), sqrt(Dim), sqrt(Dim)); % you can change its size
+        image_10{i, j}=[image_10{i, j}, temp{i, j}];
+    end
+    Image_samples=[Image_samples; image_10{i, :}];
+end</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+% Author: kailugaji https://www.cnblogs.com/kailugaji/
+interval=7; % The size of the middle space
+N_samples=10; % number of selected samples
+load('ORL_64x64.mat')
+Image_samples=Image_integration(fea, gnd, N_samples);
+A=mat2gray(Image_samples);
+figure(1)
+imshow(A, 'Border','tight'); 
+print(gcf,'-r1000','-djpeg','My_ORL.jpg');
+
+load('Yale_64x64.mat')
+Image_samples=Image_integration(fea, gnd, N_samples);
+B=mat2gray(Image_samples);
+figure(1)
+imshow(B, 'Border','tight'); 
+print(gcf,'-r1000','-djpeg','My_Yale.jpg');
+
+A_=imresize(A,[500, 2000]);
+B_=imresize(B,[500, 750]);
+C=[A_, 255.*ones(size(A_(:, 1:interval, :))), B_];
+figure(3)
+imshow(C, 'Border','tight'); 
+print(gcf,'-r1000','-djpeg','My_Image.jpg');
+</pre>
+</div>
+<h2>2. 结果</h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">ORL数据集部分样例图</span></h3>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200710221308358-1657669620.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Yale数据集部分样例图</span></h3>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200710221405629-1982642276.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">两个数据集合并在一起的样例示意图</span></h3>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200710221501470-2032042395.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>

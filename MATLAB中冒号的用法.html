@@ -1,0 +1,73 @@
+<h1 style="text-align: center;"><span style="font-family: 'times new roman', times;">MATLAB中冒号的用法</span></h1>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">matlab中冒号代表步长，用实例来说明</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; A=[1 2 3 4;5 6 7 8;9 10 11 12;13 14 15 16;17 18 19 20]
+
+A =
+
+     1     2     3     4
+     5     6     7     8
+     9    10    11    12
+    13    14    15    16
+    17    18    19    20
+
+&gt;&gt; B=A(1:2:5,2:3)
+
+B =
+
+     2     3
+    10    11
+    18    19
+
+&gt;&gt; C=A(:,4)
+
+C =
+
+     4
+     8
+    12
+    16
+    20
+
+&gt;&gt; D=A(3,:)
+
+D =
+
+     9    10    11    12
+
+&gt;&gt; E=A(:)
+
+E =
+
+     1
+     5
+     9
+    13
+    17
+     2
+     6
+    10
+    14
+    18
+     3
+     7
+    11
+    15
+    19
+     4
+     8
+    12
+    16
+    20</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">其中，C=A(:,4)表示C存放矩阵A的第四列元素，D=A(3,:)表示D存放矩阵A的第三行元素。</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">B=A(1:2:5,2:3)表示B存放矩阵A的第1,3,5行，第2,3列的元素。</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">1:5表示步长为1，范围为[1,5]，相当于1:1:5，即1 2 3 4 5；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">而1:2:5表示步长为2，范围为[1,5]，即1 3 5；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">1:10表示1 2 3 4 5 6 7 8 9 10；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">1:3:10表示1 4 7 10；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">1:2:10表示1 3 5 7 9；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">f=A(i,:)表示把A的第i行整个一行存入f；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">g=A(:,j)表示把A的第j列整个一列存入g；</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">E=A(:)表示按列输出A全部元素。</span></p>

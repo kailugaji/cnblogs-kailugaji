@@ -1,0 +1,60 @@
+<h1 style="text-align: center;">MATLAB与C语言对比实例：随机数生成</h1>
+<p>作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<h2>一、整型随机数生成函数</h2>
+<h3>1.C语言程序</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">int</span> intrand(<span style="color: #0000ff;">int</span> lower,<span style="color: #0000ff;">int</span><span style="color: #000000;"> upper)
+{
+    </span><span style="color: #0000ff;">double</span> X = (<span style="color: #0000ff;">double</span>)rand() /<span style="color: #000000;"> RAND_MAX;
+    </span><span style="color: #0000ff;">return</span> lower+(<span style="color: #0000ff;">int</span>)(X*(upper-<span style="color: #000000;">lower));
+}</span></pre>
+</div>
+<h3>2.MATLAB程序</h3>
+<p>intrand.m</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span> y=<span style="color: #000000;">intrand(lower,upper)
+</span><span style="color: #339966;">%</span><span style="color: #000000;"><span style="color: #339966;">生成随机数</span>
+x</span>=rand(<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span><span style="color: #000000;">);      
+z</span>=int32(x*(upper-<span style="color: #000000;">lower));
+y</span>=lower+<span style="color: #000000;">z;
+<span style="color: #0000ff;">end</span></span></pre>
+</div>
+<p>matlab程序运行结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; y=intrand(<span style="color: #800080;">0</span>,<span style="color: #800080;">10</span><span style="color: #000000;">)
+
+y </span>=
+
+           <span style="color: #800080;">8</span></pre>
+</div>
+<h2>二、双精度随机数生成</h2>
+<h3>1.C语言程序</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">double</span> doublerand(<span style="color: #0000ff;">double</span> lower,<span style="color: #0000ff;">double</span><span style="color: #000000;"> upper)
+{
+    </span><span style="color: #0000ff;">double</span> x = (<span style="color: #0000ff;">double</span>)rand() /<span style="color: #000000;"> RAND_MAX;
+    </span><span style="color: #0000ff;">return</span> lower+x*(upper-<span style="color: #000000;">lower);
+}</span></pre>
+</div>
+<h3>2.MATLAB程序</h3>
+<p>doublerand.m</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">function</span> y=<span style="color: #000000;">doublerand(lower,upper)
+</span><span style="color: #339966;">%</span><span style="color: #000000;"><span style="color: #339966;">生成随机数</span>
+x</span>=rand(<span style="color: #800080;">1</span>,<span style="color: #800080;">1</span><span style="color: #000000;">);        
+y</span>=lower+x.*(upper-<span style="color: #000000;">lower);
+<span style="color: #0000ff;">end</span></span></pre>
+</div>
+<p>matlab程序运行结果：</p>
+<div class="cnblogs_code">
+<pre>&gt;&gt; y=doublerand(<span style="color: #800080;">0</span>,<span style="color: #800080;">10</span><span style="color: #000000;">)
+
+y </span>=
+
+    <span style="color: #800080;">6.3236</span></pre>
+</div>
+<p>其中，C语言的RAND_MAX是stdlib.h中宏定义的一个字符常量:</p>
+<p>#define RAND_MAX 0x7FFF</p>
+<p>其值最小为32767,最大为2147483647</p>
+<p>通常在产生随机小数时可以使用RAND_MAX。</p>
+<p>如函数有不足之处，望园友多多指教。</p>

@@ -1,0 +1,168 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">MATLAB数值实验：函数逼近法求方程的数值解</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 这篇博客主要通过给定的数学迭代公式，利用MATLAB来迭代求解多项分数阶微分方程的数值解，主要用到的是函数逼近法，一种是非线性化数值解法，一种为线性化数值解法，并绘制解析解与数值解的函数图像，计算两者的误差。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 问题描述</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210420194806087-910912166.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210420194812068-1927568182.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. MATLAB程序</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo_1.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">clear
+clc
+format long % 数据形式为长精度
+% Author: 凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+%% 定义变量
+alpha1 = 0.9;
+alpha2 = 0.6;
+alpha3 = 0.3; % 1&gt;alpha1&gt;alpha2&gt;alpha3&gt;0
+
+%% 求解开始
+T = 2; % 区间右端点
+tau = 0.1; % 步长
+TT = 0:tau:T; % t变量序列，也就是方程中的自变量t
+N = length(TT)-1; % t变量序列个数-1
+
+% 定义三个1*N的0矩阵用来储存方程中每一项的系数
+b_alpha1 = zeros(1,N);
+b_alpha2 = zeros(1,N);
+b_alpha3 = zeros(1,N);
+
+% 循环开始
+for k = 0 : (N-1)
+    b_alpha1(k+1) = ((1+k)^(1-alpha1)-(k)^(1-alpha1))/gamma(2-alpha1);
+    b_alpha2(k+1) = ((1+k)^(1-alpha2)-(k)^(1-alpha2))/gamma(2-alpha2)*tau^(alpha1-alpha2);
+    b_alpha3(k+1) = ((1+k)^(1-alpha3)-(k)^(1-alpha3))/gamma(2-alpha3)*tau^(alpha1-alpha3);
+end
+
+coe_0 = b_alpha1(0+1) + b_alpha2(0+1) + b_alpha3(0+1);
+
+U = zeros(1,N+1); % 储存计算的结果
+for n = 1:N
+    temp = 0;
+    for k = 0 : n-2
+        temp = temp + (b_alpha1(n-k-1+1) + b_alpha2(n-k-1+1) + b_alpha3(n-k-1+1))*(U(k+1+1)-U(k+1));
+    end
+    temp0 = U(n);
+    while 1
+        temp1 = U(n-1+1) - temp /coe_0+ tau^(alpha1)*right_fun(TT(n+1),temp0,alpha1,alpha2,alpha3)/coe_0;
+        % 计算误差 如果前一次迭代和后一次迭代的误差小于10^-7，那么久退出循环，并把最后一次迭代的值赋给U
+        if abs(temp0-temp1) &lt; 10^(-7)
+            U(n+1) = temp1;
+            break;
+        else
+            temp0 = temp1;
+        end
+    end
+end
+
+True_sol = true_fun(TT,alpha1); % 真实值
+plot(TT,U,'-')
+hold on
+plot(TT,True_sol,'r*')
+legend('数值解','解析解','Location','northwest')
+title('Algorithm 1');
+xlabel('t');
+ylabel('u(t)');
+err = max(abs(U-True_sol)); % 误差
+saveas(gcf,sprintf('Algorithm 1.jpg'),'bmp'); %保存图片
+fprintf('方法一中解析解与数值解之间的误差为：%f\n', err);
+
+function aa = true_fun(t,alpha1)
+aa = t.^(2+alpha1);
+end
+function bb = right_fun(t,u,alpha1,alpha2,alpha3)
+bb = gamma(3+alpha1)/gamma(3)*t.^2+gamma(3+alpha1)/gamma(3+alpha1-alpha2)*t.^(2+alpha1-alpha2)+gamma(3+alpha1)/gamma(3+alpha1-alpha3)*t.^(2+alpha1-alpha3)+sin(t.^(2+alpha1))-sin(u);
+end
+</span></pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">demo_2.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">clear
+clc
+format long
+% Author: 凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/
+%% 定义变量
+alpha1 = 0.9;   
+alpha2  = 0.6;  
+alpha3 = 0.3;   % 1 &gt; alpha1 &gt; alpha2 &gt; alpha3 &gt; 0
+%% 求解开始
+T = 2;      
+tau = 0.1;  
+TT = 0:tau:T;
+N = length(TT)-1;
+% 定义三个1*N的0矩阵用来储存方程中每一项的系数
+b_alpha1 = zeros(1,N); 
+b_alpha2 = zeros(1,N); 
+b_alpha3 = zeros(1,N);
+% 循环开始
+for k = 0 :(N-1)
+    b_alpha1(k+1) = ((1+k)^(1-alpha1)-(k)^(1-alpha1))/gamma(2-alpha1);
+    b_alpha2(k+1) = ((1+k)^(1-alpha2)-(k)^(1-alpha2))/gamma(2-alpha2)*tau^(alpha1-alpha2);
+    b_alpha3(k+1) = ((1+k)^(1-alpha3)-(k)^(1-alpha3))/gamma(2-alpha3)*tau^(alpha1-alpha3);
+end
+coe_0 = b_alpha1(0+1) + b_alpha2(0+1) + b_alpha3(0+1);
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+U = zeros(1,N+1); 
+temp0=U(2);
+%% 第一个值特殊处理
+while 1
+    temp1= tau^(alpha1)*right_fun(TT(1+1),temp0,alpha1,alpha2,alpha3)/coe_0 ;
+    if (abs(temp0-temp1) &lt; 10^(-7) )
+        U(2) = temp1;
+        break;
+    else
+        temp0 = temp1;
+    end
+end
+%% 2~N个值的计算
+for n = 2:N
+    temp = 0;
+    for k = 0 : n-2
+        temp = temp + (b_alpha1(n-k-1+1) + b_alpha2(n-k-1+1) + b_alpha3(n-k-1+1))*(U(k+1+1)-U(k+1));
+    end
+    temp0 = U(n);
+    while 1
+        XX=2*U(n-1+1)-U(n-2+1);
+        temp1 = U(n-1+1) - temp /coe_0+ tau^(alpha1)*right_fun(TT(n+1),XX,alpha1,alpha2,alpha3)/coe_0;
+        % 计算误差 如果前一次迭代和后一次迭代的误差小于10^-7，那么久退出循环，并把最后一次迭代的值赋给U
+        if (abs(temp0-temp1) &lt; 10^(-7) )
+            U(n+1) = temp1;
+            break;
+        else
+            temp0 = temp1;
+        end
+    end
+end
+True_sol = true_fun(TT,alpha1); % 真实值
+plot(TT,U,'-')
+hold on
+plot(TT,True_sol,'r*')
+legend('数值解','解析解','Location','northwest')
+title('Algorithm 2');
+xlabel('t');
+ylabel('u(t)');
+err = max(abs(U-True_sol)); % 误差
+saveas(gcf,sprintf('Algorithm 2.jpg'),'bmp'); %保存图片
+fprintf('方法二中解析解与数值解之间的误差为：%f\n', err);
+
+function aa = true_fun(t,alpha1)
+aa = t.^(2+alpha1);
+end
+function bb = right_fun(t,u,alpha1,alpha2,alpha3)
+bb = gamma(3+alpha1)/gamma(3)*t.^2+gamma(3+alpha1)/gamma(3+alpha1-alpha2)*t.^(2+alpha1-alpha2)+gamma(3+alpha1)/gamma(3+alpha1-alpha3)*t.^(2+alpha1-alpha3)+sin(t.^(2+alpha1))-sin(u);
+end
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">&gt;&gt; demo_1
+方法一中解析解与数值解之间的误差为：0.169468
+&gt;&gt; demo_2
+方法二中解析解与数值解之间的误差为：0.175177
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">方法一结果图</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210420195109575-90456611.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">方法二结果图：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210420195126841-777806068.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本博文问题来源：多项分数阶常微分方程的数值微分法&nbsp;<a href="http://max.book118.com/file_down/e37129207cb5d8d84fa03b346b308819.docx" target="_blank"><em id="__mceDel">http://max.book118.com/file_down/e37129207cb5d8d84fa03b346b308819.docx</em></a></span></p>
