@@ -1,0 +1,83 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">基于图嵌入的高斯混合变分自编码器的深度聚类</span></h1>
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Deep Clustering by Gaussian Mixture Variational Autoencoders with Graph Embedding, DGG</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 引言</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 这篇博文主要是对论文&ldquo;<a href="https://openaccess.thecvf.com/content_ICCV_2019/papers/Yang_Deep_Clustering_by_Gaussian_Mixture_Variational_Autoencoders_With_Graph_Embedding_ICCV_2019_paper.pdf" target="_blank">Deep Clustering by Gaussian Mixture Variational Autoencoders with Graph Embedding</a>&rdquo;的整理总结，这篇文章将图嵌入与概率深度高斯混合模型相结合，使网络学习到符合全局模型和局部结构约束的强大特征表示。将样本作为图上的节点，并最小化它们的后验分布之间的加权距离，在这里使用<a href="https://www.cnblogs.com/kailugaji/p/11911433.html#_lab2_0_4" target="_blank">Jenson-Shannon散度</a>作为距离度量。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 阅读这篇博文的前提条件是：了解<a href="https://www.cnblogs.com/kailugaji/p/9648508.html" target="_blank">高斯混合模型用于聚类的算法</a>，了解<a href="https://www.cnblogs.com/kailugaji/p/12463966.html" target="_blank">变分推断与变分自编码器</a>，进一步了解<a href="https://www.cnblogs.com/kailugaji/p/12882812.html" target="_blank">变分深度嵌入(VaDE)模型</a>。在知道高斯混合模型(GMM)与变分自编码器(VAE)之后，VaDE实际上是将这两者结合起来的一个产物。与VAE相比，VaDE在公式推导中多了一个变量c。与GMM相比，变量c就相当于是GMM中的隐变量z，而隐层得到的特征z相当于原来GMM中的数据x。而基于图嵌入的高斯混合变分自编码器的深度聚类(DGG)模型可以看做在VAE的基础上结合了高斯混合模型与图嵌入来完成聚类过程，公式推导中同样增加了表示类别的变量c，同时，目标函数后面加了一项图嵌入的约束项。比起VaDE来说，可以理解为多了一个约束项&mdash;&mdash;图嵌入，当然目标函数还是有所不同。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 下面主要介绍DGG模型目标函数的数学推导过程。推导过程用到了概率论与数理统计的相关知识，更用到了VaDE模型推导里面的知识，如果想要深入了解推导过程，请先看<a href="https://www.cnblogs.com/kailugaji/p/12882812.html" target="_blank">变分深度嵌入(VaDE)模型</a>的&ldquo;前提公式&rdquo;。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 目标函数的由来与转化</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154642973-687675865.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200708104149649-738763751.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154651982-1033763756.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154659689-1432880253.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154707553-856568502.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154714520-676508024.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707154723558-8491080.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 目标函数具体推导</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102340819-387280432.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200707212526262-29396905.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 用Siamese网络来度量数据点之间的相似度，从而选出数据点<span style="font-size: 18px;">x</span><span style="font-size: 13px;">i</span>的邻居。</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200708103948168-1507622403.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102403906-393486640.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 其中，D是数据x的维度，M是隐层z的维度，K是聚类数。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102422008-995959919.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102439688-109713884.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102452153-835436923.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p>&nbsp; &nbsp; <span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">第二项和第四项最后一步怎么来的？用到了一个公式，公式的具体推导见：<a href="https://www.cnblogs.com/kailugaji/p/12882812.html" target="_blank">变分深度嵌入(VaDE)模型</a>的&ldquo;前提公式&rdquo;。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 参数更新过程及聚类结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724111542443-473887267.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 我也搞不明白哪个图正确，或者都不正确，望指正。</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200709101330262-1738344435.png" alt="" width="1349" height="709" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 我的思考</span></h2>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">在推导过程中我与原文中的推导有不一样的地方。</span></li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 1）我的推导过程中变分下界L中第二项系数是1/2，原文直接是1，而在支撑材料里面仍然是1/2，因此可以认为是作者笔误造成的。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 2）我的推导过程中变分下界L中的第二项与第四项都有常数项（蓝框框标出的），这两项正好正负抵消，才没有这个常数项，而在原文支撑材料里面直接第二四项都没有常数项。不过这只是支撑材料的内容，在原文中没有太大影响。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102600858-1076424016.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200724102612297-770082991.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">这里有一点和VaDE不一样，VaDE聚类结果是由${{\gamma }_{ik}}$后验概率通过贝叶斯公式得到的，中间过程并没有参与梯度下降的更新，而DGG这里是构建了一个分类器网络<em><span style="font-size: 18px;">f</span></em><span style="font-size: 13px;">2</span>，从而得到聚类结果。</span></p>
+</li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1）DGG这里有三个网络，<em><span style="font-size: 18px;">f</span></em><span style="font-size: 13px;">1</span>是编码器，<em><span style="font-size: 18px;">g</span></em>是解码器，而<span style="font-size: 18px;"><em>f</em></span><span style="font-size: 13px;">2</span>是分类器。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2）这种架构和苏剑林博客中提到的VAE用于聚类的算法"<a href="https://spaces.ac.cn/archives/5887" target="_blank">变分自编码器（四）：一步到位的聚类方案 - 科学空间|Scientific Spaces</a>"的网络架构有异曲同工之妙，不过苏剑林博客中的网路框架还多了一个自定义的Gaussian层，有兴趣的可以看看苏剑林那篇文章及代码。</span></p>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">原文中分类器的输入应该是VAE模型得到的隐层z，而代码里面是VAE得到的x_mean，没有经过采样得到z，直接用x_mean作为分类器的输入，这一点不知道是我理解有误，还是代码问题。</span></p>
+</li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">关于预训练：首先训练<a href="https://www.cnblogs.com/kailugaji/p/11599870.html" target="_blank">DAE</a>作为<a href="https://www.cnblogs.com/kailugaji/p/12463966.html#_lab2_0_1" target="_blank">VAE</a>的初始化，训练VAE得到隐层参数${\mu}_{i}$，用K-means对${\mu}_{i}$进行聚类，得到聚类中心作为GMM的初始类均值，K-means得到类标签，计算样本方差作为GMM初始类协方差矩阵。分类器部分用<a href="https://www.cnblogs.com/kailugaji/p/12030258.html#_lab2_0_1" target="_blank">SGD</a>进行微调，将${{\gamma }_{ik}}$作为分类器输出，并用${{\gamma }_{ik}}$得到的聚类结果与K-means得到的初始标签之间的<a href="https://www.cnblogs.com/kailugaji/articles/11606555.html" target="_blank">交叉熵</a>作为分类器的损失函数，从而预训练分类器的参数。</span></li>
+<li><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">关于Siamese网络找邻居：通过神经网络训练得到10维的隐层特征，对隐层计算相似性，代码中是用Siamese网络找到数据点的前100个邻居，但后来又从这100个邻居中随机取20个作为数据点的20个邻居，为什么不是先对100个邻居排序，取最近的前20个？或许我代码理解问题，求指教。</span></span></span></span></li>
+<li>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">关于邻居：预训练阶段自己算自己的，不涉及邻居。正式训练时，代码中将自己本身的数据与20个邻居的数据放在一起，形成一个三维矩阵，第一维代表样本个数，第二维代表数据的维度，第三维代表自己+邻居的ID。例如：image_train[:,:,0]代表数据本身，image_train[:,:,1]代表数据的第一个邻居。这样将数据本身与邻居整合在一起，整体作为输入数据，送进网络进行训练。这种设计相当巧妙，相当于以空间换时间，减少训练过程中用来查找邻居的时间。同时，DGG总体损失函数$\underset{\phi ,\theta }{\mathop{\max }}\,\frac{1}{2}\sum\limits_{i=1}^{N}{\sum\limits_{j=1}^{N}{{{w}_{ij}}(L(\theta ,\phi ;{{x}_{i}})+L(\theta ,\phi ;{{x}_{i}},{{x}_{j}}))}}$</span></span></span></span><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">可以将这两项合并成一项，既计算了自己与自己的损失函数，也计算了自己与邻居的损失函数。</span></p>
+</li>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">关于${{\pi }_{ik}}$：这篇文章中参数${{\pi }_{ik}}$与GMM中的混合比例不太一样，计算${{\pi }_{ik}}$时是通过拉格朗日乘数法进行求解的</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">${{\pi }_{ik}}=\frac{\sum\limits_{j\in {{\Omega }_{i}}}{{{w}_{ij}}{{\gamma }_{ik}}}}{\sum\limits_{j\in {{\Omega }_{i}}}{{{w}_{ij}}\left( {{\gamma }_{ik}}+{{\gamma }_{jk}} \right)}}$</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">，但在代码中定义的${{\pi }_{ik}}$的更新公式与原文提到的更新公式不一致。</span></p>
+</li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201012111651049-1882291440.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">同时，在定义GMM类的时候，计算后验概率${{\gamma }_{ik}}$时并没有出现混合比例${{\pi }_{k}}$，没有用GMM中${{\gamma }_{ik}}$的<a href="https://www.cnblogs.com/kailugaji/p/9648508.html#_lab2_0_1" target="_blank">更新公式</a></span><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">${{\gamma }_{ik}}=\frac{{{\pi }_{k}}N({{x}_{i}}|{{\mu }_{k}},{{\Sigma }_{k}})}{\sum\limits_{k=1}^{K}{{{\pi }_{k}}N({{x}_{i}}|{{\mu }_{k}},{{\Sigma }_{k}})}}$</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">进行计算。</span></p>
+</li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201012111715985-856238782.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">代码中计算相似度矩阵${w}_{ij}$时，窗口大小sigma的选取有歧义，函数中已经有了输入变量sigma，但是里面又重新定义了sigma=dist_temp[11]，这样的话输入sigma还有什么意义？无论输入多少都无所谓，因为会被新定义的覆盖掉。同时，sigma为什么要这样定义？为什么是[11]？</span></li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202010/1027447-20201012164803912-267688223.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<ul>
+<li>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">DGG<a href="https://github.com/ngoc-nguyen-0/DGG" target="_blank">原作者给的代码</a>里面说预训练的参数是从<a href="https://github.com/slim1017/VaDE" target="_blank">VaDE代码</a>里面获得的。这里VaDE与DGG在训练同一组数据用的VAE网络架构是一致的，因此可以直接拿来用。如果数据是新的，首先需要训练Siamese网络来找数据点的邻居，然后自己构建深度自编码器或者变分自编码器预训练模型参数。</span></p>
+</li>
+</ul>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202007/1027447-20200708154209570-439146557.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+</blockquote>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;Linxiao Yang, Ngai-Man Cheung, Jiaying Li, and Jun Fang, "<a href="https://openaccess.thecvf.com/content_ICCV_2019/papers/Yang_Deep_Clustering_by_Gaussian_Mixture_Variational_Autoencoders_With_Graph_Embedding_ICCV_2019_paper.pdf" target="_blank">Deep Clustering by Gaussian Mixture Variational Autoencoders with Graph Embedding</a>", In ICCV 2019.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] 论文补充材料：<a href="https://openaccess.thecvf.com/content_ICCV_2019/supplemental/Yang_Deep_Clustering_by_ICCV_2019_supplemental.pdf" target="_blank">Deep Clustering by Gaussian Mixture Variational Autoencoders with Graph Embedding - Supplementary</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3] DGG Python代码：<a href="https://github.com/ngoc-nguyen-0/DGG" target="_blank">https://github.com/ngoc-nguyen-0/DGG</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;<a href="https://www.cnblogs.com/kailugaji/p/12882812.html" target="_blank">变分深度嵌入(Variational Deep Embedding, VaDE)</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[5]&nbsp;<a href="https://www.cnblogs.com/kailugaji/p/12463966.html" target="_blank">变分推断与变分自编码器</a> - 凯鲁嘎吉 - 博客园&nbsp;</span></p>

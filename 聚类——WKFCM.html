@@ -1,0 +1,20 @@
+<h1 style="text-align: center;">聚类&mdash;&mdash;认识WKFCM算法</h1>
+<p><span style="font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-size: 16px;">参考文献：Shen H, Yang J, Wang S, et al. <a href="https://link.springer.com/article/10.1007/s00500-005-0043-5" target="_blank">Attribute weighted mercer kernel based fuzzy clustering algorithm for general non-spherical datasets</a>[J]. Soft Computing, 2006, 10(11):1061-1073.</span></p>
+<h2>一、WKFCM概述</h2>
+<p><span style="font-size: 16px;">WKFCM是在KFCM的基础上对数据的属性（或维度、特征空间）进行加权，加权矩阵W是一个C*L的矩阵，与聚类中心的大小一致。其中，C是聚类数，L是数据的维度。</span></p>
+<p><span style="font-size: 16px;">目标函数：</span></p>
+<p style="text-align: center;"><img src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110548881-2032728668.png" alt="" /></p>
+<p style="text-align: left;"><span style="font-size: 16px;">约束条件：</span></p>
+<p style="text-align: left;"><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110620150-1754954041.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110635050-465329451.png" alt="" /></p>
+<p><span style="font-size: 16px;">更新公式：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110852258-1395413518.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110929384-144346590.png" alt="" /></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209110949468-167297814.png" alt="" /></p>
+<p><span style="font-size: 16px;">注意：</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209111056682-2097851668.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209111119775-948570668.png" alt="" /></p>
+<h2>二、算法步骤</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209111147112-1449642519.png" alt="" /></p>
+<p>&nbsp;</p>

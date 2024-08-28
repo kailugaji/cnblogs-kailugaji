@@ -1,0 +1,23 @@
+<h1>聚类&mdash;&mdash;认识GMM算法</h1>
+<p><span style="font-size: 15px;">作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</span></p>
+<h2>一、GMM概述</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914192745456-2065802777.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2>二、GMM算法步骤</h2>
+<p><img src="https://img2018.cnblogs.com/blog/1027447/201809/1027447-20180914192859284-1014242477.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2>三、具体推导参考文献</h2>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">1. 李航. 统计学习方法[M]. 清华大学出版社, 2012. </span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">2. Bishop C M. Pattern Recognition and Machine Learning (Information Science and Statistics)[M]. Springer-Verlag New York, Inc. 2006.</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">注：GMM数学公式推导用到了贝叶斯公式、条件期望公式、拉格朗日乘数法、极大似然估计、参数估计。概率论与数理统计的内容居多，事先应掌握概率论与数理统计基本内容。</span></p>
+<h2>四、总结</h2>
+<p>&nbsp; <span style="font-family: 'times new roman', times;">&nbsp;1.<span style="font-size: 15px;"> GMM算法中间参数估计部分用到了EM算法，EM算法分为两步：</span></span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp; （1）E步：求目标函数期望，更多的是求目标函数取对数之后的期望值。</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp; （2）M步：使期望最大化。用到极大似然估计，拉格朗日乘数法，对参数求偏导，最终确定新的参数。</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 2.K-means，FCM与GMM算法参数估计的数学推导思路大体一致，都先确立目标函数，然后使目标函数最大化的参数取值就是迭代公式。</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 3.三个算法都需要事先指定k。</span><span style="font-size: 15px; font-family: 'times new roman', times;">K-means与FCM中的k指的是要聚的类的个数，GMM算法中的k指的是k个单高斯混合模型。</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 4.三个算法流程一致：</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; （1）通过一定的方法初始化参数（eg:随机，均值&middot;&middot;&middot;&middot;&middot;&middot;）</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; （2）确立目标函数</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; （3）通过一定的方法使目标函数最大化，更新参数迭代公式（eg:EM，粒子群&middot;&middot;&middot;&middot;&middot;&middot;）</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; （4）设置一定的终止条件，使算法终止。若不满足条件，转向（3）</span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; 补充：GMM的MATLAB代码：<a href="https://github.com/kailugaji/Gaussian_Mixture_Model_for_Clustering" target="_blank">https://github.com/kailugaji/Gaussian_Mixture_Model_for_Clustering</a><a href="https://github.com/kailugaji/GaussianMixtureModel-clustering" target="_blank"><br /></a></span></p>
+<p><span style="font-size: 15px; font-family: 'times new roman', times;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="https://home.deib.polimi.it/matteucc/Clustering/tutorial_html/mixture.html" target="_blank">Clustering - Mixture of Gaussians&nbsp;</a></span></p>

@@ -1,0 +1,17 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">具有协同训练的深度嵌入多视图聚类</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 本文对Deep Embedded Multi-view Clustering with Collaborative Training这篇文章进行总结，前提请了解DEC、IDEC相关知识：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/12105939.html">Deep Clustering Algorithms</a>。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 通过利用来自多视图的信息，多视图聚类最近引起了越来越多的关注。但是，现有的多视图聚类方法要么具有较高的计算和空间复杂性，要​​么缺乏表示能力。为了解决这些问题，本文中提出了具有协同训练（DEMVC）的深度嵌入式多视图聚类。首先，深度自动编码器分别学习多个视图的嵌入表示。然后，考虑了多视图之间的共识和互补，提出了一种新颖的协同训练方案。具体来说，所有视图的特征表示和聚类分配都是通过协同学习的。进一步开发了用于聚类中心初始化的新一致性策略，以通过协同训练来改善多视图聚类性能。在多个流行的多视图数据集上的实验结果表明，DEMVC与最新方法相比有了显着改进。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文贡献：</span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">提出了一种新的深度嵌入多视图聚类方法，通过协同训练多个深度神经网络，可以很好地利用多视图的共同信息和互补信息。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">为了提高MVC的性能，提出了一种辅助分布的共享方案和一种新的簇中心初始化一致性策略。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">该模型具有良好的表示能力。此外，它可以有效地求解，并应用于大规模数据集。在几个流行的数据集上的实验表明，DEMVC达到了最先进的性能。</span></li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210326081444019-1100586070.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210326165222967-486833200.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210326081503140-901920886.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考文献：</span></strong></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;Xu J,&nbsp; Ren Y,&nbsp; Li G, et al. <a href="https://arxiv.org/pdf/2007.13067v1.pdf" target="_blank">Deep Embedded Multi-view Clustering with Collaborative Training</a>[J]. Information Sciences, 2021, doi: <a href="https://doi.org/10.1016/j.ins.2020.12.073" target="_blank">https://doi.org/10.1016/j.ins.2020.12.073</a>.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Code:&nbsp;<a href="https://github.com/SubmissionsIn/DEMVC" target="_blank">https://github.com/SubmissionsIn/DEMVC</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] DEC、IDEC相关：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/12105939.html">Deep Clustering Algorithms</a></span></p>

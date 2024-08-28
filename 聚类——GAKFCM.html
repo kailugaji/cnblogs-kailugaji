@@ -1,0 +1,27 @@
+<h1 style="text-align: center;">聚类&mdash;&mdash;GAKFCM</h1>
+<p><span style="font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-size: 16px;">参考文献：黄白梅. <a href="http://www.wanfangdata.com.cn/details/detail.do?_type=degree&amp;id=Y2373818" target="_blank">基于GA优化的核模糊C均值聚类算法的研究</a>[D]. 武汉科技大学, 2013.</span></p>
+<h2>一、遗传算法</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209170738233-1094481614.png" alt="" width="613" height="288" /></p>
+<h2>二、算法具体细节</h2>
+<h3>1.Real Coding Mode</h3>
+<p>&nbsp; &nbsp; <span style="font-size: 16px;">Each individual is represented by C&times;D real numbers, where C is the number of clusters and D is the dimension of the data.</span></p>
+<h3>2.Nonlinear Ranking Select Measurement</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209170913003-2063595841.png" alt="" /></p>
+<p><span style="font-size: 16px;">where q is the parameter, j is the sorting number and n is the number of individuals.</span></p>
+<h3>3.Adaptive Crossover Strategy</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209170955057-1672169390.png" alt="" /></p>
+<p><span style="font-size: 16px;">where p<span style="font-size: 12px;">c0</span> is the initial crossover rate, t is the current evolution&nbsp;time of individuals and T is the maximum number of iterations.</span></p>
+<h3>4.Adaptive Mutation Strategy</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209171036282-958773175.png" alt="" /></p>
+<p><span style="font-size: 16px;">where p<span style="font-size: 12px;">m0</span> is the initial mutation rate, t is the current evolution&nbsp;time of individuals and T is the maximum number of iterations.</span></p>
+<h3>5.Fitness Function</h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209171116849-4432011.png" alt="" width="408" height="108" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;">其中J<span style="font-size: 12px;">KFCM</span>见<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/kailugaji/p/9942388.html">聚类&mdash;&mdash;KFCM</a>。</span></p>
+<h2>三、算法流程</h2>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209171411825-1819284730.png" alt="" /></p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181209171553584-816533572.png" alt="" /></p>
+<h2>四、理解</h2>
+<p>&nbsp; &nbsp; <span style="font-size: 16px;">GAKFCM是指用GA进行初始化KFCM的参数（聚类中心）。每个个体的大小与聚类中心的大小一致。</span></p>
+<p>&nbsp;</p>

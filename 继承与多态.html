@@ -1,0 +1,166 @@
+<p align="justify">一、运行&nbsp;TestInherits.java 示例，观察输出，注意总结父类与子类之间构造方法的调用关系修改Parent构造方法的代码，显式调用GrandParent的另一个构造函数，注意这句调用代码是否是第一句，影响重大！</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Grandparent {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Grandparent() {
+        System.out.println(</span>"GrandParent Created."<span style="color: #000000;">);
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Grandparent(String string) {
+        System.out.println(</span>"GrandParent Created.String:" +<span style="color: #000000;"> string);
+    }
+}
+
+</span><span style="color: #0000ff;">class</span> Parent <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Grandparent {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Parent() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">super("Hello.Grandparent.");</span>
+        System.out.println("Parent Created"<span style="color: #000000;">);
+       </span><span style="color: #008000;">//</span><span style="color: #008000;"> super("Hello.Grandparent.");</span>
+<span style="color: #000000;">    }
+}
+
+</span><span style="color: #0000ff;">class</span> Child <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Parent {
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Child() {
+        System.out.println(</span>"Child Created"<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestInherent {
+
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[]) {
+        Child c </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Child();
+    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161110151545452-2022000247.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">总结：通过</span> super 调用基类构造方法，必须是子类构造方法中的第一个语句。子类的构造方法在运行之前，必须调用父类的构造方法。因为继承是在已有类的基础上，添加新的变量与方法，从而产生一个新的类，子类是必须建立在父类的基础上才能继承，不能反过来。</p>
+<p align="justify"><span style="font-family: 宋体;">二、不可变类的实例：</span>Address.java</p>
+<p align="justify">源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Address
+{
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> String detail;
+    </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">final</span><span style="color: #000000;"> String postCode;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">在构造方法里初始化两个实例属性</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> Address()
+    {
+        </span><span style="color: #0000ff;">this</span>.detail = ""<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.postCode = ""<span style="color: #000000;">;
+
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Address(String detail , String postCode)
+    {
+        </span><span style="color: #0000ff;">this</span>.detail =<span style="color: #000000;"> detail;
+        </span><span style="color: #0000ff;">this</span>.postCode =<span style="color: #000000;"> postCode;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">仅为两个实例属性提供getter方法</span>
+    <span style="color: #0000ff;">public</span><span style="color: #000000;"> String getDetail()
+    {
+         </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.detail;
+    }
+
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String getPostCode()
+    {
+         </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.postCode;
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">重写equals方法，判断两个对象是否相等。</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> equals(Object obj)
+    {
+        </span><span style="color: #0000ff;">if</span> (obj <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Address)
+        {
+            Address ad </span>=<span style="color: #000000;"> (Address)obj;
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.getDetail().equals(ad.getDetail()) &amp;&amp; <span style="color: #0000ff;">this</span><span style="color: #000000;">.getPostCode().equals(ad.getPostCode()))
+            {
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> hashCode()
+    {
+        </span><span style="color: #0000ff;">return</span> detail.hashCode() +<span style="color: #000000;"> postCode.hashCode();
+    }
+}</span></pre>
+</div>
+<p align="justify">结果：无结果</p>
+<p align="justify"><span style="font-family: 'Times New Roman';">总结：不可变的</span>&ldquo;类&rdquo;有何用？（1）可以方便和安全地用于多线程环境中，（2）访问它们可以不用加锁，因而能提供较高的性能。</p>
+<p align="justify"><span style="font-family: 'Times New Roman';">三、参看</span>ExplorationJDKSource.java示例</p>
+<p align="justify"><span style="font-family: 'Times New Roman';">此示例中定义了一个类</span>A，它没有任何成员：</p>
+<p align="justify">class A { }</p>
+<p align="justify">源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ExplorationJDKSource {
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * </span><span style="color: #808080;">@param</span><span style="color: #008000;"> args
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String[] args) {
+        System.out.println(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> A());
+    }
+}
+</span><span style="color: #0000ff;">class</span> A{}</pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161110151659545-682560222.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">总结：前面示例中，</span>main方法实际上调用的是：public void println(Object x)<span style="font-family: 宋体;">，这一方法内部调用了</span><span style="font-family: 'Times New Roman';">String</span><span style="font-family: 宋体;">类的</span><span style="font-family: 'Times New Roman';">valueOf</span><span style="font-family: 宋体;">方法。</span><span style="font-family: 'Times New Roman';">valueOf</span><span style="font-family: 宋体;">方法内部又调用</span><span style="font-family: 'Times New Roman';">Object.toString</span><span style="font-family: 宋体;">方法：</span></p>
+<p align="justify">public String toString() {</p>
+<p align="justify">return getClass().getName() +"@" +</p>
+<p align="justify">Integer.toHexString(hashCode());</p>
+<p align="justify">}</p>
+<p align="justify">hashCode<span style="font-family: 宋体;">方法是本地方法，由</span><span style="font-family: 'Times New Roman';">JVM</span><span style="font-family: 宋体;">设计者实现：</span></p>
+<p align="justify">public &nbsp;native int hashCode();</p>
+<p align="justify">四、神奇的加号</p>
+<p align="justify">源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Fruit
+{        
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> String toString()
+    {
+        </span><span style="color: #0000ff;">return</span> "Fruit toString."<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[])
+    {
+        Fruit f</span>=<span style="color: #0000ff;">new</span><span style="color: #000000;"> Fruit();
+        System.out.println(</span>"f="+<span style="color: #000000;">f);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">    System.out.println("f="+f.toString());</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161110151741811-630442687.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">总结：一个字串和一个对象</span>&ldquo;相加&rdquo;，得到的结果为字符串，这是因为<span style="font-family: 'Times New Roman';">Fruit</span><span style="font-family: 宋体;">类覆盖了</span><span style="font-family: 'Times New Roman';">Object</span><span style="font-family: 宋体;">类的</span><span style="font-family: 'Times New Roman';">toString</span><span style="font-family: 宋体;">方法。 在&ldquo;</span><span style="font-family: 'Times New Roman';">+</span><span style="font-family: 宋体;">&rdquo;运算中</span><span style="font-family: 'Times New Roman';">,</span><span style="font-family: 宋体;">当任何一个对象与一个</span><span style="font-family: 'Times New Roman';">String</span><span style="font-family: 宋体;">对象，连接时，会隐式地调用其</span><span style="font-family: 'Times New Roman';">toString()</span><span style="font-family: 宋体;">方法，默认情况下，此方法返回&ldquo;类名 </span><span style="font-family: 'Times New Roman';">@ + hashCode</span><span style="font-family: 宋体;">&rdquo;。为了返回有意义的信息，子类可以重写</span><span style="font-family: 'Times New Roman';">toString()</span><span style="font-family: 宋体;">方法。方法覆盖要求子类与父类的方法一模一样，否则就是方法重载（</span><span style="font-family: 'Times New Roman';">overload</span><span style="font-family: 宋体;">）。</span></p>
+<p align="justify"><span style="font-family: 宋体;">五、请自行编写代码测试以下特性（动手动脑）：在子类中，若要调用父类中被覆盖的方法，可以使用</span>super<span style="font-family: 宋体;">关键字。</span></p>
+<p align="justify">源程序：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Grandparent{
+    </span><span style="color: #0000ff;">public</span> Grandparent(){<span style="color: #008000;">//</span><span style="color: #008000;">方法的重载</span>
+        System.out.println("Grandparent Created."<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Grandparent(String string){
+        System.out.println(</span>"GrandParent Created.String:"+<span style="color: #000000;">string);
+    }
+}
+</span><span style="color: #0000ff;">class</span> Parent <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Grandparent{
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Parent(){
+        </span><span style="color: #0000ff;">super</span>("Hello.Grandparent"<span style="color: #000000;">);
+        System.out.println(</span>"Parent Created"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">super("Hello.Grandparent");</span>
+<span style="color: #000000;">    }
+}
+</span><span style="color: #0000ff;">class</span> Child <span style="color: #0000ff;">extends</span><span style="color: #000000;"> Parent{
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Child(){
+        System.out.println(</span>"Child Created"<span style="color: #000000;">);
+    }
+}
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> TestInherent {
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(String args[]){
+    Child c</span>=<span style="color: #0000ff;">new</span> Child();<span style="color: #008000;">//</span><span style="color: #008000;">构造方法</span>
+<span style="color: #000000;">    }
+}</span></pre>
+</div>
+<p>结果：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161110151822686-1671006769.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">总结：在</span>Parent<span style="font-family: 宋体;">子类中，若要调用父类</span><span style="font-family: 'Times New Roman';">Grandparent</span><span style="font-family: 宋体;">中被覆盖的方法</span><span style="font-family: 'Times New Roman';">Grandparent()</span><span style="font-family: 宋体;">，使用</span><span style="font-family: 'Times New Roman';">super</span><span style="font-family: 宋体;">关键字后，结果如上图。</span></p>

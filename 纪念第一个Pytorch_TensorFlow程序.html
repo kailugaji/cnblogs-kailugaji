@@ -1,0 +1,133 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">纪念第一个Pytorch/TensorFlow程序</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 截止今日，写了17篇有关<a href="https://www.cnblogs.com/kailugaji/category/1764190.html" target="_blank">Deep Learning</a>的博文，如下所示</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816080955586-817689385.png" alt="" width="891" height="1605" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 没想到吧，我的电脑连Python都没安装，之前一直用的Notepad++看的程序</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816081055925-349064837.jpg" alt="" width="240" height="282" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p>&nbsp; &nbsp; &nbsp;<span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">说到Notepad++，这是一款免费的开源文本和源代码编辑器，无论电脑上有没有安装编程软件，用这个软件可以打开各种程序文件，比如MATLAB的.m文件，python的.py文件，C语言的.c文件等等，而且可以高亮文本，显示行号等等，看程序特别方便。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816170540565-104899474.png" alt="" width="962" height="371" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 趁着昨天周日，没有其他要紧的事情，自己动手从零开始安装Python以及Pytorch/TensorFlow框架</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816081231433-1196891072.jpg" alt="" width="388" height="208" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 当然，中途由于各种版本问题，一直重复着安装卸载安装卸载的过程</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 简单回顾一下安装流程</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 1) 安装python：在<a href="https://www.python.org/downloads/windows/" target="_blank">python官网</a>找到Windows的版本，选择Windows x86-64 executable installer系列的，我下了Python 3.8.5，直接就是.exe文件(当然，可以是其他版本，可能我后续还会再重复一次卸载安装。。。)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816082056190-2130486654.png" alt="" width="753" height="632" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp;&nbsp;双击运行该程序，自定义安装，勾选Add Python 3.8 to PATH，Add Python to environment variables，更改安装路径，之后一路默认，完成安装。在cmd命令行输入&nbsp;<span class="cnblogs_code">python</span>&nbsp;或者&nbsp;<span class="cnblogs_code">python --version</span>&nbsp;，能够看到python的版本，即完成安装。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816083000572-981058399.png" alt="" width="634" height="162" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;2) 安装pycharm编辑器：去<a href="https://www.jetbrains.com/pycharm/download/#section=windows" target="_blank">pycharm官网</a>下载，社区版虽然免费，但功能不全，最好安装专业版(收费，网上也有一些破解方法)，我的是PyCharm 2018.3.5。安装时，自定义安装路径，再勾选这几个，然后一路默认，即可完成安装。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816083455980-1519680233.png" alt="" width="265" height="203" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;3) 安装Anaconda：在<a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/" target="_blank">清华镜像源</a>找到合适的版本，我用的Anaconda3-5.2.0-Windows-x86_64.exe。安装时，除了自定义路径之外，其余一路默认。安装好之后，需要添加路径，在"设置"-&gt;"关于"-&gt;右上角"高级系统设置"-&gt;"系统属性"-&gt;"高级"-&gt;"环境变量"里面添加路径。(由于我不知道往哪个里面添加，于是用户变量与系统变量都添上了)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816084650906-1253743922.png" alt="" width="784" height="475" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816084809729-1562818845.png" alt="" width="480" height="506" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;4)&nbsp;Anaconda Prompt操作：打开电脑"开始"，可以看到最近添加了Anaconda3。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816085030451-877245673.png" alt="" width="301" height="632" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp;&nbsp;找到里面的Anaconda Prompt，输入&nbsp;<span class="cnblogs_code">conda info --envs</span>&nbsp;，可以查看用户定义的虚拟环境，*表示当前所处的环境。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816085752190-1228983955.png" alt="" width="467" height="236" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;创建虚拟环境：创建pytorch环境&nbsp;<span class="cnblogs_code">conda create -n pytorch python=3.8</span>&nbsp;，激活该环境&nbsp;<span class="cnblogs_code">conda activate pytorch</span>&nbsp;，如下所示</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816090139448-763231233.png" alt="" width="671" height="108" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 退出该环境&nbsp;<span class="cnblogs_code">conda deactivate</span>&nbsp;，如下所示</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816090259268-132043075.png" alt="" width="703" height="172" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp;5) 搭建pytorch：在<a href="https://pytorch.org/get-started/locally/" target="_blank">pytorch官网</a>选择适合自己的版本</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816090636708-2105433784.png" alt="" width="713" height="274" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 并在Anaconda Prompt中pytorch环境下安装</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816090946974-484328798.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;输入&nbsp;<span class="cnblogs_code"><span style="color: #0000ff;">import</span> torch</span>&nbsp;不报错即为安装完成</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816091057324-113243315.png" alt="" width="746" height="126" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 我也在pycharm中python环境下通过&nbsp;<span class="cnblogs_code">pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html</span>&nbsp;安装torch包与torchvision包。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 输入&nbsp;<span class="cnblogs_code">conda list</span>&nbsp;，显示已经安装的包，可以看到torch包。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816091709716-485893612.png" alt="" width="630" height="314" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816091809411-1307463577.png" alt="" width="875" height="443" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;6) pycharm设置："File"-&gt;"Settings"-&gt;"Project Interpreter"-&gt;"Show All"</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816092548632-953606638.png" alt="" width="920" height="572" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;点击加号</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816092630174-936855912.png" alt="" width="600" height="530" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;选择"Conda Environment"-&gt;"Existing environment"-&gt;找到Anaconda安装路径里面的环境，&nbsp;<span class="cnblogs_code">D:\Anaconda3.5\envs</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816092405189-57058102.png" alt="" width="598" height="517" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 找到&nbsp;<span class="cnblogs_code">D:\Anaconda3.5\envs\pytorch\python.exe</span>&nbsp;，点击ok，一路确定即可。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816092906734-75184261.png" alt="" width="403" height="446" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp;7) 完成，运行第一个pytorch环境下的python程序。</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+x</span>=torch.rand(6,4<span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(x)</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816093107881-958164571.png" alt="" width="852" height="645" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：安装GPU版本的pytorch：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">.condarc文件中的内容(添加清华镜像源)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">channels:</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">  - http://mirrors.bfsu.edu.cn/anaconda/pkgs/free/</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">show_channel_urls: true</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">ssl_verify: true</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">report_errors: true</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">quiet: true</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">在<a href="https://pytorch.org/get-started/previous-versions/" target="_blank">https://pytorch.org/get-started/previous-versions/</a>找到与CUDA版本匹配的文件，并在创建的环境中输入<code>conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.1&nbsp;</code></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220116090054701-1341039467.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意去掉最后的-c pytorch。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">进入Python，输入下面程序：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">import torch </span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">torch.cuda.is_available()</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202201/1027447-20220116090441160-206949641.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">返回True，则成功。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">--------------------------------------------------------------------------------------------------------------------------------------------------------------------</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"> 下面是TensorFlow搭建。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 1) 在Anaconda Prompt中修改清华镜像源，在base这一环境上修改。</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ </span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">conda config --set show_channel_urls yes</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 2) 创建TensorFlow虚拟环境：输入&nbsp;<span class="cnblogs_code">conda create -n tensorflow python=3.5.2</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 3) 安装完成后，输入&nbsp;<span class="cnblogs_code">activate tensorflow</span>&nbsp;进入该环境，并安装TensorFlow</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #ff0000;">安这个1.8版本的</span>：&nbsp;</span></p>
+<div class="cnblogs_code">
+<pre>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ https://mirrors.tuna.tsinghua.edu.cn/pypi/web/packages/3f/bb/dd01844cf88d15264d92e12a8b89526e1d805c082b8e945b632d4a1989a4/tensorflow-1.8.0-cp35-cp35m-win_amd64.whl<span style="color: #008000;">#</span><span style="color: #008000;">sha256=24c3d3f87dc6108f4de3bbb7f647bcd6f303f874721b176185f260adea88fe40</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">(旧的，舍掉) pip install -i https://pypi.tuna.tsinghua.edu.cn/simple/ https://mirrors.tuna.tsinghua.edu.cn/tensorflow/windows/cpu/tensorflow-1.1.0-cp35-cp35m-win_amd64.whl</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816093953146-1408531432.png" alt="" width="812" height="194" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;4) 进入python，输入&nbsp;<span class="cnblogs_code"><span style="color: #0000ff;">import</span> tensorflow as tf</span>&nbsp;，如果没报错，说明安装完成</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816094319068-695703719.png" alt="" width="867" height="488" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;5) pycharm设置：与pytorch设置一样，"File"-&gt;"Settings"-&gt;"Project Interpreter"-&gt;"Show All"，点击加号，选择"Conda Environment"-&gt;"Existing environment"，找到&nbsp;<span class="cnblogs_code">D:\Anaconda3.5\envs\tensorflow\python.exe</span>&nbsp;，点击ok，即可。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816094601259-996905390.png" alt="" width="895" height="572" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 6) 运行第一个TensorFlow框架下的python程序</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #0000ff;">import</span><span style="color: #000000;"> tensorflow as tf
+message </span>= tf.constant(<span style="color: #800000;">'</span><span style="color: #800000;">Hello, kailugaji</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;">要打印的信息是一个常量字符串</span>
+with tf.Session() as sess:<span style="color: #008000;">#</span><span style="color: #008000;">为了执行计算图，利用 with 语句定义 Session，并使用 run 来运行</span>
+    <span style="color: #0000ff;">print</span>(sess.run(message).decode())</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202108/1027447-20210816094921290-1475267846.png" alt="" width="1057" height="565" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp;至此，所有的都已安装完毕。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 下面给出Anaconda Prompt一些常用命令</span></p>
+<div class="cnblogs_code">
+<pre><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;">打开Anaconda Prompt</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;">检查conda版本</span>
+<span style="color: #008080;"> 3</span> conda -<span style="color: #000000;">V
+</span><span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;">查看已安装包</span>
+<span style="color: #008080;"> 5</span> <span style="color: #000000;">conda list
+</span><span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;">安装包</span>
+<span style="color: #008080;"> 7</span> <span style="color: #000000;">conda install numpy
+</span><span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;">删除包</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">conda remove numpy
+</span><span style="color: #008080;">10</span> <span style="color: #008000;">#</span><span style="color: #008000;">查看当前存放的虚拟环境</span>
+<span style="color: #008080;">11</span> <span style="color: #000000;">conda env list
+</span><span style="color: #008080;">12</span> <span style="color: #008000;">#</span><span style="color: #008000;">创建python虚拟环境</span>
+<span style="color: #008080;">13</span> conda create -n pytorch python=3.8
+<span style="color: #008080;">14</span> <span style="color: #008000;">#</span><span style="color: #008000;">激活虚拟环境</span>
+<span style="color: #008080;">15</span> <span style="color: #000000;">conda activate tensorflow
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">conda activate pytorch
+</span><span style="color: #008080;">17</span> <span style="color: #008000;">#</span><span style="color: #008000;">关闭虚拟环境</span>
+<span style="color: #008080;">18</span> <span style="color: #000000;">conda deactivate
+</span><span style="color: #008080;">19</span> <span style="color: #008000;">#</span><span style="color: #008000;">删除虚拟环境</span>
+<span style="color: #008080;">20</span> conda remove -n tensorflow --<span style="color: #000000;">all
+</span><span style="color: #008080;">21</span> conda remove -n pytorch --all</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 升级pip:&nbsp;&nbsp;<span class="cnblogs_code">python -m pip install --upgrade pip</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 安装包:&nbsp;&nbsp;<span class="cnblogs_code">pip install numpy</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">解决Anaconda navigator打不开的问题：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 在cmd窗口输入命令语句：&nbsp;<span class="cnblogs_code">tasklist | findstr <span style="color: #800000;">"</span><span style="color: #800000;">pythonw</span><span style="color: #800000;">"</span> </span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><em id="__mceDel">&nbsp; &nbsp; </em>找到pythonw的PID，如：25376，在cmd窗口输入命令语句：&nbsp;<span class="cnblogs_code">tskill 25376</span>&nbsp;，将所有的pythonw全部关掉。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 在安装路径下找到&nbsp;<span class="cnblogs_code">anaconda3\Lib\site-packages\anaconda_navigator\api\conda_api.py </span>&nbsp;，在1300行左右，把data=yaml.load(f) 改为 data=yaml.safeload(f)，保存，并重启电脑。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">GPU版本用这个：<a href="https://zhuanlan.zhihu.com/p/124231172" target="_blank">https://zhuanlan.zhihu.com/p/124231172</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; CUDA：10.1.105</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; cuDNN：v7.6.5 for CUDA 10.1</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; tensorflow==1.15.0</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考文献：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;windows环境下tensorflow安装过程详解_小白_努力-CSDN博客_tensorflow安装 <a href="https://blog.csdn.net/laobai1015/article/details/84580243" target="_blank">https://blog.csdn.net/laobai1015/article/details/84580243</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;WIN10下pytorch环境配置（安装了半天的血泪史）_熊孩纸_的博客-CSDN博客_pytorch环境搭建 <a href="https://blog.csdn.net/weixin_39487353/article/details/104666953" target="_blank">https://blog.csdn.net/weixin_39487353/article/details/104666953</a></span></p>

@@ -1,0 +1,23 @@
+<h1 style="text-align: center;">聚类&mdash;&mdash;认识FCM算法</h1>
+<p><span style="font-size: 15px;">作者：凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</span></p>
+<h2>一、FCM概述</h2>
+<p><span style="font-size: 16px;">&nbsp; &nbsp;<span style="font-family: 'times new roman', times;"> FCM算法是基于对目标函数的优化基础上的一种数据聚类方法。聚类结果是每一个数据点对聚类中心的隶属程度，该隶属程度用一个数值来表示。该算法允许同一数据属于多个不同的类。</span></span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">&nbsp; &nbsp; FCM算法是一种无监督的模糊聚类方法，在算法实现过程中不需要人为的干预。</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">&nbsp; &nbsp; 这种算法的不足之处:首先，算法中需要设定一些参数，若参数的初始化选取的不合适，可能影响聚类结果的正确性;其次，当数据样本集合较大并且特征数目较多时，算法的实时性不太好。</span></p>
+<p><span style="font-size: 16px; font-family: 'times new roman', times;">&nbsp; &nbsp; K-means也叫硬C均值聚类（HCM），而FCM是模糊C均值聚类，它是HCM的延伸与拓展，HCM与FCM最大的区别在于隶属函数（划分矩阵）的取值不同，HCM的隶属函数只取两个值：0和1，而FCM的隶属函数可以取[0,1]之间的任何数。K-means和FCM都需要事先给定聚类的类别数，而FCM还需要选取恰当的加权指数&alpha;，&alpha;的选取对结果有一定的影响，&alpha;属于[0,+&infin;)。</span></p>
+<h2>二、FCM算法</h2>
+<p><span style="font-size: 16px;">C是聚类数，N是样本个数。U是隶属度矩阵，V是聚类中心。</span></p>
+<p><span style="font-size: 16px;">目标函数：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210302151258839-736509155.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-size: 16px;">更新公式：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210302151337244-1633141914.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210302151350653-735823474.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2>三、算法流程</h2>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202103/1027447-20210302151736519-1610160045.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2>四、FCM改进算法汇总</h2>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210414210355890-685867015.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210414210404777-1533973074.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210414210413679-210122018.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210414210420992-2107949861.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-size: 16px;">推荐：<a href="https://home.deib.polimi.it/matteucc/Clustering/tutorial_html/cmeans.html" target="_blank">Clustering - Fuzzy C-means</a></span></p>
+<p><span style="font-size: 16px;">FCM改进版本汇总参考：J. Gu, L. Jiao, S. Yang and F. Liu, "<a href="https://faculty.xidian.edu.cn/system/resource/storage/download.jsp?mark=NUI2Q0EyMzc5NTE2RTMxMDUyOTdFRENFNUYzRTg1NjMvRDVBMDk3MzkvMjk1OTY1" target="_blank">Fuzzy Double C-Means Clustering Based on Sparse Self-Representation</a>," in IEEE Transactions on Fuzzy Systems, vol. 26, no. 2, pp. 612-626, April 2018.</span></p>
