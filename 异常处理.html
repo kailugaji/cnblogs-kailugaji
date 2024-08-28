@@ -1,0 +1,265 @@
+<h1 style="text-align: center;" align="justify">异常处理</h1>
+<h2 align="justify">一、<span style="font-family: 宋体;">请阅读并运行</span>AboutException.java<span style="font-family: 宋体;">示例，然后通过后面的几页</span><span style="font-family: 'Times New Roman';">PPT</span><span style="font-family: 宋体;">了解</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">中实现异常处理的基础知识</span></h2>
+<p><strong>import</strong>&nbsp;javax.swing.*;</p>
+<p><strong>class</strong>&nbsp;AboutException {</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] a)</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>int</strong>&nbsp;i=1, j=0, <span style="text-decoration: underline;">k</span>;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//double i=1, j=0, k;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k=i/j;</p>
+<p>&nbsp;&nbsp; //System.out.println(k);</p>
+<p><strong>try</strong></p>
+<p>{</p>
+<p>k&nbsp;= i/j; &nbsp;&nbsp;&nbsp;// Causes division-by-zero exception</p>
+<p>//throw new Exception("Hello.Exception!");</p>
+<p>}</p>
+<p><strong>catch</strong>&nbsp;( ArithmeticException e)</p>
+<p>{</p>
+<p>System.<strong><em>out</em></strong>.println("被0除. &nbsp;"+ e.getMessage());</p>
+<p>}</p>
+<p><strong>catch</strong>&nbsp;(Exception e)</p>
+<p>{</p>
+<p><strong>if</strong>&nbsp;(e&nbsp;<strong>instanceof</strong>&nbsp;ArithmeticException)</p>
+<p>System.<strong><em>out</em></strong>.println("被0除");</p>
+<p><strong>else</strong></p>
+<p>{ &nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println(e.getMessage());</p>
+<p>}</p>
+<p>}</p>
+<p><strong>finally</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JOptionPane.<em>showConfirmDialog</em>(<strong>null</strong>,"OK");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;}</p>
+<p>}</p>
+<p>结果：</p>
+<p>&nbsp; &nbsp;&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151131831-28929842.png" alt="" /></p>
+<p align="justify">Java<span style="font-family: 宋体;">中实现异常处理的基础</span>知识：</p>
+<p align="justify"><span style="font-family: 宋体;">异常的对象有两个来源，一是</span>Java<span style="font-family: 宋体;">运行时环境自动抛出系统生成的异常，而不管你是否愿意捕获和处理，它总要被抛出！比如除数为</span><span style="font-family: 'Times New Roman';">0</span><span style="font-family: 宋体;">的异常。二是程序员自己抛出的异常，这个异常可以是程序员自己定义的，也可以是</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">语言中定义的，用</span><span style="font-family: 'Times New Roman';">throw </span><span style="font-family: 宋体;">关键字抛出异常，这种异常常用来向调用者汇报异常的一些信息。</span></p>
+<p align="justify">异常是针对方法来说的，抛出、声明抛出、捕获和处理异常都是在方法中进行的。</p>
+<p align="justify">Java<span style="font-family: 宋体;">异常处理通过</span><span style="font-family: 'Times New Roman';">5</span><span style="font-family: 宋体;">个关键字</span><span style="font-family: 'Times New Roman';">try</span><span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">catch</span><span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">throw</span><span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">throws</span><span style="font-family: 宋体;">、</span><span style="font-family: 'Times New Roman';">finally</span><span style="font-family: 宋体;">进行管理。基本过程是用</span><span style="font-family: 'Times New Roman';">try</span><span style="font-family: 宋体;">语句块包住要监视的语句，如果在</span><span style="font-family: 'Times New Roman';">try</span><span style="font-family: 宋体;">语句块内出现异常，则异常会被抛出，你的代码在</span><span style="font-family: 'Times New Roman';">catch</span><span style="font-family: 宋体;">语句块中可以捕获到这个异常并做处理；还有以部分系统生成的异常在</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">运行时自动抛出。你也可以通过</span><span style="font-family: 'Times New Roman';">throws</span><span style="font-family: 宋体;">关键字在方法上声明该方法要抛出异常，然后在方法内部通过</span><span style="font-family: 'Times New Roman';">throw</span><span style="font-family: 宋体;">抛出异常对象。</span><span style="font-family: 'Times New Roman';">finally</span><span style="font-family: 宋体;">语句块会在方法执行</span><span style="font-family: 'Times New Roman';">return</span><span style="font-family: 宋体;">之前执行，一般结构如下：</span><br />&nbsp;try{<br />&nbsp;&nbsp;<span style="font-family: 宋体;">程序代码</span><br />&nbsp;}catch(<span style="font-family: 宋体;">异常类型</span><span style="font-family: 'Times New Roman';">1 </span><span style="font-family: 宋体;">异常的变量名</span><span style="font-family: 'Times New Roman';">1){</span><br />&nbsp;&nbsp;<span style="font-family: 宋体;">程序代码</span><br />&nbsp;}catch(<span style="font-family: 宋体;">异常类型</span><span style="font-family: 'Times New Roman';">2 </span><span style="font-family: 宋体;">异常的变量名</span><span style="font-family: 'Times New Roman';">2){</span><br />&nbsp;&nbsp;<span style="font-family: 宋体;">程序代码</span><br />&nbsp;}finally{<br />&nbsp;&nbsp;<span style="font-family: 宋体;">程序代码</span><br />&nbsp;}</p>
+<h2 align="justify">二、<span style="font-family: 宋体;">阅读以下代码（</span>CatchWho.java<span style="font-family: 宋体;">），写出程序运行结果</span></h2>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;CatchWho { </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args) { </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>try</strong>&nbsp;{ </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<strong>try</strong>&nbsp;{ </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;ArrayIndexOutOfBoundsException(); </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	} </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	<strong>catch</strong>(ArrayIndexOutOfBoundsException e) { </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		System.<strong><em>out</em></strong>.println( &nbsp;"ArrayIndexOutOfBoundsException"&nbsp;+ &nbsp;"/内层try-catch"); </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;ArithmeticException(); </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>(ArithmeticException e) { //算数</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("发生ArithmeticException"); </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>(ArrayIndexOutOfBoundsException e) { //越界</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println( &nbsp;"ArrayIndexOutOfBoundsException"&nbsp;+ "/外层try-catch"); </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;} </p>
+<p align="justify">}</p>
+<p align="justify">结果：</p>
+<p align="justify"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151153940-80107936.png" alt="" /></p>
+<h2 align="justify"><span style="font-family: 宋体;">三、写出</span>CatchWho2.java<span style="font-family: 宋体;">程序运行的结果</span></h2>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;CatchWho2 {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>try</strong>&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>try</strong>&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;ArrayIndexOutOfBoundsException();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>catch</strong>(ArithmeticException e) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; System.<strong><em>out</em></strong>.println( "ArrayIndexOutOfBoundsException"&nbsp;+ "/内层try-catch");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;ArithmeticException();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>(ArithmeticException e) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("发生ArithmeticException");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>(ArrayIndexOutOfBoundsException e) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println( "ArrayIndexOutOfBoundsException"&nbsp;+ "/外层try-catch");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p align="justify">}</p>
+<p align="justify">结果：</p>
+<p align="justify"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151215159-872140000.png" alt="" /></p>
+<h2 align="justify">四、<span style="font-family: 宋体;">请先阅读</span> EmbedFinally.java<span style="font-family: 宋体;">示例，再运行它，观察其输出并进行总结</span></h2>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;EmbededFinally { &nbsp;&nbsp;&nbsp;</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String args[]) { &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>int</strong>&nbsp;result; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>try</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("in Level 1"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; <strong>try</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("in Level 2");</p>
+<p>&nbsp;&nbsp;// result=100/0; &nbsp;//Level 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; <strong>try</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; System.<strong><em>out</em></strong>.println("in Level 3"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; result=100/0; &nbsp;//Level 3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>catch</strong>&nbsp;(Exception e) { &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("Level 3:"&nbsp;+ e.getClass().toString()); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>finally</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("In Level 3 finally"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>// result=100/0; &nbsp;//Level 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>catch</strong>&nbsp;(Exception e) { &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; System.<strong><em>out</em></strong>.println("Level 2:"&nbsp;+ e.getClass().toString()); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; }</p>
+<p>&nbsp; <strong>finally</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("In Level 2 finally"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>// result = 100 / 0; &nbsp;//level 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>catch</strong>&nbsp;(Exception e) { &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("Level 1:"&nbsp;+ e.getClass().toString()); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>finally</strong>&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp; System.<strong><em>out</em></strong>.println("In Level 1 finally"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;</p>
+<p>}</p>
+<p>}</p>
+<p>结果：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151245550-183898913.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">当有多层嵌套的</span>finally<span style="font-family: 宋体;">时，异常在不同的层次抛出</span> <span style="font-family: 宋体;">，在不同的位置抛出，可能会导致不同的</span>finally<span style="font-family: 宋体;">语句块执行顺序。</span></p>
+<p align="justify">finally<span style="font-family: 宋体;">语句块不一定会执行。</span></p>
+<p align="justify"><span style="font-family: 宋体;">请看</span>SystemExitAndFinally.java<span style="font-family: 宋体;">示例</span></p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;SystemExitAndFinally { &nbsp;</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>try</strong>{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("in main"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;Exception("Exception is thrown in main");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //System.exit(0); &nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>catch</strong>(Exception e)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println(e.getMessage()); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<em>exit</em>(0); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>finally</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>{ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>System.<strong><em>out</em></strong>.println("in finally"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>} &nbsp;&nbsp;&nbsp;</p>
+<p>}</p>
+<p>}</p>
+<p>结果：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151306909-1430801716.png" alt="" /></p>
+<p align="justify"><span style="font-family: 宋体;">当程序中出现异常时，</span>JVM<span style="font-family: 宋体;">会依据方法调用顺序依次查找有关的错误处理程序。</span></p>
+<p align="justify"><span style="font-family: 宋体;">可使用</span>printStackTrace <span style="font-family: 宋体;">和 </span><span style="font-family: 'Times New Roman';">getMessage</span><span style="font-family: 宋体;">方法了解异常发生的情况：</span></p>
+<p align="justify">printStackTrace<span style="font-family: 宋体;">：打印方法调用堆栈。</span></p>
+<p align="justify"><span style="font-family: 宋体;">每个</span>Throwable<span style="font-family: 宋体;">类的对象都有一个</span><span style="font-family: 'Times New Roman';">getMessage</span><span style="font-family: 宋体;">方法，它返回一个字串，这个字串是在</span><span style="font-family: 'Times New Roman';">Exception</span><span style="font-family: 宋体;">构造函数中传入的，通常让这一字串包含特定异常的相关信息。</span></p>
+<p align="justify"><span style="font-family: 宋体;">请通过</span> PrintExpressionStack.java<span style="font-family: 宋体;">示例掌握上述内容。依据对本讲多个示例程序的分析，请自行归纳总结出</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">多层嵌套异常处理的基本流程。</span></p>
+<p>// UsingExceptions.java</p>
+<p>// Demonstrating the getMessage and printStackTrace</p>
+<p>// methods inherited into all exception classes.</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;PrintExceptionStack {</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main( String args[] )</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>try</strong>&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>method1</em>();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>&nbsp;( Exception e&nbsp;) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>err</em></strong>.println( e.getMessage() + "\n"&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.printStackTrace();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;method1() <strong>throws</strong>&nbsp;Exception</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>method2</em>();</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;method2() <strong>throws</strong>&nbsp;Exception</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>method3</em>();</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;method3() <strong>throws</strong>&nbsp;Exception</p>
+<p>&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;Exception( "Exception thrown in method3"&nbsp;);</p>
+<p>&nbsp;&nbsp;&nbsp;}</p>
+<p>}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">结果：</span></p>
+<p><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151330378-1987901230.png" alt="" /></span></p>
+<h2>五、一个方法可以声明抛出多个异常</h2>
+<p>int g(float h) throws OneException,TwoException</p>
+<p>{ <span style="font-family: 宋体;">&hellip;&hellip; </span><span style="font-family: 'Times New Roman';">}</span></p>
+<p>ThrowMultiExceptionsDemo.java<span style="font-family: 宋体;">示例展示了相关特性。</span></p>
+<p><span style="font-family: 宋体;">注意一个</span>Java<span style="font-family: 宋体;">异常处理中的一个比较独特的地方：</span></p>
+<p><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151347565-885369015.png" alt="" /></span></p>
+<p><strong>import</strong>&nbsp;java.io.*;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;ThrowMultiExceptionsDemo {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>try</strong>&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>throwsTest</em>();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>catch</strong>(IOException e) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("捕捉异常");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>private</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;throwsTest() &nbsp;<strong>throws</strong>&nbsp;ArithmeticException,IOException {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.<strong><em>out</em></strong>.println("这只是一个测试");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// 程序处理过程假设发生异常</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;IOException();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//throw new ArithmeticException();</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p align="justify">}</p>
+<p align="justify">&nbsp;&nbsp;&nbsp;<span style="font-family: 宋体;">结果：</span></p>
+<p align="justify"><span style="font-family: 宋体;"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151405096-1926827179.png" alt="" /></span></p>
+<p align="justify"><span style="font-family: 宋体;">一个子类的</span>throws<span style="font-family: 宋体;">子句抛出的异常，不能是其基类同名方法抛出的异常对象的父类。</span></p>
+<p align="justify">OverrideThrows.java<span style="font-family: 宋体;">示例展示了</span><span style="font-family: 'Times New Roman';">Java</span><span style="font-family: 宋体;">的这个语法特性。</span></p>
+<p><strong>import</strong>&nbsp;java.io.*;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;OverrideThrows</p>
+<p>{</p>
+<p><strong>public</strong>&nbsp;<strong>void</strong>&nbsp;test()<strong>throws</strong>&nbsp;IOException</p>
+<p>{</p>
+<p>FileInputStream <span style="text-decoration: underline;">fis</span>&nbsp;= <strong>new</strong>&nbsp;FileInputStream("a.txt");</p>
+<p>}</p>
+<p>}</p>
+<p><strong>class</strong>&nbsp;Sub <strong>extends</strong>&nbsp;OverrideThrows</p>
+<p>{</p>
+<p>//如果test方法声明抛出了比父类方法更大的异常,比如Exception</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;//则代码将无法编译&hellip;&hellip;</p>
+<p><strong>public</strong>&nbsp;<strong>void</strong>&nbsp;test() <strong>throws</strong>&nbsp;FileNotFoundException</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//...</p>
+<p>}</p>
+<p align="justify">}</p>
+<h2 align="justify">六、编写一个程序，此程序在运行时要求用户输入一个 <span style="font-family: 宋体;">整数，代表某门课的考试成绩，程序接着给出</span>&ldquo;不及格&rdquo;、&ldquo;及格&rdquo;、&ldquo;中&rdquo;、&ldquo;良&rdquo;、&ldquo;优&rdquo;的结论</h2>
+<p align="justify">要求程序必须具备足够的健壮性，不管用户输入什 么样的内容，都不会崩溃。</p>
+<p><strong>import</strong>&nbsp;java.util.Scanner;</p>
+<p><strong>public</strong>&nbsp;<strong>class</strong>&nbsp;Grade {</p>
+<p><strong>public</strong>&nbsp;<strong>static</strong>&nbsp;<strong>void</strong>&nbsp;main(String[] args) <strong>throws</strong>&nbsp;NumberFormatException {</p>
+<p><strong>double</strong>&nbsp;score;</p>
+<p><strong>try</strong>{</p>
+<p>Scanner <span style="text-decoration: underline;">in</span>=<strong>new</strong>&nbsp;Scanner(System.<strong><em>in</em></strong>);</p>
+<p>System.<strong><em>out</em></strong>.println("请输入成绩：");</p>
+<p>score=in.nextDouble();</p>
+<p><strong>if</strong>((score&gt;=0)&amp;&amp;(score&lt;60)){</p>
+<p>System.<strong><em>out</em></strong>.println("不及格");</p>
+<p>}</p>
+<p><strong>else</strong>&nbsp;<strong>if</strong>((score&gt;=60)&amp;&amp;(score&lt;70)){</p>
+<p>System.<strong><em>out</em></strong>.println("及格");</p>
+<p>}</p>
+<p><strong>else</strong>&nbsp;<strong>if</strong>((score&gt;=70)&amp;&amp;(score&lt;80)){</p>
+<p>System.<strong><em>out</em></strong>.println("中");</p>
+<p>}</p>
+<p><strong>else</strong>&nbsp;<strong>if</strong>((score&gt;=80)&amp;&amp;(score&lt;90)){</p>
+<p>System.<strong><em>out</em></strong>.println("良");</p>
+<p>}</p>
+<p><strong>else</strong>&nbsp;<strong>if</strong>((score&gt;=90)&amp;&amp;(score&lt;=100)){</p>
+<p>System.<strong><em>out</em></strong>.println("优");</p>
+<p>}</p>
+<p><strong>else</strong>&nbsp;<strong>if</strong>(score&lt;0||score&gt;100)</p>
+<p>System.<strong><em>out</em></strong>.println("输入数字过大或过小"); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>else</strong>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>throw</strong>&nbsp;<strong>new</strong>&nbsp;Exception();</p>
+<p>}</p>
+<p><strong>catch</strong>(Exception e){</p>
+<p>System.<strong><em>out</em></strong>.println("输入的不是数字，请重新输入正确的数字");</p>
+<p>}</p>
+<p>}</p>
+<p>}</p>
+<p align="justify">结果：</p>
+<p align="justify"><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151426378-615484777.png" alt="" /></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="http://images2015.cnblogs.com/blog/1027447/201611/1027447-20161125151433581-1976648766.png" alt="" /></p>
+<p>&nbsp;</p>

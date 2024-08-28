@@ -1,0 +1,79 @@
+<p>凯鲁嘎吉 - 博客园</p>
+<p>http://www.cnblogs.com/kailugaji/</p>
+<p>1.打开F盘，先找两个文件，一个是压缩文件(2.rar),另一个是一张图片(1.jpg)，将其放到F盘目录下，当然，其他盘也可以。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316153706932-651007561.png" alt="" /></p>
+<p>1.jpg图片如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154426926-1984146554.jpg" alt="" width="138" height="176" /></p>
+<p>2.rar文件里面的内容如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154330888-1564299125.png" alt="" /></p>
+<p>2.打开cmd，输入命令</p>
+<div class="cnblogs_code">
+<pre>C:\Users\lenovo&gt;<span style="color: #000000;">F:
+
+F:\</span>&gt;copy /b <span style="color: #800080;">1</span>.jpg+<span style="color: #800080;">2</span>.rar 凯鲁嘎吉.jpg</pre>
+</div>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316153736716-1632206313.png" alt="" /></p>
+<p>3.再次查看F盘，发现多了一个文件（凯鲁嘎吉.jpg）</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154057502-145976025.png" alt="" /></p>
+<p>4.它表面上看去是1.jpg，但请你将&ldquo;凯鲁嘎吉.jpg&rdquo;修改文件后缀名为&ldquo;凯鲁嘎吉.rar&rdquo;，神奇的事情发生了</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154237306-1218675746.png" alt="" /></p>
+<p>凯鲁嘎吉.rar里面的内容如下：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154544813-1905522405.png" alt="" /></p>
+<p>它竟然和2.rar里面的内容一模一样！！！</p>
+<p>那么，如果你想拥有以上C语言的资料，请保存以下这张有料的图片，它真的有料！！！</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180316154724625-1632550534.jpg" alt="" width="206" height="262" /></p>
+<p>C语言实现算法：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;stdlib.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 4</span>     FILE *f_pic,*f_file,*<span style="color: #000000;">f_finish;
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">char</span> ch,pic_name[<span style="color: #800080;">20</span>],file_name[<span style="color: #800080;">20</span>],finish_name[<span style="color: #800080;">20</span><span style="color: #000000;">];
+</span><span style="color: #008080;"> 6</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please ipunt picture and file name:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">picture:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 8</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,pic_name);
+</span><span style="color: #008080;"> 9</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">file:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,file_name);
+</span><span style="color: #008080;">11</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">生成为：</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,finish_name);
+</span><span style="color: #008080;">13</span> 
+<span style="color: #008080;">14</span>     <span style="color: #0000ff;">if</span>(!(f_pic=fopen(pic_name,<span style="color: #800000;">"</span><span style="color: #800000;">rb</span><span style="color: #800000;">"</span><span style="color: #000000;">))){
+</span><span style="color: #008080;">15</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Cannot open the picture %s !</span><span style="color: #800000;">"</span><span style="color: #000000;">,pic_name);
+</span><span style="color: #008080;">16</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">18</span> 
+<span style="color: #008080;">19</span>     <span style="color: #0000ff;">if</span>(!(f_file=fopen(file_name,<span style="color: #800000;">"</span><span style="color: #800000;">rb</span><span style="color: #800000;">"</span><span style="color: #000000;">))){
+</span><span style="color: #008080;">20</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Cannot open the file %s !</span><span style="color: #800000;">"</span><span style="color: #000000;">,file_name);
+</span><span style="color: #008080;">21</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">23</span> 
+<span style="color: #008080;">24</span>     <span style="color: #0000ff;">if</span>(!(f_finish=fopen(finish_name,<span style="color: #800000;">"</span><span style="color: #800000;">wb</span><span style="color: #800000;">"</span><span style="color: #000000;">))){
+</span><span style="color: #008080;">25</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Cannot open the picture %s !</span><span style="color: #800000;">"</span><span style="color: #000000;">,finish_name);
+</span><span style="color: #008080;">26</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">28</span> 
+<span style="color: #008080;">29</span>     <span style="color: #0000ff;">while</span>(!<span style="color: #000000;">(feof(f_pic))){
+</span><span style="color: #008080;">30</span>         ch=<span style="color: #000000;">fgetc(f_pic);
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">        fputc(ch,f_finish);
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span> <span style="color: #000000;">    fclose(f_pic);
+</span><span style="color: #008080;">35</span> 
+<span style="color: #008080;">36</span>     <span style="color: #0000ff;">while</span>(!<span style="color: #000000;">(feof(f_file))){
+</span><span style="color: #008080;">37</span>         ch=<span style="color: #000000;">fgetc(f_file);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">        fputc(ch,f_finish);
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">40</span> 
+<span style="color: #008080;">41</span> <span style="color: #000000;">    fclose(f_file);
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">    fclose(f_finish);
+</span><span style="color: #008080;">43</span>     system(<span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">44</span> }</pre>
+</div>
+<p>当前目录下已有两个文件：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317205503323-420328067.png" alt="" /></p>
+<p>结果：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317205106113-828284095.png" alt="" /></p>
+<p>在当前目录下，同样生成一个图片文件 kailugaji.jpg</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317205408871-1159963711.png" alt="" /></p>
+<p>&nbsp;是不是很神奇！！！&nbsp;</p>
+<p><span style="color: #ff0000;">注意：C语言程序中1.jpg与2.rar应该与.c文件在同一目录下，生成的文件也是和.c文件在同一目录下！</span></p>
