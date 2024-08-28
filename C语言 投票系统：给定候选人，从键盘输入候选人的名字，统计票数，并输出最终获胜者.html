@@ -1,0 +1,49 @@
+<p>投票系统：给定候选人名单，从键盘输入候选人的名字，统计票数，并输出最终获胜者。若投票人输入的名字不在其候选名单上，则该票数无效。</p>
+<p>//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">#define</span> NUM 10  <span style="color: #008000;">//</span><span style="color: #008000;">投票的人数</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">#define</span> K 4  <span style="color: #008000;">//</span><span style="color: #008000;">候选人数</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">struct</span><span style="color: #000000;"> vote{
+</span><span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">char</span> name[<span style="color: #800080;">10</span><span style="color: #000000;">];
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+</span><span style="color: #008080;"> 8</span> }candidate[K]={<span style="color: #800000;">"</span><span style="color: #800000;">Mark</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">wrr</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Mary</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Kay</span><span style="color: #800000;">"</span>, <span style="color: #800080;">0</span><span style="color: #000000;">};
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">11</span>     <span style="color: #0000ff;">char</span> input[<span style="color: #800080;">10</span><span style="color: #000000;">];
+</span><span style="color: #008080;">12</span>     <span style="color: #0000ff;">int</span> i, j, m=<span style="color: #800080;">0</span>, n=<span style="color: #800080;">0</span>, max=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">13</span> 
+<span style="color: #008080;">14</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\t\tWelcome to the voting system!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">15</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\t\tcandidate:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;K;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">17</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s </span><span style="color: #800000;">"</span><span style="color: #000000;">, candidate[j].name);
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">19</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;NUM;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">22</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">No.%d is voting ,name is :</span><span style="color: #800000;">"</span>, i+<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">23</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,input);
+</span><span style="color: #008080;">24</span>         <span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;K;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">25</span>             <span style="color: #0000ff;">if</span>(strcmp(candidate[j].name, input)==<span style="color: #800080;">0</span><span style="color: #000000;">){
+</span><span style="color: #008080;">26</span>                 n=candidate[j].num++<span style="color: #000000;">;
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">28</span>             <span style="color: #0000ff;">if</span>(max&lt;<span style="color: #000000;">n){
+</span><span style="color: #008080;">29</span>                 max=<span style="color: #000000;">n;
+</span><span style="color: #008080;">30</span>                 m=<span style="color: #000000;">j;
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">34</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">35</span> <span style="color: #008000;">//</span><span style="color: #008000;">int strcmp(char *a, char *b)  比较字符串a, b    
+</span><span style="color: #008080;">36</span> <span style="color: #008000;">//</span><span style="color: #008000;">a&lt;b, 返回负数； a=b,返回 0 ； a&gt;b,返回正数</span>
+<span style="color: #008080;">37</span>     <span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;K;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">38</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s's number of votes is %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, candidate[j].name, candidate[j].num);
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">40</span> 
+<span style="color: #008080;">41</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\nThe victor is %s !!! \nThe number of votes is %d\n\n</span><span style="color: #800000;">"</span>, candidate[m].name, max+<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;">42</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180318152549737-320090694.png" alt="" /></p>
+<p>&nbsp;</p>

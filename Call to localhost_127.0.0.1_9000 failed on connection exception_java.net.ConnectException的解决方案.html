@@ -1,0 +1,58 @@
+<h1 style="text-align: center;">Call to localhost/127.0.0.1:9000 failed on connection exception:java.net.ConnectException的解决方案</h1>
+<h4 class="postTitle">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></h4>
+<p><span style="font-size: 16px;">在启动hadoop时，出现了如下错误：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">Call From java.net.UnknownHostException: ubuntu-larntin: ubuntu-larntin to localhost:9000 failed on connection exception: java.net.ConnectException: Connection refused;
+</pre>
+</div>
+<p><span style="font-size: 16px;">而且启动datanode、yarn都正常，只有namenode一直挂掉</span></p>
+<p><span style="font-size: 16px;">解决方案如下：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ hadoop namenode -format
+</pre>
+</div>
+<p><span style="font-size: 16px;">之后，重新启动所有的集群，即可</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">wrr@ubuntu:~$ cd /home/wrr/java/hadoop-2.7.6/sbin
+wrr@ubuntu:~/java/hadoop-2.7.6/sbin$ ./hadoop-daemon.sh start namenode
+starting namenode, logging to /home/wrr/java/hadoop-2.7.6/logs/hadoop-wrr-namenode-ubuntu.out
+wrr@ubuntu:~/java/hadoop-2.7.6/sbin$ jps
+8307 DataNode
+9317 NameNode
+7431 
+9352 Jps
+8476 ResourceManager
+</pre>
+</div>
+<p><span style="font-size: 16px;">之后，再次在eclipse上运行程序，就没问题了。</span></p>
+<p><span style="font-size: 16px;">新建了一个java文件</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:java;gutter:true;">import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+public class HDFSFileIfExist {
+    public static void main(String[] args){
+        try{
+            String fileName = "test";
+            Configuration conf = new Configuration();
+            conf.set("fs.defaultFS", "hdfs://localhost:9000");
+            conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
+            FileSystem fs = FileSystem.get(conf);
+            if(fs.exists(new Path(fileName))){
+                System.out.println("文件存在");
+            }else{
+                System.out.println("文件不存在");
+            }
+ 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+</pre>
+</div>
+<p><span style="font-size: 16px;">判断当前hadoop-2.7.6目录下是否存在test文件</span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201812/1027447-20181220171608696-726491478.png" alt="" /></p>
+<p><span style="font-size: 16px;">如果想看更多关于java API的内容，可以看<a href="http://dblab.xmu.edu.cn/blog/290-2/" target="_blank">大数据技术原理与应用 第三章 分布式文件系统HDFS 学习指南_厦大数据库实验室博客</a></span></p>
+<p><em id="__mceDel">&nbsp;</em></p>
+<p>&nbsp;</p>

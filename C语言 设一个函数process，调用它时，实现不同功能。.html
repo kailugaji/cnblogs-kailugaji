@@ -1,0 +1,77 @@
+<p>//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<p>输入a, b,第一次调用process找最大值，第二次调用process找最小值，第三次调用求和。</p>
+<p>方法1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">//</span><span style="color: #008000;">求最大</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">int</span> max(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">return</span> x&gt;y?<span style="color: #000000;">x:y;
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 6</span> <span style="color: #008000;">//</span><span style="color: #008000;">求最小</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">int</span> min(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">return</span> x&lt;y?<span style="color: #000000;">x:y;
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">10</span> <span style="color: #008000;">//</span><span style="color: #008000;">求和</span>
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;">12</span>     <span style="color: #0000ff;">return</span> x+<span style="color: #000000;">y;
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">14</span> <span style="color: #008000;">//</span><span style="color: #008000;">类似多态</span>
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">void</span> process(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span> y,<span style="color: #0000ff;">int</span> (*<span style="color: #000000;">fun)){
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> z;
+</span><span style="color: #008080;">17</span>     <span style="color: #0000ff;">if</span>(fun==<span style="color: #000000;">max)
+</span><span style="color: #008080;">18</span>         z=<span style="color: #000000;">max(x,y);
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">if</span>(fun==<span style="color: #000000;">min) 
+</span><span style="color: #008080;">20</span>         z=<span style="color: #000000;">min(x,y);
+</span><span style="color: #008080;">21</span>     <span style="color: #0000ff;">if</span>(fun==<span style="color: #000000;">add)
+</span><span style="color: #008080;">22</span>         z=<span style="color: #000000;">add(x,y);
+</span><span style="color: #008080;">23</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,z);
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">25</span> 
+<span style="color: #008080;">26</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">27</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> a,b;
+</span><span style="color: #008080;">28</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a and b:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">29</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;a, &amp;<span style="color: #000000;">b);
+</span><span style="color: #008080;">30</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">max=</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">    process(a,b,max);
+</span><span style="color: #008080;">32</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">min=</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">    process(a,b,min);
+</span><span style="color: #008080;">34</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">sum=</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">35</span> <span style="color: #000000;">    process(a,b,add);
+</span><span style="color: #008080;">36</span> }</pre>
+</div>
+<p>方法2：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">//</span><span style="color: #008000;">求最大</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">int</span> max(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">return</span> x&gt;y?<span style="color: #000000;">x:y;
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 6</span> <span style="color: #008000;">//</span><span style="color: #008000;">求最小</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">int</span> min(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">return</span> x&lt;y?<span style="color: #000000;">x:y;
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">10</span> <span style="color: #008000;">//</span><span style="color: #008000;">求和</span>
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span> x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;">12</span>     <span style="color: #0000ff;">return</span> x+<span style="color: #000000;">y;
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> a,b;
+</span><span style="color: #008080;">17</span>     <span style="color: #0000ff;">int</span> (*process)(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+</span><span style="color: #008080;">18</span> 
+<span style="color: #008080;">19</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a and b:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">20</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d</span><span style="color: #800000;">"</span>, &amp;a, &amp;<span style="color: #000000;">b);
+</span><span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span>     process=<span style="color: #000000;">max;
+</span><span style="color: #008080;">23</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">max=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,process(a,b));
+</span><span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span>     process=<span style="color: #000000;">min;
+</span><span style="color: #008080;">26</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">min=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,process(a,b));
+</span><span style="color: #008080;">27</span> 
+<span style="color: #008080;">28</span>     process=<span style="color: #000000;">add;
+</span><span style="color: #008080;">29</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">sum=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,process(a,b));
+</span><span style="color: #008080;">30</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317193335715-1334227962.png" alt="" /></p>
+<p>&nbsp;</p>

@@ -1,0 +1,45 @@
+<p>//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/&nbsp;</p>
+<p>方法1：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;stdlib.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">//</span><span style="color: #008000;">大小写字母隔了32位</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">char</span><span style="color: #000000;"> ch,t;
+</span><span style="color: #008080;"> 6</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a letter:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span>     ch=<span style="color: #000000;">getchar();
+</span><span style="color: #008080;"> 8</span>     t=getchar();  <span style="color: #008000;">//</span><span style="color: #008000;">吸收回车键</span>
+<span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span>     <span style="color: #0000ff;">while</span>((ch&lt;<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; ch&gt;<span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>) || (ch&lt;<span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span> &amp;&amp; ch&gt;<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">)){
+</span><span style="color: #008080;">11</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Input error!\nPlease input again:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span>         ch=<span style="color: #000000;">getchar();
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">if</span>(ch &amp; <span style="color: #800080;">32</span><span style="color: #000000;">)
+</span><span style="color: #008080;">16</span>         ch=ch &amp; <span style="color: #800080;">223</span>; <span style="color: #008000;">//</span><span style="color: #008000;">使第五位为0，变大写</span>
+<span style="color: #008080;">17</span>     <span style="color: #0000ff;">else</span> ch=ch | <span style="color: #800080;">32</span>; <span style="color: #008000;">//</span><span style="color: #008000;">使第五位为1，变小写</span>
+<span style="color: #008080;">18</span> 
+<span style="color: #008080;">19</span> <span style="color: #000000;">    putchar(ch);
+</span><span style="color: #008080;">20</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">21</span> }</pre>
+</div>
+<p>方法2：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;stdlib.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">//</span><span style="color: #008000;">大小写字母隔了32位</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+</span><span style="color: #008080;"> 6</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a letter:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">ch);
+</span><span style="color: #008080;"> 8</span>     ch=(ch&gt;=<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; ch&lt;=<span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span>)?(ch+<span style="color: #800080;">32</span>):((ch&gt;=<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> &amp;&amp; ch&lt;=<span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span>)?(ch-<span style="color: #800080;">32</span>):printf(<span style="color: #800000;">"</span><span style="color: #800000;">Input error!</span><span style="color: #800000;">"</span><span style="color: #000000;">));
+</span><span style="color: #008080;"> 9</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">%c\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,ch);
+</span><span style="color: #008080;">10</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317185625279-412603505.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317185655388-1690485885.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317185716412-1531173721.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317185739223-579591099.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317185807939-31383762.png" alt="" /></p>
+<p>&nbsp;</p>

@@ -1,0 +1,153 @@
+<h1 style="text-align: center;">C语言 实现逆置功能</h1>
+<p>//凯鲁嘎吉 - 博客园&nbsp;<em id="__mceDel">http://www.cnblogs.com/kailugaji/</em></p>
+<h2>1. 字符串的逆置</h2>
+<h3>方法1：利用数组</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span> fun(<span style="color: #0000ff;">char</span><span style="color: #000000;"> a[]){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,len;
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">char</span><span style="color: #000000;"> ch;
+</span><span style="color: #008080;"> 6</span>     len=<span style="color: #000000;">strlen(a);
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;len/<span style="color: #800080;">2</span>;i++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 8</span>         ch=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 9</span>         a[i]=a[len-<span style="color: #800080;">1</span>-<span style="color: #000000;">i];
+</span><span style="color: #008080;">10</span>         a[len-<span style="color: #800080;">1</span>-i]=<span style="color: #000000;">ch;
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">13</span> 
+<span style="color: #008080;">14</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">15</span>     <span style="color: #0000ff;">char</span> s[<span style="color: #800080;">10</span><span style="color: #000000;">];
+</span><span style="color: #008080;">16</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Pealse input a string:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">    gets(s);
+</span><span style="color: #008080;">18</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The string has been inverted:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">    fun(s);
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">    puts(s);
+</span><span style="color: #008080;">21</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317174537179-2126361334.png" alt="" /></p>
+<h3>方法2：利用指针</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span> fun(<span style="color: #0000ff;">char</span> *<span style="color: #000000;">a){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">if</span>(*<span style="color: #000000;">a){
+</span><span style="color: #008080;"> 5</span>         fun(a+<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">%c</span><span style="color: #800000;">"</span>,*<span style="color: #000000;">a);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">11</span>     <span style="color: #0000ff;">char</span> s[<span style="color: #800080;">10</span><span style="color: #000000;">];
+</span><span style="color: #008080;">12</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Pealse input a string:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">    gets(s);
+</span><span style="color: #008080;">14</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The string has been inverted:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">    fun(s);
+</span><span style="color: #008080;">16</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317172137570-1184483048.png" alt="" /></p>
+<h2>2.输入10个数，逆置输出</h2>
+<h3>方法1：利用数组</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">#define</span> N 10
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">#if</span>(1)
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">int</span> x[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,temp,m;
+</span><span style="color: #008080;"> 8</span>     m=(n-<span style="color: #800080;">1</span>)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;=m;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">10</span>         j=n-<span style="color: #800080;">1</span>-<span style="color: #000000;">i;
+</span><span style="color: #008080;">11</span>         temp=<span style="color: #000000;">x[i];
+</span><span style="color: #008080;">12</span>         x[i]=<span style="color: #000000;">x[j];
+</span><span style="color: #008080;">13</span>         x[j]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">16</span> <span style="color: #0000ff;">#endif</span>
+<span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> <span style="color: #0000ff;">#if</span>(0)
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">int</span> *x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;">20</span>     <span style="color: #0000ff;">int</span> *i,*j,*<span style="color: #000000;">p,temp,m;
+</span><span style="color: #008080;">21</span>     m=(n-<span style="color: #800080;">1</span>)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">22</span>     i=x;   <span style="color: #008000;">//</span><span style="color: #008000;">i-&gt;x[0]</span>
+<span style="color: #008080;">23</span>     j=x+n-<span style="color: #800080;">1</span>;  <span style="color: #008000;">//</span><span style="color: #008000;">j-&gt;x[n-1]</span>
+<span style="color: #008080;">24</span>     p=x+m;   <span style="color: #008000;">//</span><span style="color: #008000;">p-&gt;x[m]</span>
+<span style="color: #008080;">25</span>     <span style="color: #0000ff;">for</span>(;i&lt;=p;i++,j--<span style="color: #000000;">){
+</span><span style="color: #008080;">26</span>         temp=*<span style="color: #000000;">i;
+</span><span style="color: #008080;">27</span>         *i=*<span style="color: #000000;">j;
+</span><span style="color: #008080;">28</span>         *j=<span style="color: #000000;">temp;
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">31</span> <span style="color: #0000ff;">#endif</span>
+<span style="color: #008080;">32</span> 
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">34</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,a[N];
+</span><span style="color: #008080;">35</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Pealse input %d numbers:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,N);
+</span><span style="color: #008080;">36</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;N;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">37</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,a+<span style="color: #000000;">i);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    reverse(a,N);
+</span><span style="color: #008080;">40</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The array has been inverted:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">41</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;N;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">42</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">%2d</span><span style="color: #800000;">"</span><span style="color: #000000;">,a[i]);
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">44</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">45</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317173546720-1204819688.png" alt="" /></p>
+<h3>方法2：利用指针</h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;<span style="color: #0000ff;">string</span>.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">#define</span> N 10
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">#if</span>(0)
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">int</span> x[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,temp,m;
+</span><span style="color: #008080;"> 8</span>     m=(n-<span style="color: #800080;">1</span>)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;=m;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">10</span>         j=n-<span style="color: #800080;">1</span>-<span style="color: #000000;">i;
+</span><span style="color: #008080;">11</span>         temp=<span style="color: #000000;">x[i];
+</span><span style="color: #008080;">12</span>         x[i]=<span style="color: #000000;">x[j];
+</span><span style="color: #008080;">13</span>         x[j]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">16</span> <span style="color: #0000ff;">#endif</span>
+<span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> <span style="color: #0000ff;">#if</span>(1)
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">void</span> reverse(<span style="color: #0000ff;">int</span> *x,<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;">20</span>     <span style="color: #0000ff;">int</span> *i,*j,*<span style="color: #000000;">p,temp,m;
+</span><span style="color: #008080;">21</span>     m=(n-<span style="color: #800080;">1</span>)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;">22</span>     i=x;   <span style="color: #008000;">//</span><span style="color: #008000;">i-&gt;x[0]</span>
+<span style="color: #008080;">23</span>     j=x+n-<span style="color: #800080;">1</span>;  <span style="color: #008000;">//</span><span style="color: #008000;">j-&gt;x[n-1]</span>
+<span style="color: #008080;">24</span>     p=x+m;   <span style="color: #008000;">//</span><span style="color: #008000;">p-&gt;x[m]</span>
+<span style="color: #008080;">25</span>     <span style="color: #0000ff;">for</span>(;i&lt;=p;i++,j--<span style="color: #000000;">){
+</span><span style="color: #008080;">26</span>         temp=*<span style="color: #000000;">i;
+</span><span style="color: #008080;">27</span>         *i=*<span style="color: #000000;">j;
+</span><span style="color: #008080;">28</span>         *j=<span style="color: #000000;">temp;
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">31</span> <span style="color: #0000ff;">#endif</span>
+<span style="color: #008080;">32</span> 
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">34</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,a[N];
+</span><span style="color: #008080;">35</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Pealse input %d numbers:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,N);
+</span><span style="color: #008080;">36</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;N;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">37</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,a+<span style="color: #000000;">i);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">    reverse(a,N);
+</span><span style="color: #008080;">40</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The array has been inverted:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">41</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;N;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">42</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">%2d</span><span style="color: #800000;">"</span><span style="color: #000000;">,a[i]);
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">44</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">45</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317173742061-380065509.png" alt="" /></p>
+<p>&nbsp;</p>

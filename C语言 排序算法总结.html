@@ -1,0 +1,136 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;">  2</span> #include&lt;stdlib.h&gt;<br />    //作者：凯鲁嘎吉 - 博客园 <em id="__mceDel">http://www.cnblogs.com/kailugaji/</em></pre>
+<pre><span style="color: #008080;">  3</span> <span style="color: #0000ff;">#define</span> N 20
+<span style="color: #008080;">  4</span> <span style="color: #008000;">//</span><span style="color: #008000;">冒泡排序</span>
+<span style="color: #008080;">  5</span> <span style="color: #0000ff;">void</span> bubble(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;">  6</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,temp;
+</span><span style="color: #008080;">  7</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;n-<span style="color: #800080;">1</span>;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">  8</span>         <span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;j&lt;n-<span style="color: #800080;">1</span>-i;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">  9</span>             <span style="color: #0000ff;">if</span>(a[j]&gt;a[j+<span style="color: #800080;">1</span><span style="color: #000000;">]){
+</span><span style="color: #008080;"> 10</span>                 temp=<span style="color: #000000;">a[j];
+</span><span style="color: #008080;"> 11</span>                 a[j]=a[j+<span style="color: #800080;">1</span><span style="color: #000000;">];
+</span><span style="color: #008080;"> 12</span>                 a[j+<span style="color: #800080;">1</span>]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;"> 13</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 14</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 15</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 16</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 17</span> 
+<span style="color: #008080;"> 18</span> <span style="color: #008000;">//</span><span style="color: #008000;">选择排序</span>
+<span style="color: #008080;"> 19</span> <span style="color: #0000ff;">void</span> <span style="color: #0000ff;">select</span>(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 20</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,min,temp;
+</span><span style="color: #008080;"> 21</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;n-<span style="color: #800080;">1</span>;i++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 22</span>         min=<span style="color: #000000;">i;
+</span><span style="color: #008080;"> 23</span>         <span style="color: #0000ff;">for</span>(j=i+<span style="color: #800080;">1</span>;j&lt;n;j++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 24</span>             <span style="color: #0000ff;">if</span>(a[j]&lt;<span style="color: #000000;">a[min]){
+</span><span style="color: #008080;"> 25</span>                 min=<span style="color: #000000;">j;
+</span><span style="color: #008080;"> 26</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 27</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 28</span>         <span style="color: #0000ff;">if</span>(min!=<span style="color: #000000;">i){
+</span><span style="color: #008080;"> 29</span>             temp=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 30</span>             a[i]=<span style="color: #000000;">a[min];
+</span><span style="color: #008080;"> 31</span>             a[min]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;"> 32</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 33</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 34</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 35</span> <span style="color: #008000;">//</span><span style="color: #008000;">直接插入排序</span>
+<span style="color: #008080;"> 36</span> <span style="color: #0000ff;">void</span> insert(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 37</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,temp;
+</span><span style="color: #008080;"> 38</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">1</span>;i&lt;n;i++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 39</span>         temp=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 40</span>         j=i-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 41</span>         <span style="color: #0000ff;">while</span>((temp&lt;a[j]) &amp;&amp; (j&gt;=<span style="color: #800080;">0</span><span style="color: #000000;">)){
+</span><span style="color: #008080;"> 42</span>             a[j+<span style="color: #800080;">1</span>]=<span style="color: #000000;">a[j];
+</span><span style="color: #008080;"> 43</span>             j--<span style="color: #000000;">;
+</span><span style="color: #008080;"> 44</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 45</span>         a[j+<span style="color: #800080;">1</span>]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;"> 46</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 47</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 48</span> <span style="color: #008000;">//</span><span style="color: #008000;">折半插入排序</span>
+<span style="color: #008080;"> 49</span> <span style="color: #0000ff;">void</span> bi_insert(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 50</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,j,low,high,mid,temp;
+</span><span style="color: #008080;"> 51</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">1</span>;i&lt;n;i++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 52</span>         temp=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 53</span>         low=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 54</span>         high=i-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 55</span>         <span style="color: #0000ff;">while</span>(low&lt;=<span style="color: #000000;">high){
+</span><span style="color: #008080;"> 56</span>             mid=(low+high)/<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 57</span>             <span style="color: #0000ff;">if</span>(a[mid]&gt;<span style="color: #000000;">temp){
+</span><span style="color: #008080;"> 58</span>                 high=mid-<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 59</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 60</span>             <span style="color: #0000ff;">else</span>
+<span style="color: #008080;"> 61</span>                 low=mid+<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 62</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 63</span>         <span style="color: #0000ff;">for</span>(j=i-<span style="color: #800080;">1</span>;j&gt;=high+<span style="color: #800080;">1</span>;--<span style="color: #000000;">j){
+</span><span style="color: #008080;"> 64</span>             a[j+<span style="color: #800080;">1</span>]=<span style="color: #000000;">a[j];
+</span><span style="color: #008080;"> 65</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 66</span>         a[high+<span style="color: #800080;">1</span>]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;"> 67</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 68</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 69</span> <span style="color: #008000;">//</span><span style="color: #008000;">堆排序</span>
+<span style="color: #008080;"> 70</span> <span style="color: #0000ff;">void</span> sift(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span> low,<span style="color: #0000ff;">int</span><span style="color: #000000;"> high){
+</span><span style="color: #008080;"> 71</span>     <span style="color: #0000ff;">int</span> i=low,j=i*<span style="color: #800080;">2</span>,t=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 72</span>     <span style="color: #0000ff;">while</span>(j&lt;=<span style="color: #000000;">high){
+</span><span style="color: #008080;"> 73</span>         <span style="color: #0000ff;">if</span>(j&lt;high &amp;&amp; a[j]&lt;a[j+<span style="color: #800080;">1</span><span style="color: #000000;">]){
+</span><span style="color: #008080;"> 74</span>             ++<span style="color: #000000;">j;
+</span><span style="color: #008080;"> 75</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 76</span>         <span style="color: #0000ff;">if</span>(t&lt;<span style="color: #000000;">a[j]){
+</span><span style="color: #008080;"> 77</span>             a[i]=<span style="color: #000000;">a[j];
+</span><span style="color: #008080;"> 78</span>             i=<span style="color: #000000;">j;
+</span><span style="color: #008080;"> 79</span>             j=<span style="color: #800080;">2</span>*<span style="color: #000000;">i;
+</span><span style="color: #008080;"> 80</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 81</span>         <span style="color: #0000ff;">else</span>
+<span style="color: #008080;"> 82</span>             <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 83</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 84</span>     a[i]=<span style="color: #000000;">t;
+</span><span style="color: #008080;"> 85</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 86</span> 
+<span style="color: #008080;"> 87</span> <span style="color: #0000ff;">void</span> heap(<span style="color: #0000ff;">int</span> a[],<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;"> 88</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,temp;
+</span><span style="color: #008080;"> 89</span>     <span style="color: #0000ff;">for</span>(i=n/<span style="color: #800080;">2</span>;i&gt;=<span style="color: #800080;">1</span>;--<span style="color: #000000;">i){
+</span><span style="color: #008080;"> 90</span> <span style="color: #000000;">        sift(a,i,n);
+</span><span style="color: #008080;"> 91</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 92</span>     <span style="color: #0000ff;">for</span>(i=n;i&gt;=<span style="color: #800080;">2</span>;--<span style="color: #000000;">i){
+</span><span style="color: #008080;"> 93</span>         temp=<span style="color: #000000;">a[i];
+</span><span style="color: #008080;"> 94</span>         a[i]=a[<span style="color: #800080;">1</span><span style="color: #000000;">];
+</span><span style="color: #008080;"> 95</span>         a[<span style="color: #800080;">1</span>]=<span style="color: #000000;">temp;
+</span><span style="color: #008080;"> 96</span>         sift(a,<span style="color: #800080;">1</span>,i-<span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 97</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 98</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 99</span> 
+<span style="color: #008080;">100</span> 
+<span style="color: #008080;">101</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">102</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> a[N];
+</span><span style="color: #008080;">103</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i,k,m;
+</span><span style="color: #008080;">104</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a number:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">105</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">m);
+</span><span style="color: #008080;">106</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input %d numbers:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,m);
+</span><span style="color: #008080;">107</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;m;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">108</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,a+<span style="color: #000000;">i);
+</span><span style="color: #008080;">109</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">110</span>     <span style="color: #0000ff;">while</span>(<span style="color: #800080;">1</span><span style="color: #000000;">){
+</span><span style="color: #008080;">111</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">1.冒泡排序\n2.选择排序\n3.直接插入排序\n4.折半插入排序\n5.堆排序\n0.exit\nPlease choose:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">112</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">k);
+</span><span style="color: #008080;">113</span>         <span style="color: #0000ff;">switch</span><span style="color: #000000;">(k)
+</span><span style="color: #008080;">114</span> <span style="color: #000000;">        { 
+</span><span style="color: #008080;">115</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">1</span>: bubble(a,m);<span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">116</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">2</span>: <span style="color: #0000ff;">select</span>(a,m);<span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">117</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">3</span>: insert(a,m);<span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">118</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">4</span>: bi_insert(a,m);<span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">119</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">5</span>: heap(a,m-<span style="color: #800080;">1</span>);<span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">120</span>         <span style="color: #0000ff;">case</span> <span style="color: #800080;">0</span>: printf(<span style="color: #800000;">"</span><span style="color: #800000;">Byebye!\n</span><span style="color: #800000;">"</span>);system(<span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span>);exit(<span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">121</span>         <span style="color: #0000ff;">default</span> :printf(<span style="color: #800000;">"</span><span style="color: #800000;">Input error!\nPlease choose again:\n</span><span style="color: #800000;">"</span>);<span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+</span><span style="color: #008080;">122</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">123</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Result:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">124</span>         <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;m;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">125</span>             printf(<span style="color: #800000;">"</span><span style="color: #800000;">%4d</span><span style="color: #800000;">"</span><span style="color: #000000;">,a[i]);
+</span><span style="color: #008080;">126</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">127</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">128</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">129</span>     system(<span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">130</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317164719270-48454583.png" alt="" /></p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317164750371-780529147.png" alt="" /></p>
+<p>&nbsp;</p>

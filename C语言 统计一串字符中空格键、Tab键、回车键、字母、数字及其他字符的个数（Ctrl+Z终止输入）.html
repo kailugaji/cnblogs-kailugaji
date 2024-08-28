@@ -1,0 +1,35 @@
+<p>&nbsp;//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">int</span> c, letter=<span style="color: #800080;">0</span>, num=<span style="color: #800080;">0</span>, blank=<span style="color: #800080;">0</span>, tab=<span style="color: #800080;">0</span>, enter=<span style="color: #800080;">0</span>, other=<span style="color: #800080;">0</span> ,i=<span style="color: #800080;">0</span>, sum=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a string:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">while</span>((c=getchar())!=<span style="color: #000000;">EOF){
+</span><span style="color: #008080;"> 7</span>         sum++<span style="color: #000000;">;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">if</span>(c==<span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">){
+</span><span style="color: #008080;"> 9</span>             ++blank;  <span style="color: #008000;">//</span><span style="color: #008000;">空格键的个数</span>
+<span style="color: #008080;">10</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">11</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(c==<span style="color: #800000;">'</span><span style="color: #800000;">\t</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+</span><span style="color: #008080;">12</span>             ++tab;   <span style="color: #008000;">//</span><span style="color: #008000;">Tab键的个数</span>
+<span style="color: #008080;">13</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">14</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(c==<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+</span><span style="color: #008080;">15</span>             ++enter;   <span style="color: #008000;">//</span><span style="color: #008000;">回车键的个数</span>
+<span style="color: #008080;">16</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">17</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>((c&gt;=<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span> &amp;&amp; c&lt;=<span style="color: #800000;">'</span><span style="color: #800000;">Z</span><span style="color: #800000;">'</span>) || (c&gt;=<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span> &amp;&amp; c&lt;=<span style="color: #800000;">'</span><span style="color: #800000;">z</span><span style="color: #800000;">'</span><span style="color: #000000;">)){
+</span><span style="color: #008080;">18</span>             ++letter;    <span style="color: #008000;">//</span><span style="color: #008000;">字母的个数</span>
+<span style="color: #008080;">19</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">20</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(c&gt;=<span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> &amp;&amp; c&lt;=<span style="color: #800000;">'</span><span style="color: #800000;">9</span><span style="color: #800000;">'</span><span style="color: #000000;">){
+</span><span style="color: #008080;">21</span>             ++num;      <span style="color: #008000;">//</span><span style="color: #008000;">数字的个数</span>
+<span style="color: #008080;">22</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">23</span>         <span style="color: #0000ff;">else</span> ++other;     <span style="color: #008000;">//</span><span style="color: #008000;">其他字符的个数</span>
+<span style="color: #008080;">24</span>         i++<span style="color: #000000;">;
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">26</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">There are %d characters\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, sum);
+</span><span style="color: #008080;">27</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">blank=%d, Tab=%d, Enter=%d, letter=%d, number=%d ,other=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,blank, tab, enter, letter, num, other);
+</span><span style="color: #008080;">28</span> 
+<span style="color: #008080;">29</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180318101411431-1597306291.png" alt="" /></p>
+<p>&nbsp;</p>

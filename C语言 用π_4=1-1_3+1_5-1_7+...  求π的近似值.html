@@ -1,0 +1,20 @@
+<p>//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;math.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">int</span> s=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">double</span> n=<span style="color: #800080;">1.0</span>,t=<span style="color: #800080;">1.0</span>,pi=<span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">while</span>(fabs(t)&gt;1e-<span style="color: #800080;">7</span><span style="color: #000000;">){    //fabs(double), abs(int)
+</span><span style="color: #008080;"> 7</span>         pi=pi+<span style="color: #000000;">t;
+</span><span style="color: #008080;"> 8</span>         n=n+<span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>         s=-<span style="color: #000000;">s;  //实现正负交替
+</span><span style="color: #008080;">10</span>         t=s/<span style="color: #000000;">n;
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">12</span>     pi=pi*<span style="color: #800080;">4</span><span style="color: #000000;">;
+</span><span style="color: #008080;">13</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">&pi; =%10.6lf\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,pi);
+</span><span style="color: #008080;">14</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317200041621-1761142153.png" alt="" /></p>
+<p>&nbsp;</p>

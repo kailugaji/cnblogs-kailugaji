@@ -1,0 +1,67 @@
+<h1 class="p" style="text-align: center;"><span style="font-family: Helvetica;">BrainWeb: Simulated Brain Database使用说明</span></h1>
+<p class="p"><span style="font-size: 16px;"><span style="font-family: Helvetica;">作者：凯鲁嘎吉</span> - <span style="font-family: Helvetica;">博客园</span><span style="font-family: 'Times New Roman';">&nbsp;</span><a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p class="p"><span style="font-size: 16px;">其他请看标签：<a href="https://www.cnblogs.com/kailugaji/tag/%E8%84%91%E5%9B%BE%E5%83%8F/" target="_blank">脑图像</a></span></p>
+<p class="p">&nbsp;</p>
+<p class="p" style="text-align: center;"><span style="font-size: 16px;">BrainWeb: Simulated Brain Database</span><br /><span style="font-size: 16px;"><a href="http://brainweb.bic.mni.mcgill.ca/brainweb/"><span style="text-decoration: underline;">http://brainweb.bic.mni.mcgill.ca/brainweb/</span></a></span></p>
+<p class="p"><span style="font-size: 16px;"><span style="font-family: Helvetica;">&nbsp; &nbsp; 数据集选自</span>McGill<span style="font-family: Helvetica;">大学</span><span style="font-family: 'Times New Roman';">Montreal</span><span style="font-family: Helvetica;">神经所大脑成像中心的</span><span style="font-family: 'Times New Roman';">Brain Web</span><span style="font-family: Helvetica;">反震脑部</span><span style="font-family: 'Times New Roman';">MR</span><span style="font-family: Helvetica;">图像数据库。该数据库包含基于两种解剖模型的模拟脑</span><span style="font-family: 'Times New Roman';">MRI</span><span style="font-family: Helvetica;">数据：正常和多发性硬化（</span><span style="font-family: 'Times New Roman';">MS</span><span style="font-family: Helvetica;">）</span><span style="font-family: 宋体;">，</span><span style="font-family: 宋体;">并且</span><span style="font-family: Helvetica;">提供了人工合成三种模态</span>(T1-, T2-, PD-)<span style="font-family: Helvetica;">下的三维脑</span><span style="font-family: 'Times New Roman';">MR</span><span style="font-family: Helvetica;">图像。图像中包含不同的扫描厚度、噪声以及偏移场，且该数据库对于所有脑</span><span style="font-family: 'Times New Roman';">MR</span><span style="font-family: Helvetica;">图像均提供了标准分割结果。</span></span></p>
+<h2 class="p"><span style="font-family: 宋体;">一、文件命名规则</span></h2>
+<p class="p"><span style="font-size: 16px;">1.<span style="font-family: Helvetica;">模态 </span><span style="font-family: 'Times New Roman';">T1,T2,PD</span></span><br /><span style="font-size: 16px;">2.<span style="font-family: Helvetica;">协议 </span><span style="font-family: 'Times New Roman';">icmb</span></span><br /><span style="font-size: 16px;">3.<span style="font-family: Helvetica;">脑图像名字</span><span style="font-family: 宋体;">：</span><span style="font-family: Helvetica;">正常</span></span><br /><span style="font-size: 16px;">4.<span style="font-family: Helvetica;">切片厚度 </span><span style="font-family: 'Times New Roman';">1mm,3mm,5mm,7mm,9mm</span></span><br /><span style="font-size: 16px;">5.<span style="font-family: Helvetica;">噪声水平 </span><span style="font-family: 'Times New Roman';">pn0=0%;1%,3%,5%,7%,9%</span></span><br /><span style="font-size: 16px;">6.<span style="font-family: Helvetica;">灰度不均匀水平 </span><span style="font-family: 'Times New Roman';">rf0=0%;20%,40%</span></span></p>
+<h2 class="p"><span style="font-family: 宋体, 'Songti SC';">二、文件下载格式：&nbsp;.rawb</span></h2>
+<p class="p"><span style="font-size: 16px;"><span style="font-family: 宋体;">以正常脑数据库为例，模态</span>= T1<span style="font-family: 宋体;">，协议</span><span style="font-family: 'Times New Roman';">= ICBM</span><span style="font-family: 宋体;">，幻像名称</span><span style="font-family: 'Times New Roman';">=</span><span style="font-family: 宋体;">正常，切片厚度</span><span style="font-family: 'Times New Roman';">= 1mm</span><span style="font-family: 宋体;">，噪声</span><span style="font-family: 'Times New Roman';">= 0</span><span style="font-family: 宋体;">％，</span><span style="font-family: 'Times New Roman';">INU = 0</span><span style="font-family: 宋体;">％</span></span></p>
+<p class="p"><span style="font-family: 宋体; font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/201810/1027447-20181030100032920-1363699505.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p class="p" align="justify"><span style="font-size: 16px;"><span style="font-family: 宋体;">点击下载即可，下载之后格式为</span>.rawb<span style="font-family: 宋体;">文档</span><span style="font-family: 宋体;">，用</span>matlab<span style="font-family: 宋体;">打开文件及数据。</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-size: 16px;">function g = readrawb(filename, num)
+% 函数readrawb(filename, num)中的第一个参数filename是欲读取的rawb文件的文件名，第二个参数num就是第多少张。
+fid = fopen(filename);
+% 连续读取181*217*181个数据，这时候temp是一个长度为181*217*181的向量。
+% 先将rawb中的所有数据传递给temp数组，然后将tempreshape成图片集。
+temp = fread(fid, 181 * 217 * 181);
+% 所以把它变成了一个181*217行，181列的数组，按照它的代码，这就是181张图片的数据，每一列对应一张图。
+% 生成图片集数组。图片集images数组中每一列表示一张图片。
+images = reshape(temp, 181 * 217, 181);   
+% 读取数组中的第num行，得到数组再reshape成图片原来的行数和列数：181*217。
+image = images(:, num);
+image = reshape(image, 181, 217);
+g = image;
+fclose(fid);
+end</span></pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;"><span style="font-size: 16px;">function init_image(filename,num)
+% 函数init_image(filename,num)中的第一个参数filename是欲读取的rawb文件的文件名，第二个参数num就是第多少张。输出为原始图像，未处理
+%例如：init_image('t1_icbm_normal_1mm_pn0_rf0.rawb',90)， init_image('phantom_1.0mm_normal_csf.rawb',90)
+read=readrawb(filename, num);
+% 旋转90&deg;并显示出来
+read=imrotate(read, 90);                                        
+imshow(uint8(read));
+end
+</span></pre>
+</div>
+<p><span style="font-size: 16px;">在命令行窗口输入</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">init_image('t1_icbm_normal_1mm_pn0_rf0.rawb',90)</pre>
+</div>
+<p class="p"><span style="font-size: 16px;">即可获得第90层的脑MR图像。</span></p>
+<p class="p"><span style="font-size: 16px;"><img src="https://img2018.cnblogs.com/blog/1027447/201810/1027447-20181030100651832-771364111.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2 class="p"><span style="font-family: 宋体;">三、离散标签命名规则</span></h2>
+<p class="p"><span style="font-size: 16px;">0=Background,<span style="font-family: Helvetica;">背景</span></span><br /><span style="font-size: 16px;">1=CSF,<span style="font-family: Helvetica;">脑脊液</span></span><br /><span style="font-size: 16px;">2=Grey Matter,<span style="font-family: Helvetica;">灰质</span></span><br /><span style="font-size: 16px;">3=White Matter,<span style="font-family: Helvetica;">白质</span></span><br /><span style="font-size: 16px;">4=Fat,<span style="font-family: Helvetica;">脂肪</span></span><br /><span style="font-size: 16px;">5=Muscle/Skin,<span style="font-family: Helvetica;">肌肉</span><span style="font-family: 'Times New Roman';">/</span><span style="font-family: Helvetica;">皮肤</span></span><br /><span style="font-size: 16px;">6=Skin,<span style="font-family: Helvetica;">皮肤</span></span><br /><span style="font-size: 16px;">7=Skull,<span style="font-family: Helvetica;">颅骨</span></span><br /><span style="font-size: 16px;">8=Glial Matter,<span style="font-family: Helvetica;">胶质</span></span><br /><span style="font-size: 16px;">9=Connective,<span style="font-family: Helvetica;">连接</span></span></p>
+<h2 class="p"><span style="font-family: 宋体, 'Songti SC';">四、批量保存全部数据为mat文件与jpg图像文件</span></h2>
+<p><span style="font-family: 宋体, 'Songti SC'; font-size: 16px; color: #000000;">将全部181层的217*181大小的数据保存为mat文件与jpg图像文件，方便后续调用某一层的图像数据。</span><span style="font-family: 宋体, 'Songti SC'; font-size: 16px;">前提需要新建一个空白文件夹&ldquo;results&rdquo;</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">clear
+clc
+filename='t1_icbm_normal_1mm_pn0_rf0.rawb';
+for i=1:181
+    read{i}=readrawb(filename, i);
+    read{i}=imrotate(read{i}, 90);  
+    % imshow(uint8(read{i}));
+    imwrite(uint8(read{i}),['.\results\', int2str(i), '.jpg']); 
+end
+save image_data read </pre>
+</div>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202203/1027447-20220316221733271-1442037554.png" alt="" width="945" height="628" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202203/1027447-20220316221759153-370821178.png" alt="" width="940" height="371" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 宋体, 'Songti SC'; font-size: 16px;">用Honeycam将这181张脑图像做成GIF动图</span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202203/1027447-20220317083612196-600790475.gif" alt="" width="303" height="365" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-size: 16px;">补充：BrainWeb: 20 Anatomical Models of 20 Normal Brains的数据加载方式见：<a href="https://www.cnblogs.com/kailugaji/p/10012338.html#_lab2_0_3" target="_blank">https://www.cnblogs.com/kailugaji/p/10012338.html#_lab2_0_3</a></span></p>

@@ -1,0 +1,38 @@
+<p>求s=(a<sup>m</sup>)!+(b<sup>n</sup>)!</p>
+<p>//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">int</span> a, b, m, n, a_m, b_n, sum, power(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span>), fact(<span style="color: #0000ff;">int</span>), add(<span style="color: #0000ff;">int</span>, <span style="color: #0000ff;">int</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 4</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a, m, b, n :\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 5</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d %d %d %d</span><span style="color: #800000;">"</span>, &amp;a, &amp;m, &amp;b, &amp;<span style="color: #000000;">n);
+</span><span style="color: #008080;"> 6</span>     a_m=fact(power(a, m));    <span style="color: #008000;">//</span><span style="color: #008000;">a_m=(a^m)!</span>
+<span style="color: #008080;"> 7</span>     b_n=fact(power(b, n));     <span style="color: #008000;">//</span><span style="color: #008000;">b_n=(b^n)!</span>
+<span style="color: #008080;"> 8</span>     sum=<span style="color: #000000;">add(a_m, b_n);
+</span><span style="color: #008080;"> 9</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">(%d^%d)!+(%d^%d)!=%d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">, a, m, b, n, sum);
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">11</span> <span style="color: #008000;">//</span><span style="color: #008000;">实现求和 x+y</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">int</span> add(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;">13</span>     <span style="color: #0000ff;">return</span> x+<span style="color: #000000;">y;
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">15</span> <span style="color: #008000;">//</span><span style="color: #008000;">实现x^y</span>
+<span style="color: #008080;">16</span> <span style="color: #0000ff;">int</span> power(<span style="color: #0000ff;">int</span> x, <span style="color: #0000ff;">int</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;">17</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> i, c;
+</span><span style="color: #008080;">18</span>     c=<span style="color: #000000;">x;
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">1</span>; i&lt;y; i++<span style="color: #000000;">){
+</span><span style="color: #008080;">20</span>         x=x*<span style="color: #000000;">c;
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">22</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> x;
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">24</span> <span style="color: #008000;">//</span><span style="color: #008000;">实现求阶乘 n!</span>
+<span style="color: #008080;">25</span> <span style="color: #0000ff;">int</span> fact(<span style="color: #0000ff;">int</span><span style="color: #000000;"> n){
+</span><span style="color: #008080;">26</span>     <span style="color: #0000ff;">int</span> i,z=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">27</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">1</span>;i&lt;=n;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">28</span>         z=z*<span style="color: #000000;">i;
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">30</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> z;
+</span><span style="color: #008080;">31</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180318112407846-589987607.png" alt="" /></p>
+<p>&nbsp;</p>

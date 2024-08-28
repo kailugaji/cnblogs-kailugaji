@@ -1,0 +1,83 @@
+<p>&nbsp;//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> #include&lt;stdlib.h&gt;
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> a;
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">void</span><span style="color: #000000;"> write();
+</span><span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">void</span><span style="color: #000000;"> read();
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">while</span>(<span style="color: #800080;">1</span><span style="color: #000000;">){
+</span><span style="color: #008080;"> 8</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">*****************\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 9</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">1.write\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">2.read\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">11</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">0.exit\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">*****************\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">13</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please choose:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>         scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">a);
+</span><span style="color: #008080;">15</span>         <span style="color: #0000ff;">if</span>(a==<span style="color: #800080;">0</span><span style="color: #000000;">){
+</span><span style="color: #008080;">16</span>             exit(<span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">18</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(a==<span style="color: #800080;">1</span><span style="color: #000000;">){
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">            write();
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">21</span>         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(a==<span style="color: #800080;">2</span><span style="color: #000000;">){
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">            read();
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">24</span>         <span style="color: #0000ff;">else</span>
+<span style="color: #008080;">25</span>             printf(<span style="color: #800000;">"</span><span style="color: #800000;">input error!\nPlease choose:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">    }  
+</span><span style="color: #008080;">27</span>     
+<span style="color: #008080;">28</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">29</span> 
+<span style="color: #008080;">30</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> write(){
+</span><span style="color: #008080;">31</span>     FILE *<span style="color: #000000;">fp;
+</span><span style="color: #008080;">32</span>     <span style="color: #0000ff;">char</span> ch,filename[<span style="color: #800080;">20</span><span style="color: #000000;">];
+</span><span style="color: #008080;">33</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input the filename you want to write:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">34</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,filename);
+</span><span style="color: #008080;">35</span>     <span style="color: #0000ff;">if</span>(!(fp=fopen(filename,<span style="color: #800000;">"</span><span style="color: #800000;">wt+</span><span style="color: #800000;">"</span><span style="color: #000000;">))){
+</span><span style="color: #008080;">36</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Cannot open the file!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">37</span>         exit(<span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">39</span>     
+<span style="color: #008080;">40</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input the sentences you want to write:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">41</span>     ch=<span style="color: #000000;">getchar();
+</span><span style="color: #008080;">42</span>     ch=<span style="color: #000000;">getchar();
+</span><span style="color: #008080;">43</span>     <span style="color: #0000ff;">while</span>(ch!=EOF){  <span style="color: #008000;">//</span><span style="color: #008000;">EOF: Ctrl+z</span>
+<span style="color: #008080;">44</span> <span style="color: #000000;">        fputc(ch,fp);
+</span><span style="color: #008080;">45</span>         ch=<span style="color: #000000;">getchar();
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">47</span>     
+<span style="color: #008080;">48</span> <span style="color: #000000;">    fclose(fp);
+</span><span style="color: #008080;">49</span>     
+<span style="color: #008080;">50</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">51</span> 
+<span style="color: #008080;">52</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> read(){
+</span><span style="color: #008080;">53</span>     FILE *<span style="color: #000000;">fp;
+</span><span style="color: #008080;">54</span>     <span style="color: #0000ff;">char</span> ch,filename[<span style="color: #800080;">20</span><span style="color: #000000;">];
+</span><span style="color: #008080;">55</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input the filename you want to read:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">56</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%s</span><span style="color: #800000;">"</span><span style="color: #000000;">,filename);
+</span><span style="color: #008080;">57</span>     <span style="color: #0000ff;">if</span>(!(fp=fopen(filename,<span style="color: #800000;">"</span><span style="color: #800000;">r</span><span style="color: #800000;">"</span><span style="color: #000000;">))){
+</span><span style="color: #008080;">58</span>         printf(<span style="color: #800000;">"</span><span style="color: #800000;">Cannot open the file!\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">59</span>         exit(<span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">60</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">61</span>     
+<span style="color: #008080;">62</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">%s 的内容为:</span><span style="color: #800000;">"</span><span style="color: #000000;">,filename);
+</span><span style="color: #008080;">63</span>     <span style="color: #0000ff;">while</span>(ch!=EOF){  <span style="color: #008000;">//</span><span style="color: #008000;">EOF(end of file): Ctrl+z</span>
+<span style="color: #008080;">64</span>         ch=<span style="color: #000000;">fgetc(fp);
+</span><span style="color: #008080;">65</span> <span style="color: #000000;">        putchar(ch);
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">67</span>     
+<span style="color: #008080;">68</span> <span style="color: #000000;">    fclose(fp);
+</span><span style="color: #008080;">69</span> }</pre>
+</div>
+<p>程序运行前的当前目录：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317210431962-624173117.png" alt="" /></p>
+<p>程序运行结果：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317210659635-1218467369.png" alt="" /></p>
+<p>当前目录多了一个文件wrr.txt</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317210759337-1771967010.png" alt="" /></p>
+<p>打开该文件：</p>
+<p>&nbsp;<img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317210822519-554750813.png" alt="" /></p>
+<p>里面已经有了刚刚输入的内容：</p>
+<p>Hello world!<br />I am RONGRONG WANG!<br />My English name is Kailugaji!<br />Thank you!</p>
+<p>&nbsp;</p>

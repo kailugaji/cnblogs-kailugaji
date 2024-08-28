@@ -1,0 +1,43 @@
+<p>&nbsp; &nbsp; &nbsp;//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/ &nbsp;</p>
+<p>&nbsp; &nbsp; 汉诺塔是由三根杆子A，B，C组成的。A杆上有n个(n&gt;1)穿孔圆盘，盘的尺寸由下到上依次变小。要求按下列规则将所有圆盘移至C杆：每次只能移动一个圆盘；大盘不能叠在小盘上面。提示：可将圆盘临时置于B杆，也可将从A杆移出的圆盘重新移回A杆，但都必须尊循上述两条规则。问：如何移？最少要移动多少次？</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317202111627-461590421.png" alt="" /></p>
+<p>分析：</p>
+<p>（1）将A上n-1个盘子借助C移动到B；</p>
+<p>（2）将A剩下的一个盘子移动到C；</p>
+<p>（3）将B上n-1个盘子借助A移动到C。</p>
+<p>程序实现如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">int</span> sum=<span style="color: #800080;">0</span>;  <span style="color: #008000;">//</span><span style="color: #008000;">全局变量</span>
+<span style="color: #008080;"> 4</span> 
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">void</span> move(<span style="color: #0000ff;">char</span> x,<span style="color: #0000ff;">char</span><span style="color: #000000;"> y){
+</span><span style="color: #008080;"> 6</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">%c--&gt;%c\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,x,y);
+</span><span style="color: #008080;"> 7</span>     sum=sum+<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">int</span> hanoi(<span style="color: #0000ff;">int</span> n,<span style="color: #0000ff;">char</span> a,<span style="color: #0000ff;">char</span> b,<span style="color: #0000ff;">char</span><span style="color: #000000;"> c){
+</span><span style="color: #008080;">11</span>     <span style="color: #0000ff;">if</span>(n==<span style="color: #800080;">1</span><span style="color: #000000;">){
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">        move(a,c);
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">else</span><span style="color: #000000;">{
+</span><span style="color: #008080;">16</span>         hanoi(n-<span style="color: #800080;">1</span><span style="color: #000000;">,a,c,b);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">        move(a,c); 
+</span><span style="color: #008080;">18</span>         hanoi(n-<span style="color: #800080;">1</span><span style="color: #000000;">,b,a,c);
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">21</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;">22</span>     <span style="color: #0000ff;">int</span><span style="color: #000000;"> m;
+</span><span style="color: #008080;">23</span> 
+<span style="color: #008080;">24</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input a number:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">25</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;<span style="color: #000000;">m);
+</span><span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The step to moving %d disks:\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,m);
+</span><span style="color: #008080;">28</span>     hanoi(m,<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">B</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">C</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+</span><span style="color: #008080;">29</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">It need %d steps\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,sum);
+</span><span style="color: #008080;">30</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180317203849523-1146853244.png" alt="" /></p>
+<p>&nbsp;</p>

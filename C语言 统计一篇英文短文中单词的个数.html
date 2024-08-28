@@ -1,0 +1,35 @@
+<p>&nbsp;//凯鲁嘎吉 - 博客园&nbsp;http://www.cnblogs.com/kailugaji/</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> #include&lt;stdio.h&gt;
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">#define</span> N 1000
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> main(){
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">char</span> en[N][<span style="color: #800080;">81</span><span style="color: #000000;">];
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">int</span> i,j,num=<span style="color: #800080;">0</span><span style="color: #000000;">,n,state;   
+</span><span style="color: #008080;"> 6</span>     <span style="color: #008000;">//</span><span style="color: #008000;">num 用来统计单词的个数
+</span><span style="color: #008080;"> 7</span>     <span style="color: #008000;">//</span><span style="color: #008000;">state 用来记录程序当前是否处于一个单词之中，初值为0，表示不在单词中，值为1，表示正处于在一个单词中</span>
+<span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">Please input the number of lines for English passage:</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+</span><span style="color: #008080;">10</span>     scanf(<span style="color: #800000;">"</span><span style="color: #800000;">%d</span><span style="color: #800000;">"</span>,&amp;n);  <span style="color: #008000;">//</span><span style="color: #008000;">输入英语短文的行数</span>
+<span style="color: #008080;">11</span>     getchar();   <span style="color: #008000;">//</span><span style="color: #008000;">吸收回车符</span>
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;n;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">14</span>         gets(en[i]);   <span style="color: #008000;">//</span><span style="color: #008000;">输入英语短文</span>
+<span style="color: #008080;">15</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">for</span>(i=<span style="color: #800080;">0</span>;i&lt;n;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">17</span>         state=<span style="color: #800080;">0</span>;  <span style="color: #008000;">//</span><span style="color: #008000;">设每行的开始都是单词的开始</span>
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">for</span>(j=<span style="color: #800080;">0</span>;en[i][j]!=<span style="color: #800000;">'</span><span style="color: #800000;">\0</span><span style="color: #800000;">'</span>;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">19</span>             <span style="color: #0000ff;">if</span>(en[i][j]==<span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #000000;">){
+</span><span style="color: #008080;">20</span>                 state=<span style="color: #800080;">0</span>;   <span style="color: #008000;">//</span><span style="color: #008000;">判断 en[i][j] 是否为空格字符</span>
+<span style="color: #008080;">21</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">22</span>             <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(state==<span style="color: #800080;">0</span><span style="color: #000000;">){
+</span><span style="color: #008080;">23</span>                 state=<span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;">24</span>                 num++<span style="color: #000000;">;
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">28</span>     printf(<span style="color: #800000;">"</span><span style="color: #800000;">The number of words is %d\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,num);
+</span><span style="color: #008080;">29</span> }</pre>
+</div>
+<p>结果为：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1027447/201803/1027447-20180318094000483-332759798.png" alt="" /></p>
+<p>&nbsp;</p>
