@@ -1,0 +1,179 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">强化学习(Reinforcement Learning)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 通过阅读《神经网络与深度学习》及其他资料，了解强化学习(Reinforcement Learning)的基本知识，并介绍相关强化学习算法。更多强化学习内容，请看：<a href="https://www.cnblogs.com/kailugaji/category/2038931.html" target="_blank">随笔分类 - Reinforcement Learning</a>。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 强化学习背景与基本概念</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.1 强化学习概念图</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205637979-1931047233.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">三种机器学习方法(监督学习，无监督学习与强化学习)比较：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202111/1027447-20211110093058019-1662716909.jpg" alt="" width="912" height="410" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h3 id="1632919873378"><span style="font-family: 'comic sans ms', sans-serif;">1.2&nbsp;基于学习信号的结构复杂度和时序复杂度对机器学习方法进行归类</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205653706-1143493422.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920214067"><span style="font-family: 'comic sans ms', sans-serif;">1.3 强化学习常用符号</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205749775-1070203519.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920270102"><span style="font-family: 'comic sans ms', sans-serif;">1.4 强化学习定义与概念</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205818590-1861925986.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920299045"><span style="font-family: 'comic sans ms', sans-serif;">1.5&nbsp;马尔可夫决策过程(Markov Decision Process, MDP)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205847627-937955574.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<div align="center">
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">不考虑动作</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">考虑动作</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">状态完全可见</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">马尔科夫链(MC)</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">马尔可夫决策过程(MDP)</span></p>
+</td>
+</tr>
+<tr>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">状态不完全可见</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">隐马尔可夫模型(HMM)</span></p>
+</td>
+<td>
+<p align="center"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">部分可观察马尔可夫决策过程(POMDP)</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="1632920328138"><span style="font-family: 'comic sans ms', sans-serif;">1.6 强化学习的目标函数</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205915823-519194049.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920356182"><span style="font-family: 'comic sans ms', sans-serif;">1.7 值函数</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205937430-261149119.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929205945720-2126788168.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 动态规划方程/贝尔曼方程见：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15938535.html">动态规划(Dynamic Programming, DP)</a></span></p>
+<h3 id="1632920386145"><span style="font-family: 'comic sans ms', sans-serif;">1.8 强化学习方法总体概括</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210013845-261076453.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202111/1027447-20211102095122197-1642165431.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210027985-335034236.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">算法小结：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">1. 值函数算法：通过迭代更新值函数来间接得到智能体的策略，当值函数迭代达到最优时，智能体的最优策略通过最优值函数得到。在算法应用的场景上，值函数算法需要对动作进行采样，因此只能处理离散动作的情况。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2. 策略梯度算法：直接采用函数近似的方法建立策略网络，通过策略网络选取动作得到奖励值，并沿梯度方向对策略网络参数进行优化，得到优化的策略最大化奖励值。在算法应用的场景上，策略梯度算法直接利用策略网络对动作进行搜索，可以被用来处理连续动作的情况。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">3. 演员-评论员算法：将值函数算法和策略梯度算法结合得到的演员-评论员(Actor-Critic, AC)结构也受到了广泛的关注。在AC结构中，演员使用策略梯度法选取动作，通过值函数对演员采取的动作进行评价，并且在训练时，演员和评论员的参数交替更新。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026091412369-358803879.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1635210659029"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图源：李茹杨,彭慧民,李仁刚,赵坤.<a href="http://www.c-s-a.org.cn/csa/article/pdf/7701" target="_blank">强化学习算法与应用综述</a>.计算机系统应用,2020,29(12):13-25.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202203/1027447-20220321192905004-526737138.png" alt="" width="1145" height="623" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><img src="https://img2022.cnblogs.com/blog/1027447/202203/1027447-20220321192933328-1831375637.png" alt="" width="1141" height="589" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp;图源：<a href="https://deepreinforcementlearningbook.org/assets/pdfs/%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0(%E4%B8%AD%E6%96%87%E7%89%88-%E5%BD%A9%E8%89%B2%E5%8E%8B%E7%BC%A9).pdf" target="_blank">深度强化学习：基础、研究与应用</a>/ 董豪等著.&mdash;北京：电子工业出版社，2020.7</span></p>
+<h2 id="1632920428352"><span style="font-family: 'comic sans ms', sans-serif;">2. 基于值函数的方法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1&nbsp;值函数估计&mdash;&mdash;优化思路</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210133050-1367634140.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920493406"><span style="font-family: 'comic sans ms', sans-serif;">2.2&nbsp;动态规划算法(基于模型的强化学习)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211013154613627-1601944934.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210222224-1907297287.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211013155832580-872365174.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;">&nbsp; &nbsp;<span style="font-size: 16px;"> Python实现值迭代算法：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15891401.html">Deep Reinforcement Learning Hands-On&mdash;&mdash;Tabular Learning and the Bellman Equation</a></span></span></p>
+<h3 id="1632920554532"><span style="font-family: 'comic sans ms', sans-serif;">2.3&nbsp;蒙特卡罗方法(模型无关的强化学习)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210306795-1005071985.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210324149-564394658.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; on-policy(同策略)与off-policy(异策略)的本质区别在于：更新Q值时所使用的方法是沿用既定的策略(on-policy)还是使用新策略(off-policy) 。</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.4&nbsp;时序差分学习方法(蒙特卡罗+动态规划)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210446308-365963103.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h4 id="1632920686834"><span style="font-family: 'comic sans ms', sans-serif;">2.4.1&nbsp;SARSA：一种同策略的时序差分学习算法</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210528591-1890402458.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h4 id="1632920729325"><span style="font-family: 'comic sans ms', sans-serif;">2.4.2&nbsp;Q学习：一种异策略的时序差分学习算法</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210604446-684980012.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; Q学习通常假设智能体贪婪地选择动作，即只选择Q值最大的动作，其他动作的选择概率为0，从而保证了Q学习的收敛性。与Sarsa相比，异策略Q学习需要更短的训练时间，跳出局部最优解的概率更大。然而，如果智能体根据Q值的概率模型而不是贪婪选择对动作进行采样，则采用异策略技术的Q值估计误差将增大。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp;&nbsp;Python实现Sarsa与Q学习算法：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15783258.html">Hands-On Reinforcement Learning With Python&mdash;&mdash;Temporal Difference Learning</a>，<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15891401.html">Deep Reinforcement Learning Hands-On&mdash;&mdash;Tabular Learning and the Bellman Equation</a></span></p>
+<h4 id="1632920764985"><span style="font-family: 'comic sans ms', sans-serif;">2.4.3&nbsp;深度Q网络(Deep Q-Networks，DQN)</span></h4>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210655868-1430831550.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210707958-109739661.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; Python实现简易版的DQN(架构不是三卷积两全连接，简化为两全连接)：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15926723.html">Deep Reinforcement Learning Hands-On&mdash;&mdash;Higher-Level RL Libraries (PTAN)</a>，<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15946220.html">Deep Reinforcement Learning Hands-On&mdash;&mdash;Policy Gradients &ndash; an Alternative</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; Python完整版实现DQN：<a href="https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On-Second-Edition/tree/master/Chapter08" target="_blank">https://github.com/PacktPublishing/Deep-Reinforcement-Learning-Hands-On-Second-Edition/tree/master/Chapter08</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">DQN网络结构：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026081059976-1484411556.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1635206866614"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">DQN(off-policy)算法流程：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026081124316-99874889.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">DQN算法改进：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211025205432870-1806019476.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Double DQN算法流程</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202204/1027447-20220414105309763-1163425928.jpg" alt="" width="1151" height="591" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图源：<a href="https://zhuanlan.zhihu.com/p/79712897" target="_blank">https://zhuanlan.zhihu.com/p/79712897</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Dueling DQN 的网络结构</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026081311839-1147239597.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：为什么需要经验回放池(Experience Replay Buffer)？</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">1. 重复利用收集到的经验，而不是用一次就丢弃，这样可以用更少的样本数量达到同样的表现。</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">重复利用经验、不重复利用经验的收敛曲线通常如下图所示。图的横轴是样本数量，纵轴是平均回报。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211014135839415-1654033121.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图来自：王树森, 张志华, 深度强化学习，<a href="https://github.com/wangshusen/DRL/blob/master/Notes_CN/DRL.pdf" target="_blank">https://github.com/wangshusen/DRL/blob/master/Notes_CN/DRL.pdf</a>, 2021.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2. 采用神经网络训练时，一般需要进行基于梯度的优化，并对数据进行分批次训练，设立batch，但采用这种方式的前提是假设样本之间都是独立同分布的(independent and identically distributed，i.i.d.)，这样每个batch内的噪声可以互相抵消。但强化学习中的决策过程是一个时间序列，这意味着前后数据之间具有很强的相关性，这样不利于进行梯度优化。设立经验回放池，将贝尔曼公式中需要的数据保存起来，通过随机的(或者基于优先度的)从经验回放池中进行抽样，当回放池中的数据足够多，随机抽样得到的数据就接近独立同分布，因此设立经验回放池可以打破序列之间的相关性，避免模型陷入局部最优。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211014091649138-1639549662.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p>&nbsp;<span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">图来自：From Policy Gradient to Actor-Critic methods&nbsp;<a href="https://rl-vs.github.io/rlvs2021/class-material/pg/6_baseline_AC.pdf" target="_blank">https://rl-vs.github.io/rlvs2021/class-material/pg/6_baseline_AC.pdf</a></span></p>
+<h2 id="1632920828662"><span style="font-family: 'comic sans ms', sans-serif;">3. 基于策略函数的学习方法</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3.1 策略梯度(Policy Gradient)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210836108-1126544273.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920916632"><span style="font-family: 'comic sans ms', sans-serif;">3.2&nbsp;REINFORCE算法</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210901062-893085464.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3 id="1632920941707"><span style="font-family: 'comic sans ms', sans-serif;">3.3&nbsp;带基准线的REINFORCE算法(REINFORCE with Baseline)</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210936353-362170795.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929210943570-1571377225.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：策略梯度法改进思路</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211025211533263-1503464106.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">信任域类算法请看：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15388913.html">信赖域策略优化(Trust Region Policy Optimization, TRPO)</a>，<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15396437.html">近端策略优化算法(Proximal Policy Optimization Algorithms, PPO)</a>，<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15401383.html">重要性采样(Importance Sampling)&mdash;&mdash;TRPO与PPO的补充</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Python实现基于策略函数的强化学习方法：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15946220.html">Deep Reinforcement Learning Hands-On&mdash;&mdash;Policy Gradients &ndash; an Alternative</a></span></p>
+<h2 id="1632920984205"><span style="font-family: 'comic sans ms', sans-serif;">4.&nbsp;演员-评论员算法(Actor-Critic Algorithm)</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202109/1027447-20210929211016874-1241090408.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">A2C的基本结构：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026081346707-1316416979.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">A3C(on-policy)异步训练框架图：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026083422844-1983170932.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Soft Actor-Critic:</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202111/1027447-20211102152426976-479681981.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 深度强化学习算法分类与应用</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.1 算法分类</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211025204824307-1309347509.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">5.2 应用与意义</span></h3>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026081557421-2090635960.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6. 基于模型的方法与定义奖励函数方法概述</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">根据智能体是否通过与环境交互获得的，数据来预定义环境动态模型，将强化学习分为模型化强化学习(基于模型的强化学习)和无模型强化学习(与模型无关的强化学习)，上述讨论的大多数为无模型强化学习(动态规划属于模型化强化学习)。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211026083835846-859995110.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">无模型的深度强化学习算法需要大量的采样数据进行训练，而这些数据往往很难通过交互得到，因此可以考虑使用已有的现实环境中的数据建立环境模型，然后利用环境模型对智能体进行训练。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Model-based RL vs Model-free RL</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202204/1027447-20220406092911541-1718764260.png" alt="" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p id="1635208522412"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">基于模型的强化学习：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211025211723759-62640348.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">定义奖励函数方法概述：</span></p>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202110/1027447-20211025211735123-167166645.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">7. 强化学习前沿方向</span></h2>
+<ul>
+<li><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;"><strong>元强化学习(Meta Reinforcement Learning)</strong>：除改善一个具体任务上的学习效率外，研究人员也在寻求能够提高在不同任务上整体学习表现的方法，这与模型的通用性(Generality)和多面性(Versatility)相关。因此，我们会问，如何让智能体基于它所学习的旧任务来在新任务上更快地学习？因此有了元学习(Meta Learning)这一概念。</span><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">元学习的最初目的是让智能体解决不同问题或掌握不同技能。然而，我们无法忍受它对每个任务都从头学习，尤其是用深度学习来拟合的时候。元学习，也称学会学习(Learn to Learn)，是让智能体根据以往经验在新任务上更快学习的方法，而非将每个任务作为一个单独的任务。通常一个普通的学习者学习一个具体任务的过程被看作是元学习中的内循环(Inner-Loop)学习过程，而元学习者(Meta-Learner)可以通过一个外循环(Outer-Loop)学习过程来更新内循环学习者。这两种学习过程可以同时优化或者以一种迭代的方式进行。三个元学习的主要类别为循环模型(Recurrent Model)、度量学习(Metric Learning)和学习优化器(Optimizer)。结合元学习和强化学习，可以得到元强化学习(Meta Reinforcement Learning)方法。一种有效的元强化学习方法像与模型无关的元学习(<a href="https://www.cnblogs.com/kailugaji/p/15156806.html" target="_blank">Finn et al., 2017</a>) 可以通过小样本学习(Few-Shot Learning)或者几步更新来解决一个简单的新任务。可参见：<a href="https://www.cnblogs.com/kailugaji/tag/Meta%20Learning/" target="_blank">https://www.cnblogs.com/kailugaji/tag/Meta%20Learning/</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><strong>离线强化学习(Offline Reinforcement Learning)</strong>：智能体完全从静态的离线数据集中学习，而不进行探索。经验池中的离线数据由未知的行为策略（behaviour&nbsp;policy）产生，而离线强化学习希望利用该经验池中的这些来源未知的数据进行当前策略的学习和更新，并期望学到的策略可以在部署到交互环境中时可以有不错的表现。相关介绍详见：<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/16040339.html">离线强化学习(A Survey on Offline Reinforcement Learning)</a>&nbsp;- 凯鲁嘎吉 - 博客园</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><strong>自监督强化学习(Self-Supervised Reinforcement Learning)</strong>：学习一个观测的低维空间表示，即输入数据的压缩映射，能够有效解决直接用高维度数据学习控制策略中产生的维度灾难问题，有四种方式：</span></span></li>
+</ul>
+<ol>
+<li style="margin-left: 30px;"><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">状态表征 (State Representation)：</span></strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">对环境中的状态进行表征，提取状态中与学习任务相关的信息以提升例如值函数、策略函数在状态空间中学习效率，或提取与单学习任务无关而对多任务通用的信息使得在多任务的学习中迁移状态表征来泛化和加速。</span></li>
+<li style="margin-left: 30px;"><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">动作表征 (Action Representation)：</span></strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">对动作进行表征，压缩大的、高维的动作空间，约减探索和学习的采样开销。提取动作语义，表征动作空间的内在结构，提升函数在动作空间中的近似与泛化表现，提升学习的效果。</span></li>
+<li style="margin-left: 30px;"><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">策略表征 (Policy Representation)：</span></strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">对策略进行表征，使得值函数、策略影响的环境动态等在策略空间能够泛化，拓展强化学习算法的研究领域。压缩策略空间，提供策略表征空间策略优化的可能。提供分析策略学习、演进过程的方式。</span></li>
+<li style="margin-left: 30px;"><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">任务/环境表征 (Task/Environment Representation)：</span></strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">对强化学习学习任务和环境进行表征，在表征空间建立多任务、多环境的相似与区别，使得多任务、多环境的学习互相泛化和促进。</span></li>
+</ol>
+<p style="margin-left: 30px;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考：</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">自监督强化学习 - 知乎专栏&nbsp;<a href="https://www.zhihu.com/column/c_1424482085201932288" target="_blank">https://www.zhihu.com/column/c_1424482085201932288</a></span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Jianye Hao, Self-supervised Reinforcement Learning, <a href="http://tcci.ccf.org.cn/conference/2021/dldoc/tutorial_6.pdf" target="_blank">http://tcci.ccf.org.cn/conference/2021/dldoc/tutorial_6.pdf</a>, NLPCC 2021 Tutorial.&nbsp;</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">【汽车学术沙龙】郝建业：自监督强化学习，<a href="https://www.bilibili.com/video/BV1YF411i7K3?spm_id_from=333.337.search-card.all.click" target="_blank">https://www.bilibili.com/video/BV1YF411i7K3?spm_id_from=333.337.search-card.all.click</a></span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><strong>无监督强化学习(Unsupervised Reinforcement Learning)</strong>：现有的强化学习方法都是有监督的，这使得智能体过度拟合特定的外在奖励，因此限制了算法的泛化能力。无监督强化学习与监督强化学习非常相似。两者都假设底层环境由马尔可夫决策过程(MDP)或部分可观测MDP描述，目的都是使奖励最大化。主要区别在于<span style="text-decoration: underline;">监督强化学习假设监督是由环境通过外部奖励提供的，而无监督强化学习通过自我监督任务定义内部奖励</span>。与自然语言处理和机器视觉中的监督一样，监督奖励要么是由人工操作员设计的，要么作为标签提供，这些操作员很难扩展并将强化学习算法的泛化限制到特定任务。迄今为止已知的大多数无监督强化学习算法可以分为三类&mdash;&mdash;基于知识的、基于数据的和基于能力的。基于知识的方法是最大化预测模型的预测误差或不确定性(例如 Curiosity、Disagreement、RND)，基于数据的方法是最大化观察数据的多样性(例如 APT、ProtoRL)，基于能力的方法使状态和一些通常被称为"skill"或"task"向量的潜在向量之间的互信息最大化(例如 DIAYN、SMM、APS)。具体参考：<a href="https://bair.berkeley.edu/blog/2021/12/15/unsupervised-rl/" target="_blank">The Unsupervised Reinforcement Learning Benchmark, Misha Laskin and Denis Yarats&nbsp;</a></span></li>
+</ul>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2022.cnblogs.com/blog/1027447/202204/1027447-20220407102153279-1472377382.png" alt="" width="1049" height="536" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2 id="1632921017477"><span style="font-family: 'comic sans ms', sans-serif;">8. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15494210.html">强化学习相关资料(书籍，课程，网址，笔记等)</a>&nbsp;- 凯鲁嘎吉 博客园</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2]&nbsp;邱锡鹏，神经网络与深度学习，机械工业出版社，<a href="https://nndl.github.io/" target="_blank">https://nndl.github.io/</a>, 2020.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3]&nbsp;强化学习&mdash;&mdash;值迭代和策略迭代 - 虔诚的树 - 博客园 <a href="https://www.cnblogs.com/xxxxxxxxx/p/11536460.html" target="_blank">https://www.cnblogs.com/xxxxxxxxx/p/11536460.html</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]&nbsp;杨思明 , 单征 , 丁煜 , 李刚伟. <a href="http://www.ecice06.com/CN/article/downloadArticleFile.do?attachType=PDF&amp;id=31189" target="_blank">深度强化学习研究现状及展望</a>[J]. 计算机工程, 2021,&nbsp;<a href="https://doi.org/10.19678/j.issn.1000-3428.0061116" target="_blank">doi: 10.19678/j.issn.1000-3428.0061116</a>.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[5] 刘朝阳, 穆朝絮, 孙长银. <a href="http://www.infocomm-journal.com/znkx/CN/article/downloadArticleFile.do?attachType=PDF&amp;id=170947" target="_blank">深度强化学习算法与应用研究现状综述</a>[J]. 智能科学与技术学报, 2020, 2(4): 314-326.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[6] 秦智慧, 李宁, 刘晓彤, 刘秀磊, 佟强, 刘旭红.&nbsp;<a href="http://www.jsjkx.com/CN/article/openArticlePDF.jsp?id=19779" target="_blank">无模型强化学习研究综述</a>[J]. 计算机科学, 2021, 48(3): 180-187.</span></p>

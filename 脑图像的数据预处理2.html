@@ -1,0 +1,133 @@
+<h1 style="text-align: center;">脑图像的数据预处理2</h1>
+<p><strong><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">作者：凯鲁嘎吉&nbsp;-&nbsp;博客园<a href="http://www.cnblogs.com/kailugaji/" target="_blank">&nbsp;http://www.cnblogs.com/kailugaji/</a></span></strong></p>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">在<a href="https://www.cnblogs.com/kailugaji/p/10012338.html" target="_blank">脑图像的数据预处理</a>中已经介绍了一些内容，这篇文章是对前一篇文章的补充与完善。更多内容请看<a href="https://www.cnblogs.com/kailugaji/tag/%E8%84%91%E5%9B%BE%E5%83%8F/" target="_blank">脑图像</a>。数据来源：<a href="http://brainweb.bic.mni.mcgill.ca/brainweb/" target="_blank">BrainWeb: Simulated Brain Database</a></span></p>
+<h2>1. 将0、1、2、3类数据分离出来，并存入文件</h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">main.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function main(filename,name, num)
+%将真实脑图像中的0、1、2、3拿出来，其余像素为0.
+%function main(filename,name,name_label, num)
+%函数main(filename, num)中的第一个参数filename是欲读取的rawb文件的文件名，第二个参数num就是第多少张。
+%例如：main('t1_icbm_normal_1mm_pn0_rf0.rawb','train.txt','label.txt', 90)， main('phantom_1.0mm_normal_csf.rawb','train.txt','label.txt', 90)
+mark=Mark('phantom_1.0mm_normal_crisp.rawb',num);
+read=readrawb(filename, num);
+[row,col]=size(read);
+for i=1:row   %行
+    for j=1:col    %列
+        if mark(i,j)==0
+            read_new(i,j)=0;
+        else
+            read_new(i,j)=read(i,j);   %将第0、1、2、3类拿出来，其余类为0
+        end
+    end
+end
+% 旋转90&deg;并显示出来
+read_new=imrotate(read_new, 90); 
+%mark=mark';
+Write_txt(name,read_new);    %将数据写入TXT文件
+%Write_txt(name_label,mark);    %将标签数据写入TXT文件
+imshow(uint8(read_new),'border','tight','initialmagnification','fit'); 
+</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Mark.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function mark=Mark(filename,num)
+%将标签为1、2、3类分出来，其余为0，mark取值：0、1、2、3
+%[mark_new,mark]=Mark('phantom_1.0mm_normal_crisp.rawb',90);
+fp=fopen(filename);
+temp=fread(fp, 181 * 217 * 181);
+image=reshape(temp, 181 * 217, 181);   
+images=image(:, num);
+images=reshape(images, 181, 217);
+mark_data=images;
+fclose(fp);
+%将第0、1、2、3类标签所在的坐标点拿出来，其余置0
+for i=1:181
+    for j=1:217
+        if (mark_data(i,j)==1)||(mark_data(i,j)==2)||(mark_data(i,j)==3)
+            mark(i,j)=mark_data(i,j);
+        else
+            mark(i,j)=0;
+        end
+    end
+end
+</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">readrawb.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function g = readrawb(filename, num)
+%函数readrawb(filename, num)中的第一个参数filename是欲读取的rawb文件的文件名，第二个参数num就是第多少张。
+fid = fopen(filename);
+%连续读取181*217*181个数据，这时候temp是一个长度为181*217*181的向量。
+%先将rawb中的所有数据传递给temp数组，然后将tempreshape成图片集。
+temp = fread(fid, 181 * 217 * 181);
+%所以把它变成了一个181*217行，181列的数组，按照它的代码，这就是181张图片的数据，每一列对应一张图。
+%生成图片集数组。图片集images数组中每一列表示一张图片。
+images = reshape(temp, 181 * 217, 181);   
+%读取数组中的第num行，得到数组再reshape成图片原来的行数和列数：181*217。
+image = images(:, num);
+image = reshape(image, 181, 217);
+g = image;
+fclose(fid);
+end
+</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Write_txt.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function Write_txt(name,read)
+%将数据写入txt文件
+fp=fopen(name,'w');
+[row,col]=size(read);
+for i=1:row   %行
+    for j=1:col    %列
+        if j==col
+            fprintf(fp,'%f\n',read(i,j));  %换行   %f或者%d
+        else
+            fprintf(fp,'%f\t',read(i,j));  %多个空格tab
+        end
+    end
+end
+fclose(fp);</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; main('t1_icbm_normal_1mm_pn0_rf0.rawb','train.txt', 90)</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201904/1027447-20190420163022152-33650813.png" alt="" /></p>
+<p>&nbsp;</p>
+<h2>2. 标准分割结果</h2>
+<p>&nbsp; &nbsp; <span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">用到三个函数：Ground_truth.m、Mark.m与Write_txt.m</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">Ground_truth.m</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">function Ground_truth(name, num)
+%标准分割结果
+%例如：Ground_truth('Ground truth.txt',90)
+mark=Mark('phantom_1.0mm_normal_crisp.rawb',num);
+for i=1:181   %行
+    for j=1:217    %列
+        if mark(i,j)==1
+            read_new(i,j)=50;
+        elseif mark(i, j)==2
+            read_new(i,j)=150;
+        elseif mark(i, j)==3
+            read_new(i,j)=255;
+        else
+            read_new(i,j)=0;
+        end
+    end
+end
+% 旋转90&deg;并显示出来
+read_new=imrotate(read_new, 90); 
+%mark=mark';
+Write_txt(name,read_new);    %将数据写入TXT文件
+%Write_txt(name_label,mark);    %将标签数据写入TXT文件
+imshow(uint8(read_new),'border','tight','initialmagnification','fit'); 
+</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">结果</span></h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">&gt;&gt; Ground_truth('Ground truth.txt',90)</pre>
+</div>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="https://img2018.cnblogs.com/blog/1027447/201904/1027447-20190420163235506-557821445.png" alt="" /></p>
+<h2>3. 说明</h2>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">T1模态、icmb协议下，切片厚度为1mm，噪声水平为0，灰度不均匀水平为0的正常脑图像，第90层</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">只选取0、1、2、3类的数据</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">0：背景 blankground    0</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">1：脑脊液 CSF     26-89</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">2：灰质 Grey Matter    78-132</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">3：白质 White Matter    124-150</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">分割之后各类用以下像素值进行渲染：</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">0：0</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">1：50</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">2：150</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">3：255</span><br /><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">数据均为217*181的矩阵</span></p>

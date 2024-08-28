@@ -1,0 +1,80 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">浅谈范数正则化</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; 这篇博客介绍不同范数作为正则化项时的作用。首先介绍了常见的向量范数与矩阵范数，然后说明添加正则化项的原因，之后介绍向量的$L_0$，$L_1$，$L_2$范数及其作为正则化项的作用，对三者进行比较分析，并用贝叶斯观点解释传统线性模型与正则化项。随后，介绍矩阵的$L_{2, 1}$范数及其推广形式$L_{p, q}$范数，以及矩阵的核范数及其推广形式Schatten范数。最后，用MATLAB程序编写了Laplace分布与Gauss分布的概率密度函数图。有关矩阵范数优化求解问题可参考：<a href="https://www.cnblogs.com/kailugaji/p/14613210.html" target="_blank">一类涉及矩阵范数的优化问题 - 凯鲁嘎吉 - 博客园&nbsp;</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 向量范数与矩阵范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165223053-2016897877.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 为什么要添加正则项？</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165249520-1410268993.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. $L_0$范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210409160327879-1951950691.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. $L_1$范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165323180-359679983.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. $L_2$范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165340879-1042272184.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">6. $L_1$范数与$L_2$范数作为正则项的区别</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165355169-1398387738.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">7. 用概率解释传统线性回归模型</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165414648-752259604.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">8. $L_2$范等价于Gauss先验</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165429260-2028814916.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">9. $L_1$范数等价于Laplace先验</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408195015599-1895156647.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">10. 矩阵的$L_{2, 1}$范数及$L_{p, q}$范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165459458-1035950880.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">11. 矩阵的核范数及Schatten范数</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165514652-1483475805.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">12. MATLAB程序：Laplace分布与Gauss分布的概率密度函数图</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">%% Demo of Laplace Density Function
+% x : variable
+% lambda : size para
+%miu: location para
+clear
+clc
+x = -10:0.1:10;
+y_1=Laplace_distribution(x, 0, 1);
+y_2=Laplace_distribution(x, 0, 2);
+y_3=Laplace_distribution(x, 0, 4);
+y_4=Laplace_distribution(x, -5, 4);
+y_5=Laplace_distribution(x, 5, 4);
+y_6=normpdf(x,0,1);
+plot(x, y_1, 'r-', x, y_2, 'g-', x, y_3, 'c-', x, y_4, 'm-', x, y_5, 'y-', x, y_6, 'b-', 'LineWidth',1.2);
+legend('\mu =0, \lambda=1','\mu=0, \lambda=2','\mu=0, \lambda=4','\mu=-5, \lambda=4','\mu=5, \lambda=4', '\mu=0, \sigma=1'); %图例的设置
+xlabel('x');
+ylabel('f(x)');
+title('Laplace vs Gauss pdf');
+set(gca, 'FontName', 'Times New Roman', 'FontSize',11);
+saveas(gcf,sprintf('demo_Laplace_Gauss.jpg'),'bmp'); %保存图片
+
+%% Laplace Density Function
+function y=Laplace_distribution(x, miu, lambda)
+    y = 1 / (2*lambda) * exp( -abs(x-miu)/lambda);
+end
+</pre>
+</div>
+<p><img src="https://img2020.cnblogs.com/blog/1027447/202104/1027447-20210408165614292-581598273.jpg" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">13. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] 证明核范数是矩阵秩的凸包络</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">EJ Cand&egrave;s,&nbsp; Recht B . Exact Matrix Completion via Convex Optimization[J]. Foundations of Computational Mathematics, 2009, 9(6):717.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.312.1183&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.312.1183&amp;rep=rep1&amp;type=pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] 关于说明$L_1$范数是$L_0$范数的凸包络的文献及教案</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Donoho D L ,&nbsp; Huo X . Uncertainty Principles and Ideal Atomic Decomposition[J]. IEEE Transactions on Information Theory, 2001, 47(7):2845-2862.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=00BC0C50CDECB265657379792F917FFE?doi=10.1.1.161.9300&amp;rep=rep1&amp;type=pdf">http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=00BC0C50CDECB265657379792F917FFE?doi=10.1.1.161.9300&amp;rep=rep1&amp;type=pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Learning with Combinatorial Structure Note for Lecture 12</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="http://people.csail.mit.edu/stefje/fall15/notes_lecture12.pdf">http://people.csail.mit.edu/stefje/fall15/notes_lecture12.pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">L1-norm Methods for Convex-Cardinality Problems</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://web.stanford.edu/class/ee364b/lectures/l1_slides.pdf">https://web.stanford.edu/class/ee364b/lectures/l1_slides.pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3] 有关过拟合的教案及图片来源</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2017 Lecture 2: Overfitting. Regularization</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.cs.mcgill.ca/~dprecup/courses/ML/Lectures/ml-lecture02.pdf">https://www.cs.mcgill.ca/~dprecup/courses/ML/Lectures/ml-lecture02.pdf</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4] 一些可供参考的资料</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">The difference between L1 and L2 regularization</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://explained.ai/regularization/L1vsL2.html">https://explained.ai/regularization/L1vsL2.html</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Why L1 norm for sparse models</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://stats.stackexchange.com/questions/45643/why-l1-norm-for-sparse-models">https://stats.stackexchange.com/questions/45643/why-l1-norm-for-sparse-models</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Why L1 regularization can &ldquo;zero out the weights&rdquo; and therefore leads to sparse models? [duplicate]</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://stats.stackexchange.com/questions/375374/why-l1-regularization-can-zero-out-the-weights-and-therefore-leads-to-sparse-m">https://stats.stackexchange.com/questions/375374/why-l1-regularization-can-zero-out-the-weights-and-therefore-leads-to-sparse-m</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">What are L1, L2 and Elastic Net Regularization in neural networks?</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://www.machinecurve.com/index.php/2020/01/21/what-are-l1-l2-and-elastic-net-regularization-in-neural-networks/">https://www.machinecurve.com/index.php/2020/01/21/what-are-l1-l2-and-elastic-net-regularization-in-neural-networks/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">Introduction. Sharpness Enhancement and Denoising of Image Using L1-Norm Minimization Technique in Adaptive Bilateral Filter.&nbsp;</span></p>
+<p><a href="https://www.ijsr.net/archive/v3i11/T0NUMTQxMzUy.pdf" target="_blank"><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">https://www.ijsr.net/archive/v3i11/T0NUMTQxMzUy.pdf</span></a></p>
