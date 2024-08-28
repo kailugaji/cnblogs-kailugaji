@@ -1,0 +1,279 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python与MATLAB小练习：计算准确度Accuracy</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">分别使用Python与MATLAB编程，计算聚类准确度。思路为：首先利用匈牙利算法将训练后的标签进行调整，然后再计算准确度。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. Python程序</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python demo</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;">  -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：计算准确度Accuracy</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 先用匈牙利算法调整标签，然后再计算准确度</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 已经调整过标签了</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> cluster_acc(y_true, y_pred):
+</span><span style="color: #008080;">10</span>     y_true =<span style="color: #000000;"> y_true.astype(np.int64)
+</span><span style="color: #008080;">11</span>     <span style="color: #0000ff;">assert</span> y_pred.size ==<span style="color: #000000;"> y_true.size
+</span><span style="color: #008080;">12</span>     D = max(y_pred.max(), y_true.max()) + 1
+<span style="color: #008080;">13</span>     w = np.zeros((D, D), dtype=<span style="color: #000000;">np.int64)
+</span><span style="color: #008080;">14</span>     <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(y_pred.size):
+</span><span style="color: #008080;">15</span>         w[y_pred[i], y_true[i]] += 1
+<span style="color: #008080;">16</span>     <span style="color: #0000ff;">from</span> sklearn.utils.linear_assignment_ <span style="color: #0000ff;">import</span><span style="color: #000000;"> linear_assignment
+</span><span style="color: #008080;">17</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 匈牙利算法调整标签</span>
+<span style="color: #008080;">18</span>     ind = linear_assignment(w.max() -<span style="color: #000000;"> w)
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">return</span> sum([w[i, j] <span style="color: #0000ff;">for</span> i, j <span style="color: #0000ff;">in</span> ind]) * 1.0 /<span style="color: #000000;"> y_pred.size
+</span><span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span> y_true = np.array([2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 1<span style="color: #000000;">])
+</span><span style="color: #008080;">22</span> y_pred_1 = np.array([1, 1, 2, 1, 1, 2, 2, 2, 3, 2, 2, 3, 1, 3, 3, 2, 3]) <span style="color: #008000;">#</span><span style="color: #008000;"> 未调整的标签</span>
+<span style="color: #008080;">23</span> y_pred_2 = np.array([2, 2, 3, 2, 2, 3, 3, 3, 1, 3, 3, 1, 2, 1, 1, 3, 1]) <span style="color: #008000;">#</span><span style="color: #008000;"> 调整后的标签</span>
+<span style="color: #008080;">24</span> result_1 =<span style="color: #000000;"> cluster_acc(y_true, y_pred_1)
+</span><span style="color: #008080;">25</span> result_2 =<span style="color: #000000;"> cluster_acc(y_true, y_pred_2)
+</span><span style="color: #008080;">26</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1：</span><span style="color: #800000;">'</span><span style="color: #000000;">, result_1)
+</span><span style="color: #008080;">27</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2：</span><span style="color: #800000;">'</span>, result_2)</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>1： 0.6470588235294118
+2： 0.6470588235294118</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. MATLAB程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:true;">%% MATLAB demo
+clear
+clc
+y_true = [2 2 2 2 2 2 3 3 3 3 3 3 1 1 1 1 1 ];
+y_pred_1 = [1 1 2 1 1 2 2 2 3 2 2 3 1 3 3 2 3];
+results = Evaluate(y_true,y_pred_1);
+fprintf('未调整标签的准确度：%f\n', results(1));
+% --------------------------------------------------
+% 实际采用下面这个：先用匈牙利算法对标签进行调整，然后再计算准确度Accuracy
+y_pred_2 = label_map(y_pred_1, y_true);
+results = Evaluate(y_true,y_pred_2);
+fprintf('调整标签后的准确度：%f\n', results(1));
+
+%% MATLAB实例：Munkres指派算法 - 凯鲁嘎吉 - 博客园
+% 来自：https://www.cnblogs.com/kailugaji/p/11765596.html
+function [assignment,cost] = munkres(costMat)
+% MUNKRES   Munkres Assign Algorithm
+%
+% [ASSIGN,COST] = munkres(COSTMAT) returns the optimal assignment in ASSIGN
+% with the minimum COST based on the assignment problem represented by the
+% COSTMAT, where the (i,j)th element represents the cost to assign the jth
+% job to the ith worker.
+%
+ 
+% This is vectorized implementation of the algorithm. It is the fastest
+% among all Matlab implementations of the algorithm.
+ 
+% Examples
+% Example 1: a 5 x 5 example
+%{
+[assignment,cost] = munkres(magic(5));
+[assignedrows,dum]=find(assignment);
+disp(assignedrows'); % 3 2 1 5 4
+disp(cost); %15
+%}
+% Example 2: 400 x 400 random data
+%{
+n=5;
+A=rand(n);
+tic
+[a,b]=munkres(A);
+toc                
+%}
+ 
+% Reference:
+% "Munkres' Assignment Algorithm, Modified for Rectangular Matrices",
+% http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
+ 
+% version 1.0 by Yi Cao at Cranfield University on 17th June 2008
+ 
+assignment = false(size(costMat));
+cost = 0;
+ 
+costMat(costMat~=costMat)=Inf;
+validMat = costMat&lt;Inf;
+validCol = any(validMat);
+validRow = any(validMat,2);
+ 
+nRows = sum(validRow);
+nCols = sum(validCol);
+n = max(nRows,nCols);
+if ~n
+    return
+end
+     
+dMat = zeros(n);
+dMat(1:nRows,1:nCols) = costMat(validRow,validCol);
+ 
+%*************************************************
+% Munkres' Assignment Algorithm starts here
+%*************************************************
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   STEP 1: Subtract the row minimum from each row.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ dMat = bsxfun(@minus, dMat, min(dMat,[],2));
+ 
+%************************************************************************** 
+%   STEP 2: Find a zero of dMat. If there are no starred zeros in its
+%           column or row start the zero. Repeat for each zero
+%**************************************************************************
+zP = ~dMat;
+starZ = false(n);
+while any(zP(:))
+    [r,c]=find(zP,1);
+    starZ(r,c)=true;
+    zP(r,:)=false;
+    zP(:,c)=false;
+end
+ 
+while 1
+%**************************************************************************
+%   STEP 3: Cover each column with a starred zero. If all the columns are
+%           covered then the matching is maximum
+%**************************************************************************
+    primeZ = false(n);
+    coverColumn = any(starZ);
+    if ~any(~coverColumn)
+        break
+    end
+    coverRow = false(n,1);
+    while 1
+        %**************************************************************************
+        %   STEP 4: Find a noncovered zero and prime it.  If there is no starred
+        %           zero in the row containing this primed zero, Go to Step 5. 
+        %           Otherwise, cover this row and uncover the column containing
+        %           the starred zero. Continue in this manner until there are no
+        %           uncovered zeros left. Save the smallest uncovered value and
+        %           Go to Step 6.
+        %**************************************************************************
+        zP(:) = false;
+        zP(~coverRow,~coverColumn) = ~dMat(~coverRow,~coverColumn);
+        Step = 6;
+        while any(any(zP(~coverRow,~coverColumn)))
+            [uZr,uZc] = find(zP,1);
+            primeZ(uZr,uZc) = true;
+            stz = starZ(uZr,:);
+            if ~any(stz)
+                Step = 5;
+                break;
+            end
+            coverRow(uZr) = true;
+            coverColumn(stz) = false;
+            zP(uZr,:) = false;
+            zP(~coverRow,stz) = ~dMat(~coverRow,stz);
+        end
+        if Step == 6
+            % *************************************************************************
+            % STEP 6: Add the minimum uncovered value to every element of each covered
+            %         row, and subtract it from every element of each uncovered column.
+            %         Return to Step 4 without altering any stars, primes, or covered lines.
+            %**************************************************************************
+            M=dMat(~coverRow,~coverColumn);
+            minval=min(min(M));
+            if minval==inf
+                return
+            end
+            dMat(coverRow,coverColumn)=dMat(coverRow,coverColumn)+minval;
+            dMat(~coverRow,~coverColumn)=M-minval;
+        else
+            break
+        end
+    end
+    %**************************************************************************
+    % STEP 5:
+    %  Construct a series of alternating primed and starred zeros as
+    %  follows:
+    %  Let Z0 represent the uncovered primed zero found in Step 4.
+    %  Let Z1 denote the starred zero in the column of Z0 (if any).
+    %  Let Z2 denote the primed zero in the row of Z1 (there will always
+    %  be one).  Continue until the series terminates at a primed zero
+    %  that has no starred zero in its column.  Unstar each starred
+    %  zero of the series, star each primed zero of the series, erase
+    %  all primes and uncover every line in the matrix.  Return to Step 3.
+    %**************************************************************************
+    rowZ1 = starZ(:,uZc);
+    starZ(uZr,uZc)=true;
+    while any(rowZ1)
+        starZ(rowZ1,uZc)=false;
+        uZc = primeZ(rowZ1,:);
+        uZr = rowZ1;
+        rowZ1 = starZ(:,uZc);
+        starZ(uZr,uZc)=true;
+    end
+end
+ 
+% Cost of assignment
+assignment(validRow,validCol) = starZ(1:nRows,1:nCols);
+cost = sum(costMat(assignment));
+end
+
+%% MATLAB实例：为匹配真实标签，对训练得到的标签进行调整 - 凯鲁嘎吉 - 博客园
+% 来自：https://www.cnblogs.com/kailugaji/p/11771226.html
+function [ new_label ] = label_map( label, gnd )
+%为匹配真实标签，对标签重新调整
+K = length(unique(gnd));
+cost_mat = zeros(K,K);
+for i=1:K
+    idx = find(label==i);
+    for j=1:K       
+        cost_mat(i,j) = length(find(gnd(idx)~=j));
+    end
+end
+[assignment, ~] = munkres(cost_mat);
+[assignedrows, ~]=find(assignment');
+new_label = label;
+for i=1:K
+    idx = find(label==i);
+    new_label(idx) = assignedrows(i);
+end
+end
+
+%% MATLAB聚类有效性评价指标（外部 成对度量） - 凯鲁嘎吉 - 博客园
+% 来自：https://www.cnblogs.com/kailugaji/p/11926253.html
+function result = Evaluate(real_label,pre_label)
+% This fucntion evaluates the performance of a classification model by
+% calculating the common performance measures: Accuracy, Sensitivity,
+% Specificity, Precision, Recall, F-Measure, G-mean.
+% Input: ACTUAL = Column matrix with actual class labels of the training
+%                 examples
+%        PREDICTED = Column matrix with predicted class labels by the
+%                    classification model
+% Output: EVAL = Row matrix with all the performance measures
+% https://www.mathworks.com/matlabcentral/fileexchange/37758-performance-measures-for-classification
+ 
+idx = (real_label()==1);
+ 
+p = length(real_label(idx));
+n = length(real_label(~idx));
+N = p+n;
+ 
+tp = sum(real_label(idx)==pre_label(idx));
+tn = sum(real_label(~idx)==pre_label(~idx));
+fp = n-tn;
+fn = p-tp;
+ 
+tp_rate = tp/p;
+tn_rate = tn/n;
+ 
+accuracy = (tp+tn)/N; %准确度
+sensitivity = tp_rate;  %敏感性：真阳性率
+specificity = tn_rate; %特异性：真阴性率
+precision = tp/(tp+fp);  %精度
+recall = sensitivity;  %召回率
+f_measure = 2*((precision*recall)/(precision + recall));  %F-measure
+gmean = sqrt(tp_rate*tn_rate);
+Jaccard=tp/(tp+fn+fp); %Jaccard系数
+ 
+result = [accuracy sensitivity specificity precision recall f_measure gmean Jaccard];
+end
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:matlab;gutter:false;">未调整标签的准确度：0.294118
+调整标签后的准确度：0.647059
+</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">完成。</span></p>

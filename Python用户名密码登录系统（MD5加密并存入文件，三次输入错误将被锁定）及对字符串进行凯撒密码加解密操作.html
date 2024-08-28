@@ -1,0 +1,239 @@
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: gb2312 -*-</span><span style="color: #008000;">
+#</span><span style="color: #008000;">用户名密码登录系统（MD5加密并存入文件）及对字符串进行凯撒密码加解密操作</span><span style="color: #008000;">
+#</span><span style="color: #008000;">作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> hashlib
+</span><span style="color: #0000ff;">def</span> md5(arg):<span style="color: #008000;">#</span><span style="color: #008000;">这是加密函数，将传进来的函数加密</span>
+        md5_pwd = hashlib.md5(bytes(<span style="color: #800000;">'</span><span style="color: #800000;">admin</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+        md5_pwd.update(bytes(arg))
+        </span><span style="color: #0000ff;">return</span> md5_pwd.hexdigest()<span style="color: #008000;">#</span><span style="color: #008000;">返回加密的数据</span>
+
+<span style="color: #0000ff;">def</span> log(user,pwd):<span style="color: #008000;">#</span><span style="color: #008000;">登录时的函数，由于md5不能反解，因此登陆的时候用正解</span>
+        with open(<span style="color: #800000;">'</span><span style="color: #800000;">pass.txt</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">r</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+            </span><span style="color: #0000ff;">for</span> line <span style="color: #0000ff;">in</span><span style="color: #000000;"> f:
+                u,p</span>=line.strip().split(<span style="color: #800000;">'</span><span style="color: #800000;">|</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                </span><span style="color: #0000ff;">if</span> u == user <span style="color: #0000ff;">and</span> p == md5(pwd):<span style="color: #008000;">#</span><span style="color: #008000;">登录的时候验证用户名以及加密的密码跟之前保存的是否一样</span>
+                     <span style="color: #0000ff;">return</span><span style="color: #000000;"> True
+
+</span><span style="color: #0000ff;">def</span> register(user,pwd):<span style="color: #008000;">#</span><span style="color: #008000;">注册的时候把用户名和加密的密码写进文件，保存起来</span>
+        with open(<span style="color: #800000;">'</span><span style="color: #800000;">pass.txt</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">a</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+            temp </span>= user+<span style="color: #800000;">'</span><span style="color: #800000;">|</span><span style="color: #800000;">'</span>+ md5(pwd)+<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">
+            f.write(temp)
+
+</span><span style="color: #0000ff;">def</span> encryption(): <span style="color: #008000;">#</span><span style="color: #008000;">加解密界面</span>
+        offset=int(input(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~\n</span><span style="color: #800000;">'</span>
+                         <span style="color: #800000;">'</span><span style="color: #800000;">请输入偏移量:\n</span><span style="color: #800000;">'</span>
+                         <span style="color: #800000;">'</span><span style="color: #800000;">大于0小于26:偏移量\n</span><span style="color: #800000;">'</span>
+                         <span style="color: #800000;">'</span><span style="color: #800000;">0：退出登录\n</span><span style="color: #800000;">'</span>
+                         <span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~\n</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+        </span><span style="color: #0000ff;">if</span> offset <span style="color: #0000ff;">in</span> range(1,25<span style="color: #000000;">):
+            variable</span>=int(input(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~\n</span><span style="color: #800000;">'</span>
+                               <span style="color: #800000;">'</span><span style="color: #800000;">请选择操作：\n</span><span style="color: #800000;">'</span>
+                               <span style="color: #800000;">'</span><span style="color: #800000;">1：加密\n</span><span style="color: #800000;">'</span>
+                               <span style="color: #800000;">'</span><span style="color: #800000;">2：解密\n</span><span style="color: #800000;">'</span>
+                               <span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~\n</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+            user1</span>=<span style="color: #000000;">Caesar(offset,variable)
+            user1.choose()
+        </span><span style="color: #0000ff;">elif</span> offset==<span style="color: #000000;">0:
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">谢谢使用，再见！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            exit(0)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">偏移量超出范围,请重新输入！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">class</span> Caesar: <span style="color: #008000;">#</span><span style="color: #008000;"> 定义类，名叫Caesar</span>
+    <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span>(self, offset, variable):<span style="color: #008000;">#</span><span style="color: #008000;"> 初始化</span>
+        self.passage =<span style="color: #000000;"> offset
+        self.type </span>=<span style="color: #000000;"> variable
+
+    </span><span style="color: #0000ff;">def</span> encrypt(self,offset): <span style="color: #008000;">#</span><span style="color: #008000;"> 加密</span>
+        move = (ord(offset)-97+self.passage) % 26+97  <span style="color: #008000;">#</span><span style="color: #008000;"> 用ASCII码值来完成移动，ord()将字符转化为对应ASCII码的十进制数</span>
+        <span style="color: #0000ff;">return</span> chr(move)    <span style="color: #008000;">#</span><span style="color: #008000;">将ASCII码转化为对应的数值，chr()将一个整数转化为Unicode字符</span>
+
+    <span style="color: #0000ff;">def</span> decrypt(self,offset): <span style="color: #008000;">#</span><span style="color: #008000;"> 解密</span>
+        move=(ord(offset)-97-self.passage)%26+97
+        <span style="color: #0000ff;">if</span> move &lt; 97<span style="color: #000000;">:
+            move </span>= move + 26
+        <span style="color: #0000ff;">return</span><span style="color: #000000;"> chr(move)
+
+    </span><span style="color: #0000ff;">def</span> choose(self):   <span style="color: #008000;">#</span><span style="color: #008000;"> 选择</span>
+        str2=<span style="color: #800000;">''</span>
+        <span style="color: #0000ff;">if</span> self.type==1: <span style="color: #008000;">#</span><span style="color: #008000;"> 加密时进入</span>
+            str1=input(<span style="color: #800000;">"</span><span style="color: #800000;">请输入要加密的字符串('xxx'):\n</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            org</span>=<span style="color: #000000;">str1
+            </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range (len(str1)): <span style="color: #008000;">#</span><span style="color: #008000;"> str1为输入的字符串</span>
+                str1=str1[:i]+self.encrypt(str1[i])+str1[i+1<span style="color: #000000;">:]
+            </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range (len(str1)):
+                str2</span>=str2+<span style="color: #000000;">str1[i]
+            </span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">'</span><span style="color: #800000;">字符串</span><span style="color: #800000;">'</span>+org+<span style="color: #800000;">'</span><span style="color: #800000;">加密后为：</span><span style="color: #800000;">'</span>+<span style="color: #000000;">str2)
+        </span><span style="color: #0000ff;">elif</span> self.type==2:  <span style="color: #008000;">#</span><span style="color: #008000;"> 解密时进入</span>
+            str1=input(<span style="color: #800000;">"</span><span style="color: #800000;">请输入要解密的字符串('xxx'):\n</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            org</span>=<span style="color: #000000;">str1
+            </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range (len(str1)):
+                str1</span>=str1[:i]+self.decrypt(str1[i])+str1[i+1<span style="color: #000000;">:]
+            </span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range (len(str1)):
+                str2</span>=str2+<span style="color: #000000;">str1[i]
+            </span><span style="color: #0000ff;">print</span> (<span style="color: #800000;">'</span><span style="color: #800000;">字符串</span><span style="color: #800000;">'</span>+org+<span style="color: #800000;">'</span><span style="color: #800000;">解密后为：</span><span style="color: #800000;">'</span>+<span style="color: #000000;">str2)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">选择错误，请重新输入！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Login:
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self,i):
+        self.i</span>=<span style="color: #000000;">i
+
+    </span><span style="color: #0000ff;">def</span><span style="color: #000000;"> showface(self):
+        </span><span style="color: #0000ff;">if</span> self.i==2<span style="color: #000000;">:
+            user </span>= input(<span style="color: #800000;">"</span><span style="color: #800000;">用户名('xxx')：</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            pwd </span>=input(<span style="color: #800000;">"</span><span style="color: #800000;">密码('xxx')：</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            register(user,pwd)
+        </span><span style="color: #0000ff;">elif</span> self.i==1<span style="color: #000000;">:
+            count</span>=1
+            <span style="color: #0000ff;">while</span> count&lt;=3<span style="color: #000000;">:
+                user </span>= user = input(<span style="color: #800000;">"</span><span style="color: #800000;">用户名('xxx')：</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+                pwd </span>=input(<span style="color: #800000;">"</span><span style="color: #800000;">密码('xxx')：</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+                r</span>=log(user,pwd)<span style="color: #008000;">#</span><span style="color: #008000;">验证用户名和密码</span>
+                <span style="color: #0000ff;">if</span> r==<span style="color: #000000;">True:
+                    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">登录成功</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+                        encryption()
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+                    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">登录失败</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                count </span>+=1
+                <span style="color: #0000ff;">if</span> count == 4<span style="color: #000000;">:
+                    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">密码输入次数过多，账户将被锁定！</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+                    exit(0)
+                </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+                    </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">还有%d次尝试机会！</span><span style="color: #800000;">"</span>%(4-<span style="color: #000000;">count))
+        </span><span style="color: #0000ff;">elif</span> self.i==<span style="color: #000000;">0:
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">谢谢使用，再见！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            exit(0)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入错误，请重新输入！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span>==<span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span>:  <span style="color: #008000;">#</span><span style="color: #008000;"> 测试程序</span>
+    <span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        i</span>=int(input(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~趣味密码学~~~~~~~\n</span><span style="color: #800000;">'</span>
+                    <span style="color: #800000;">'</span><span style="color: #800000;">0.退出\n</span><span style="color: #800000;">'</span>
+                    <span style="color: #800000;">'</span><span style="color: #800000;">1.登录\n</span><span style="color: #800000;">'</span>
+                    <span style="color: #800000;">'</span><span style="color: #800000;">2.注册\n</span><span style="color: #800000;">'</span>
+                    <span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~\n</span><span style="color: #800000;">'</span>
+                    <span style="color: #800000;">'</span><span style="color: #800000;">请输入您的选择：</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+        pass1</span>=<span style="color: #000000;">Login(i)
+        pass1.showface()</span></pre>
+</div>
+<p>结果：</p>
+<div class="cnblogs_code">
+<pre>C:\Python27\python.exe D:/Mypython/Myexercise/<span style="color: #000000;">_kaisa_passage.py
+</span>~~~~~~~~趣味密码学~~~~~~~<span style="color: #000000;">
+0.退出
+</span>1<span style="color: #000000;">.登录
+</span>2<span style="color: #000000;">.注册
+</span>~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入您的选择：</span>2<span style="color: #000000;">
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">wrr</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span>
+~~~~~~~~趣味密码学~~~~~~~<span style="color: #000000;">
+0.退出
+</span>1<span style="color: #000000;">.登录
+</span>2<span style="color: #000000;">.注册
+</span>~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入您的选择：</span>2<span style="color: #000000;">
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123456</span><span style="color: #800000;">'</span>
+~~~~~~~~趣味密码学~~~~~~~<span style="color: #000000;">
+0.退出
+</span>1<span style="color: #000000;">.登录
+</span>2<span style="color: #000000;">.注册
+</span>~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入您的选择：</span>1<span style="color: #000000;">
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123456</span><span style="color: #800000;">'</span><span style="color: #000000;">
+登录成功
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入偏移量:
+大于0小于26:偏移量
+0：退出登录
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~
+3
+~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请选择操作：
+</span>1<span style="color: #000000;">：加密
+</span>2<span style="color: #000000;">：解密
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~
+1<span style="color: #000000;">
+请输入要加密的字符串(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #800000;">'</span><span style="color: #800000;">qwert</span><span style="color: #800000;">'</span><span style="color: #000000;">
+字符串qwert加密后为：tzhuw
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入偏移量:
+大于0小于26:偏移量
+0：退出登录
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~
+3
+~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请选择操作：
+</span>1<span style="color: #000000;">：加密
+</span>2<span style="color: #000000;">：解密
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~
+2<span style="color: #000000;">
+请输入要解密的字符串(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #800000;">'</span><span style="color: #800000;">tzhuw</span><span style="color: #800000;">'</span><span style="color: #000000;">
+字符串tzhuw解密后为：qwert
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入偏移量:
+大于0小于26:偏移量
+0：退出登录
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+0
+谢谢使用，再见！
+
+Process finished with exit code 0</span></pre>
+</div>
+<p>或者：</p>
+<div class="cnblogs_code">
+<pre>C:\Python27\python.exe D:/Mypython/Myexercise/<span style="color: #000000;">_kaisa_passage.py
+</span>~~~~~~~~趣味密码学~~~~~~~<span style="color: #000000;">
+0.退出
+</span>1<span style="color: #000000;">.登录
+</span>2<span style="color: #000000;">.注册
+</span>~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入您的选择：</span>1<span style="color: #000000;">
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">wrr</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">
+登录成功
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入偏移量:
+大于0小于26:偏移量
+0：退出登录
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+0
+谢谢使用，再见！
+
+Process finished with exit code 0</span></pre>
+</div>
+<p>或者：</p>
+<div class="cnblogs_code">
+<pre>C:\Python27\python.exe D:/Mypython/Myexercise/<span style="color: #000000;">_kaisa_passage.py
+</span>~~~~~~~~趣味密码学~~~~~~~<span style="color: #000000;">
+0.退出
+</span>1<span style="color: #000000;">.登录
+</span>2<span style="color: #000000;">.注册
+</span>~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+请输入您的选择：</span>1<span style="color: #000000;">
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">123</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">456</span><span style="color: #800000;">'</span><span style="color: #000000;">
+登录失败
+还有2次尝试机会！
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">456</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">485</span><span style="color: #800000;">'</span><span style="color: #000000;">
+登录失败
+还有1次尝试机会！
+用户名(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">425</span><span style="color: #800000;">'</span><span style="color: #000000;">
+密码(</span><span style="color: #800000;">'</span><span style="color: #800000;">xxx</span><span style="color: #800000;">'</span>)：<span style="color: #800000;">'</span><span style="color: #800000;">425552</span><span style="color: #800000;">'</span><span style="color: #000000;">
+登录失败
+密码输入次数过多，账户将被锁定！
+
+Process finished with exit code 0</span></pre>
+</div>
+<p>pass.txt文件保存结果如下：</p>
+<p><img src="http://images2015.cnblogs.com/blog/1027447/201706/1027447-20170602105006399-1641181109.png" alt="" /></p>
+<p>&nbsp;</p>

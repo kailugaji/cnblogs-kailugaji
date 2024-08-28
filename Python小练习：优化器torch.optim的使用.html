@@ -1,0 +1,136 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：优化器torch.optim的使用</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文主要介绍Pytorch中优化器的使用方法，了解optimizer.zero_grad()、loss.backward()以及optimizer.step()函数的用法。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">问题陈述：假设最小化目标函数为$L = \sum\nolimits_{i = 1}^N {x_i^2} $。给定初始值$\left[ {x_1^{(0)},x_2^{(0)}} \right] = [5,{\rm{ }}10]$，求最优解$\hat x = \arg \min L$。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;optim_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：优化器torch.optim的使用</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 假设损失函数为loss = &sum;(x^2)，给定初始x(0)，目的是找到最优的x，使得loss最小化</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 以2维数据为例，loss = x1^2 + x2^2</span>
+<span style="color: #008080;"> 7</span> <span style="color: #008000;">#</span><span style="color: #008000;"> loss对x1的偏导为2 * x1，loss对x2的偏导为2 * x2</span>
+<span style="color: #008080;"> 8</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 9</span> <span style="color: #800000;">部分参考：
+</span><span style="color: #008080;">10</span> <span style="color: #800000;">    https://www.cnblogs.com/zhouyang209117/p/16048331.html
+</span><span style="color: #008080;">11</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.optim as optim
+</span><span style="color: #008080;">14</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;">15</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;">16</span> plt.rc(<span style="color: #800000;">'</span><span style="color: #800000;">font</span><span style="color: #800000;">'</span>,family=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法一：</span>
+<span style="color: #008080;">19</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 自己实现的优化</span>
+<span style="color: #008080;">20</span> rate = 0.1 <span style="color: #008000;">#</span><span style="color: #008000;"> 学习率</span>
+<span style="color: #008080;">21</span> iteration = 30 <span style="color: #008000;">#</span><span style="color: #008000;"> 迭代次数</span>
+<span style="color: #008080;">22</span> num = 3
+<span style="color: #008080;">23</span> data = np.array([5.0, 10.0]) <span style="color: #008000;">#</span><span style="color: #008000;"> 给定初始数据x(0)</span>
+<span style="color: #008080;">24</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(iteration):
+</span><span style="color: #008080;">25</span>     loss = (data ** 2).sum(axis = 0) <span style="color: #008000;">#</span><span style="color: #008000;"> 优化目标：最小化loss = x1^2 + x2^2</span>
+<span style="color: #008080;">26</span>     my_grad = 2 * data <span style="color: #008000;">#</span><span style="color: #008000;"> 梯度d(loss)/dx：2 * x1, 2 * x2</span>
+<span style="color: #008080;">27</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">%d.</span><span style="color: #800000;">'</span> %(i+1<span style="color: #000000;">),
+</span><span style="color: #008080;">28</span>           <span style="color: #800000;">'</span><span style="color: #800000;">数据：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(data, num),
+</span><span style="color: #008080;">29</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t损失函数：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(loss, num),
+</span><span style="color: #008080;">30</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t梯度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(my_grad, num)
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">          )
+</span><span style="color: #008080;">32</span>     data -= my_grad * rate <span style="color: #008000;">#</span><span style="color: #008000;"> 优化更新：x = x - learning_rate * (d(loss)/dx)</span>
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">----------------------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">35</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法二：</span>
+<span style="color: #008080;">36</span> <span style="color: #008000;">#</span><span style="color: #008000;"> pytorch自带的优化器</span>
+<span style="color: #008080;">37</span> data = np.array([5.0, 10.0]) <span style="color: #008000;">#</span><span style="color: #008000;"> 给定初始数据x(0)</span>
+<span style="color: #008080;">38</span> data = torch.tensor(data, requires_grad=True) <span style="color: #008000;">#</span><span style="color: #008000;"> 需要求梯度</span>
+<span style="color: #008080;">39</span> optimizer = optim.SGD([data], lr = rate) <span style="color: #008000;">#</span><span style="color: #008000;"> 优化器：随机梯度下降</span>
+<span style="color: #008080;">40</span> plot_loss =<span style="color: #000000;"> []
+</span><span style="color: #008080;">41</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(iteration):
+</span><span style="color: #008080;">42</span>     optimizer.zero_grad() <span style="color: #008000;">#</span><span style="color: #008000;"> 清空先前的梯度</span>
+<span style="color: #008080;">43</span>     loss = (data ** 2).sum() <span style="color: #008000;">#</span><span style="color: #008000;"> 优化目标：最小化loss = x1^2 + x2^2</span>
+<span style="color: #008080;">44</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">%d.</span><span style="color: #800000;">'</span> %(i+1<span style="color: #000000;">),
+</span><span style="color: #008080;">45</span>           <span style="color: #800000;">'</span><span style="color: #800000;">数据：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(data.detach().numpy(), num),
+</span><span style="color: #008080;">46</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t损失函数：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(loss.item(), num),
+</span><span style="color: #008080;">47</span>           end=<span style="color: #800000;">'</span> <span style="color: #800000;">'</span>
+<span style="color: #008080;">48</span> <span style="color: #000000;">          )
+</span><span style="color: #008080;">49</span>     loss.backward() <span style="color: #008000;">#</span><span style="color: #008000;"> 计算当前梯度d(loss)/dx = 2 * x，并反向传播</span>
+<span style="color: #008080;">50</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\t梯度：</span><span style="color: #800000;">'</span>, np.around(data.grad.detach().numpy(), num)) <span style="color: #008000;">#</span><span style="color: #008000;"> 打印梯度</span>
+<span style="color: #008080;">51</span>     optimizer.step() <span style="color: #008000;">#</span><span style="color: #008000;"> 优化更新：x = x - learning_rate * (d(loss)/dx)</span>
+<span style="color: #008080;">52</span>     plot_loss.append([i+1, loss.item()]) <span style="color: #008000;">#</span><span style="color: #008000;"> 保存每次迭代的loss</span>
+<span style="color: #008080;">53</span> 
+<span style="color: #008080;">54</span> plot_loss = np.array(plot_loss) <span style="color: #008000;">#</span><span style="color: #008000;"> 将list转换成numpy</span>
+<span style="color: #008080;">55</span> <span style="color: #008000;">#</span><span style="color: #008000;"> --------------------画Loss曲线图------------------------</span>
+<span style="color: #008080;">56</span> plt.plot(plot_loss[:, 0], plot_loss[:, 1], color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">57</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">Iteration</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">58</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">Loss</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">59</span> <span style="color: #000000;">plt.tight_layout()
+</span><span style="color: #008080;">60</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Loss.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">61</span> plt.show()</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/optimizer/optim_test.py</span><span style="color: #800000;">"</span>
+1. 数据： [ 5. 10.]     损失函数： 125.0     梯度： [10. 20<span style="color: #000000;">.]
+</span>2. 数据： [4. 8.]     损失函数： 80.0     梯度： [ 8. 16<span style="color: #000000;">.]
+</span>3. 数据： [3.2 6.4]     损失函数： 51.2     梯度： [ 6.4 12.8<span style="color: #000000;">]
+</span>4. 数据： [2.56 5.12]     损失函数： 32.768     梯度： [ 5.12 10.24<span style="color: #000000;">]
+</span>5. 数据： [2.048 4.096]     损失函数： 20.972     梯度： [4.096 8.192<span style="color: #000000;">]
+</span>6. 数据： [1.638 3.277]     损失函数： 13.422     梯度： [3.277 6.554<span style="color: #000000;">]
+</span>7. 数据： [1.311 2.621]     损失函数： 8.59     梯度： [2.621 5.243<span style="color: #000000;">]
+</span>8. 数据： [1.049 2.097]     损失函数： 5.498     梯度： [2.097 4.194<span style="color: #000000;">]
+</span>9. 数据： [0.839 1.678]     损失函数： 3.518     梯度： [1.678 3.355<span style="color: #000000;">]
+</span>10. 数据： [0.671 1.342]     损失函数： 2.252     梯度： [1.342 2.684<span style="color: #000000;">]
+</span>11. 数据： [0.537 1.074]     损失函数： 1.441     梯度： [1.074 2.147<span style="color: #000000;">]
+</span>12. 数据： [0.429 0.859]     损失函数： 0.922     梯度： [0.859 1.718<span style="color: #000000;">]
+</span>13. 数据： [0.344 0.687]     损失函数： 0.59     梯度： [0.687 1.374<span style="color: #000000;">]
+</span>14. 数据： [0.275 0.55 ]     损失函数： 0.378     梯度： [0.55 1.1<span style="color: #000000;"> ]
+</span>15. 数据： [0.22 0.44]     损失函数： 0.242     梯度： [0.44 0.88<span style="color: #000000;">]
+</span>16. 数据： [0.176 0.352]     损失函数： 0.155     梯度： [0.352 0.704<span style="color: #000000;">]
+</span>17. 数据： [0.141 0.281]     损失函数： 0.099     梯度： [0.281 0.563<span style="color: #000000;">]
+</span>18. 数据： [0.113 0.225]     损失函数： 0.063     梯度： [0.225 0.45<span style="color: #000000;"> ]
+</span>19. 数据： [0.09 0.18]     损失函数： 0.041     梯度： [0.18 0.36<span style="color: #000000;">]
+</span>20. 数据： [0.072 0.144]     损失函数： 0.026     梯度： [0.144 0.288<span style="color: #000000;">]
+</span>21. 数据： [0.058 0.115]     损失函数： 0.017     梯度： [0.115 0.231<span style="color: #000000;">]
+</span>22. 数据： [0.046 0.092]     损失函数： 0.011     梯度： [0.092 0.184<span style="color: #000000;">]
+</span>23. 数据： [0.037 0.074]     损失函数： 0.007     梯度： [0.074 0.148<span style="color: #000000;">]
+</span>24. 数据： [0.03  0.059]     损失函数： 0.004     梯度： [0.059 0.118<span style="color: #000000;">]
+</span>25. 数据： [0.024 0.047]     损失函数： 0.003     梯度： [0.047 0.094<span style="color: #000000;">]
+</span>26. 数据： [0.019 0.038]     损失函数： 0.002     梯度： [0.038 0.076<span style="color: #000000;">]
+</span>27. 数据： [0.015 0.03 ]     损失函数： 0.001     梯度： [0.03 0.06<span style="color: #000000;">]
+</span>28. 数据： [0.012 0.024]     损失函数： 0.001     梯度： [0.024 0.048<span style="color: #000000;">]
+</span>29. 数据： [0.01  0.019]     损失函数： 0.0     梯度： [0.019 0.039<span style="color: #000000;">]
+</span>30. 数据： [0.008 0.015]     损失函数： 0.0     梯度： [0.015 0.031<span style="color: #000000;">]
+</span>----------------------------------------------------------------
+1. 数据： [ 5. 10.]     损失函数： 125.0     梯度： [10. 20<span style="color: #000000;">.]
+</span>2. 数据： [4. 8.]     损失函数： 80.0     梯度： [ 8. 16<span style="color: #000000;">.]
+</span>3. 数据： [3.2 6.4]     损失函数： 51.2     梯度： [ 6.4 12.8<span style="color: #000000;">]
+</span>4. 数据： [2.56 5.12]     损失函数： 32.768     梯度： [ 5.12 10.24<span style="color: #000000;">]
+</span>5. 数据： [2.048 4.096]     损失函数： 20.972     梯度： [4.096 8.192<span style="color: #000000;">]
+</span>6. 数据： [1.638 3.277]     损失函数： 13.422     梯度： [3.277 6.554<span style="color: #000000;">]
+</span>7. 数据： [1.311 2.621]     损失函数： 8.59     梯度： [2.621 5.243<span style="color: #000000;">]
+</span>8. 数据： [1.049 2.097]     损失函数： 5.498     梯度： [2.097 4.194<span style="color: #000000;">]
+</span>9. 数据： [0.839 1.678]     损失函数： 3.518     梯度： [1.678 3.355<span style="color: #000000;">]
+</span>10. 数据： [0.671 1.342]     损失函数： 2.252     梯度： [1.342 2.684<span style="color: #000000;">]
+</span>11. 数据： [0.537 1.074]     损失函数： 1.441     梯度： [1.074 2.147<span style="color: #000000;">]
+</span>12. 数据： [0.429 0.859]     损失函数： 0.922     梯度： [0.859 1.718<span style="color: #000000;">]
+</span>13. 数据： [0.344 0.687]     损失函数： 0.59     梯度： [0.687 1.374<span style="color: #000000;">]
+</span>14. 数据： [0.275 0.55 ]     损失函数： 0.378     梯度： [0.55 1.1<span style="color: #000000;"> ]
+</span>15. 数据： [0.22 0.44]     损失函数： 0.242     梯度： [0.44 0.88<span style="color: #000000;">]
+</span>16. 数据： [0.176 0.352]     损失函数： 0.155     梯度： [0.352 0.704<span style="color: #000000;">]
+</span>17. 数据： [0.141 0.281]     损失函数： 0.099     梯度： [0.281 0.563<span style="color: #000000;">]
+</span>18. 数据： [0.113 0.225]     损失函数： 0.063     梯度： [0.225 0.45<span style="color: #000000;"> ]
+</span>19. 数据： [0.09 0.18]     损失函数： 0.041     梯度： [0.18 0.36<span style="color: #000000;">]
+</span>20. 数据： [0.072 0.144]     损失函数： 0.026     梯度： [0.144 0.288<span style="color: #000000;">]
+</span>21. 数据： [0.058 0.115]     损失函数： 0.017     梯度： [0.115 0.231<span style="color: #000000;">]
+</span>22. 数据： [0.046 0.092]     损失函数： 0.011     梯度： [0.092 0.184<span style="color: #000000;">]
+</span>23. 数据： [0.037 0.074]     损失函数： 0.007     梯度： [0.074 0.148<span style="color: #000000;">]
+</span>24. 数据： [0.03  0.059]     损失函数： 0.004     梯度： [0.059 0.118<span style="color: #000000;">]
+</span>25. 数据： [0.024 0.047]     损失函数： 0.003     梯度： [0.047 0.094<span style="color: #000000;">]
+</span>26. 数据： [0.019 0.038]     损失函数： 0.002     梯度： [0.038 0.076<span style="color: #000000;">]
+</span>27. 数据： [0.015 0.03 ]     损失函数： 0.001     梯度： [0.03 0.06<span style="color: #000000;">]
+</span>28. 数据： [0.012 0.024]     损失函数： 0.001     梯度： [0.024 0.048<span style="color: #000000;">]
+</span>29. 数据： [0.01  0.019]     损失函数： 0.0     梯度： [0.019 0.039<span style="color: #000000;">]
+</span>30. 数据： [0.008 0.015]     损失函数： 0.0     梯度： [0.015 0.031<span style="color: #000000;">]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230329111035911-453132841.png" alt="" width="611" height="453" style="display: block; margin-left: auto; margin-right: auto;" /></p>

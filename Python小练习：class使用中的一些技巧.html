@@ -1,0 +1,312 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：class使用中的一些技巧</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文主要介绍Python代码中@property、pass、@abc.abstractmethod、raise NotImplementedError、super().__init__、*args与**kwargs等所起的作用。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. python_class.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;">  2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;">  3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;">  4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> python class使用中的一些技巧</span>
+<span style="color: #008080;">  5</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;">  6</span> <span style="color: #800000;">部分代码参考于：
+</span><span style="color: #008080;">  7</span> <span style="color: #800000;">    https://blog.csdn.net/weixin_42681866/article/details/83376484
+</span><span style="color: #008080;">  8</span> <span style="color: #800000;">    https://blog.csdn.net/qq_40666620/article/details/105026716
+</span><span style="color: #008080;">  9</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 10</span> <span style="color: #0000ff;">import</span> abc <span style="color: #008000;">#</span><span style="color: #008000;"> 抽象类</span>
+<span style="color: #008080;"> 11</span> <span style="color: #0000ff;">from</span> typing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Dict, List, Any, Union
+</span><span style="color: #008080;"> 12</span> 
+<span style="color: #008080;"> 13</span> 
+<span style="color: #008080;"> 14</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Person(object):
+</span><span style="color: #008080;"> 15</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, name, age):
+</span><span style="color: #008080;"> 16</span>         self.name =<span style="color: #000000;"> name
+</span><span style="color: #008080;"> 17</span>         self.<span style="color: #800080;">__age</span> = 18 <span style="color: #008000;">#</span><span style="color: #008000;"> 双下划线的age定义为私有变量</span>
+<span style="color: #008080;"> 18</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 这里的成员属性__age需要与成员方法age()区分开</span>
+<span style="color: #008080;"> 19</span> 
+<span style="color: #008080;"> 20</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> python @property的使用</span>
+<span style="color: #008080;"> 21</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> property装饰器的作用：将方法变成属性调用</span>
+<span style="color: #008080;"> 22</span> <span style="color: #000000;">    @property
+</span><span style="color: #008080;"> 23</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> age(self):
+</span><span style="color: #008080;"> 24</span>         <span style="color: #0000ff;">return</span> self.<span style="color: #800080;">__age</span>
+<span style="color: #008080;"> 25</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 方法加入@property后，这个方法相当于一个属性，该属性可以让用户进行使用，而且用户有没办法随意修改</span>
+<span style="color: #008080;"> 26</span> 
+<span style="color: #008080;"> 27</span> <span style="color: #000000;">    @age.setter
+</span><span style="color: #008080;"> 28</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> age(self, age):
+</span><span style="color: #008080;"> 29</span>         <span style="color: #0000ff;">if</span> age &lt; 18<span style="color: #000000;">:
+</span><span style="color: #008080;"> 30</span>             <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">年龄必须大于18岁</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 31</span>             <span style="color: #0000ff;">return</span>
+<span style="color: #008080;"> 32</span>         self.<span style="color: #800080;">__age</span> =<span style="color: #000000;"> age
+</span><span style="color: #008080;"> 33</span>         <span style="color: #0000ff;">return</span> self.<span style="color: #800080;">__age</span>
+<span style="color: #008080;"> 34</span> 
+<span style="color: #008080;"> 35</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> pass的使用</span>
+<span style="color: #008080;"> 36</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> pass的作用：代码的占位符</span>
+<span style="color: #008080;"> 37</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_pass(self):
+</span><span style="color: #008080;"> 38</span>         <span style="color: #0000ff;">pass</span>
+<span style="color: #008080;"> 39</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 现在这个方法我还没想好里面要写啥东西，但又不能空着不写，所以用pass先占个位</span>
+<span style="color: #008080;"> 40</span> 
+<span style="color: #008080;"> 41</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> @abc.abstractmethod的使用</span>
+<span style="color: #008080;"> 42</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> @abc.abstractmethod的作用：实现抽象方法</span>
+<span style="color: #008080;"> 43</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 基类不能实例化，子类实现了该抽象方法才能被实例化</span>
+<span style="color: #008080;"> 44</span> <span style="color: #000000;">    @abc.abstractmethod
+</span><span style="color: #008080;"> 45</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_abstract(self, weight):
+</span><span style="color: #008080;"> 46</span>         <span style="color: #0000ff;">pass</span>
+<span style="color: #008080;"> 47</span> 
+<span style="color: #008080;"> 48</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> raise NotImplementedError的使用</span>
+<span style="color: #008080;"> 49</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> raise NotImplementedError的作用：如果子类不重写这个方法，就会抛出异常</span>
+<span style="color: #008080;"> 50</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_Error(self):
+</span><span style="color: #008080;"> 51</span>         <span style="color: #0000ff;">raise</span> NotImplementedError(<span style="color: #800000;">"</span><span style="color: #800000;">没有重写Test_Error方法，因此抛出NotImplementedError异常！</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 52</span> 
+<span style="color: #008080;"> 53</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 父类与子类的使用</span>
+<span style="color: #008080;"> 54</span> <span style="color: #008000;">#</span><span style="color: #008000;"> raise NotImplementedError的使用</span>
+<span style="color: #008080;"> 55</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 当子类没有重写父类中的成员函数，然后子类对象调用该函数时，会提示这个错误！</span>
+<span style="color: #008080;"> 56</span> <span style="color: #008000;">#</span><span style="color: #008000;"> pass的使用</span>
+<span style="color: #008080;"> 57</span> <span style="color: #0000ff;">class</span> PersonTwo(Person): <span style="color: #008000;">#</span><span style="color: #008000;"> 继承于父类Person</span>
+<span style="color: #008080;"> 58</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 对父类的Test_Error方法进行了重写</span>
+<span style="color: #008080;"> 59</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_Error(self):
+</span><span style="color: #008080;"> 60</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">你好！\n</span><span style="color: #800000;">'</span>
+<span style="color: #008080;"> 61</span>               <span style="color: #800000;">'</span><span style="color: #800000;">我重写了父类Person中的Test_Error方法！\n</span><span style="color: #800000;">'</span>
+<span style="color: #008080;"> 62</span>               <span style="color: #800000;">'</span><span style="color: #800000;">因此没有抛出NotImplementedError异常！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 63</span> 
+<span style="color: #008080;"> 64</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 对父类的Test_pass方法进行了重写</span>
+<span style="color: #008080;"> 65</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_pass(self):
+</span><span style="color: #008080;"> 66</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">我现在想好了，准备写这段话！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 67</span> 
+<span style="color: #008080;"> 68</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 对父类的Test_abstract方法进行了重写</span>
+<span style="color: #008080;"> 69</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_abstract(self, weight):
+</span><span style="color: #008080;"> 70</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">体重：</span><span style="color: #800000;">'</span><span style="color: #000000;">, weight)
+</span><span style="color: #008080;"> 71</span> 
+<span style="color: #008080;"> 72</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 没有重写Test_Error方法</span>
+<span style="color: #008080;"> 73</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PersonThree(Person):
+</span><span style="color: #008080;"> 74</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> Test_Error2(self):
+</span><span style="color: #008080;"> 75</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">Sorry！</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 76</span> 
+<span style="color: #008080;"> 77</span> <span style="color: #008000;">#</span><span style="color: #008000;"> super().__init__的使用</span>
+<span style="color: #008080;"> 78</span> <span style="color: #008000;">#</span><span style="color: #008000;"> super().__init__()作用：用来调用super class内的__init__构造方法</span>
+<span style="color: #008080;"> 79</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> PersonFour(Person):
+</span><span style="color: #008080;"> 80</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self, name, age, height):
+</span><span style="color: #008080;"> 81</span>         super().<span style="color: #800080;">__init__</span><span style="color: #000000;">(name, age)
+</span><span style="color: #008080;"> 82</span>         self.height =<span style="color: #000000;"> height
+</span><span style="color: #008080;"> 83</span> 
+<span style="color: #008080;"> 84</span> <span style="color: #008000;">#</span><span style="color: #008000;"> *args与**kwargs的使用</span>
+<span style="color: #008080;"> 85</span> <span style="color: #008000;">#</span><span style="color: #008000;"> *args的作用：arguments，位置参数，在当传入的参数个数未知，且不需要知道参数名称时使用</span>
+<span style="color: #008080;"> 86</span> <span style="color: #008000;">#</span><span style="color: #008000;"> **kwargs的作用：keyword arguments，关键字参数，当传入的参数个数未知，但需要知道参数的名称时使用</span>
+<span style="color: #008080;"> 87</span> <span style="color: #0000ff;">def</span> roster(para1, *args, **<span style="color: #000000;">kwargs):
+</span><span style="color: #008080;"> 88</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">必选参数：</span><span style="color: #800000;">'</span><span style="color: #000000;">, para1)
+</span><span style="color: #008080;"> 89</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">位置参数：</span><span style="color: #800000;">'</span><span style="color: #000000;">, args)
+</span><span style="color: #008080;"> 90</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">位置参数求和结果：</span><span style="color: #800000;">'</span><span style="color: #000000;">, sum(args))
+</span><span style="color: #008080;"> 91</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">关键字参数数据类型：</span><span style="color: #800000;">"</span><span style="color: #000000;">, type(kwargs))
+</span><span style="color: #008080;"> 92</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">************花名册************</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 93</span>     count =<span style="color: #000000;"> 0
+</span><span style="color: #008080;"> 94</span>     <span style="color: #0000ff;">for</span> key, value <span style="color: #0000ff;">in</span><span style="color: #000000;"> kwargs.items():
+</span><span style="color: #008080;"> 95</span>         count = count +1
+<span style="color: #008080;"> 96</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">第%d个学生的姓名：</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> count, key)
+</span><span style="color: #008080;"> 97</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">第%d个学生的信息：</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> count)
+</span><span style="color: #008080;"> 98</span>         <span style="color: #0000ff;">for</span> i, j <span style="color: #0000ff;">in</span><span style="color: #000000;"> value.items():
+</span><span style="color: #008080;"> 99</span>             <span style="color: #0000ff;">print</span>(i, <span style="color: #800000;">'</span><span style="color: #800000;">：</span><span style="color: #800000;">'</span><span style="color: #000000;">, j)
+</span><span style="color: #008080;">100</span> 
+<span style="color: #008080;">101</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">*args与**kwargs的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">102</span> tuple = (1, 2, 3, 4<span style="color: #000000;">)
+</span><span style="color: #008080;">103</span> dict1 = {<span style="color: #800000;">"</span><span style="color: #800000;">小明</span><span style="color: #800000;">"</span>:{<span style="color: #800000;">"</span><span style="color: #800000;">年龄</span><span style="color: #800000;">"</span>: 15, <span style="color: #800000;">"</span><span style="color: #800000;">身高</span><span style="color: #800000;">"</span>: 165, <span style="color: #800000;">"</span><span style="color: #800000;">体重</span><span style="color: #800000;">"</span>: 55<span style="color: #000000;">},
+</span><span style="color: #008080;">104</span>          <span style="color: #800000;">"</span><span style="color: #800000;">小红</span><span style="color: #800000;">"</span>:{<span style="color: #800000;">"</span><span style="color: #800000;">年龄</span><span style="color: #800000;">"</span>: 18, <span style="color: #800000;">"</span><span style="color: #800000;">身高</span><span style="color: #800000;">"</span>: 170, <span style="color: #800000;">"</span><span style="color: #800000;">体重</span><span style="color: #800000;">"</span>: 60<span style="color: #000000;">},
+</span><span style="color: #008080;">105</span>          <span style="color: #800000;">"</span><span style="color: #800000;">小王</span><span style="color: #800000;">"</span>:{<span style="color: #800000;">"</span><span style="color: #800000;">年龄</span><span style="color: #800000;">"</span>: 25, <span style="color: #800000;">"</span><span style="color: #800000;">身高</span><span style="color: #800000;">"</span>: 180, <span style="color: #800000;">"</span><span style="color: #800000;">体重</span><span style="color: #800000;">"</span>: 66<span style="color: #000000;">},
+</span><span style="color: #008080;">106</span>          <span style="color: #800000;">"</span><span style="color: #800000;">小张</span><span style="color: #800000;">"</span>:{<span style="color: #800000;">"</span><span style="color: #800000;">年龄</span><span style="color: #800000;">"</span>: 30, <span style="color: #800000;">"</span><span style="color: #800000;">身高</span><span style="color: #800000;">"</span>: 175, <span style="color: #800000;">"</span><span style="color: #800000;">体重</span><span style="color: #800000;">"</span>: 58<span style="color: #000000;">}}
+</span><span style="color: #008080;">107</span> roster(<span style="color: #800000;">'</span><span style="color: #800000;">花名册</span><span style="color: #800000;">'</span>, *tuple, **<span style="color: #000000;">dict1)
+</span><span style="color: #008080;">108</span> 
+<span style="color: #008080;">109</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">110</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">@property的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">111</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 创建实例</span>
+<span style="color: #008080;">112</span> xm = Person(<span style="color: #800000;">'</span><span style="color: #800000;">小明</span><span style="color: #800000;">'</span>, 20<span style="color: #000000;">)
+</span><span style="color: #008080;">113</span> xm.name=<span style="color: #800000;">'</span><span style="color: #800000;">小红</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">114</span> xm.<span style="color: #800080;">__age</span>=5
+<span style="color: #008080;">115</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">姓名：</span><span style="color: #800000;">'</span>, xm.name) <span style="color: #008000;">#</span><span style="color: #008000;"> 按最新的来</span>
+<span style="color: #008080;">116</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">117</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况1：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">118</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">年龄：%d岁</span><span style="color: #800000;">'</span> % xm.age) <span style="color: #008000;">#</span><span style="color: #008000;"> 默认18岁，xm.__age改了，不关xm.age的事</span>
+<span style="color: #008080;">119</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用@property装饰器来创建只读属性</span>
+<span style="color: #008080;">120</span> <span style="color: #008000;">#</span><span style="color: #008000;"> @property装饰器会将方法转换为相同名称的只读属性</span>
+<span style="color: #008080;">121</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 可以与所定义的属性配合使用，这样可以防止属性被修改</span>
+<span style="color: #008080;">122</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">123</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况2：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">124</span> xm.age = 10
+<span style="color: #008080;">125</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">年龄：%d岁</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> xm.age)
+</span><span style="color: #008080;">126</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">127</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况3：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">128</span> xm.age=20
+<span style="color: #008080;">129</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用@property装饰器来修饰方法，使方法可以像属性一样访问</span>
+<span style="color: #008080;">130</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 加了@property后，可以用调用属性的形式来调用方法,后面不需要加()</span>
+<span style="color: #008080;">131</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">年龄：%d岁</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> xm.age)
+</span><span style="color: #008080;">132</span> 
+<span style="color: #008080;">133</span> <span style="color: #008000;">#</span><span style="color: #008000;"> pass的使用</span>
+<span style="color: #008080;">134</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">135</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">pass的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">136</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况1：父类</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">137</span> c = Person(<span style="color: #800000;">'</span><span style="color: #800000;">小李</span><span style="color: #800000;">'</span>, 28<span style="color: #000000;">)
+</span><span style="color: #008080;">138</span> <span style="color: #000000;">c.Test_pass()
+</span><span style="color: #008080;">139</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">140</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况2：PersonTwo子类</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">141</span> d = PersonTwo(<span style="color: #800000;">'</span><span style="color: #800000;">小李</span><span style="color: #800000;">'</span>, 28<span style="color: #000000;">)
+</span><span style="color: #008080;">142</span> <span style="color: #000000;">d.Test_pass()
+</span><span style="color: #008080;">143</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">144</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况3：PersonThree子类</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">145</span> e = PersonThree(<span style="color: #800000;">'</span><span style="color: #800000;">小王</span><span style="color: #800000;">'</span>, 35<span style="color: #000000;">)
+</span><span style="color: #008080;">146</span> <span style="color: #000000;">e.Test_pass()
+</span><span style="color: #008080;">147</span> 
+<span style="color: #008080;">148</span> <span style="color: #008000;">#</span><span style="color: #008000;"> @abc.abstractmethod的使用</span>
+<span style="color: #008080;">149</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">150</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">@abc.abstractmethod的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">151</span> g = PersonTwo(<span style="color: #800000;">'</span><span style="color: #800000;">小李</span><span style="color: #800000;">'</span>, 28<span style="color: #000000;">)
+</span><span style="color: #008080;">152</span> g.Test_abstract(55) <span style="color: #008000;">#</span><span style="color: #008000;"> 实例化，体重55KG</span>
+<span style="color: #008080;">153</span> 
+<span style="color: #008080;">154</span> <span style="color: #008000;">#</span><span style="color: #008000;"> super().__init__的使用</span>
+<span style="color: #008080;">155</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">156</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">super().__init__的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">157</span> f = PersonFour(<span style="color: #800000;">'</span><span style="color: #800000;">小张</span><span style="color: #800000;">'</span>, 26, 170<span style="color: #000000;">)
+</span><span style="color: #008080;">158</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">姓名：</span><span style="color: #800000;">'</span><span style="color: #000000;">, f.name)
+</span><span style="color: #008080;">159</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">年龄：</span><span style="color: #800000;">'</span>, f.age) <span style="color: #008000;">#</span><span style="color: #008000;"> 不是26，还是默认的18</span>
+<span style="color: #008080;">160</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">身高：</span><span style="color: #800000;">'</span><span style="color: #000000;">, f.height)
+</span><span style="color: #008080;">161</span> 
+<span style="color: #008080;">162</span> <span style="color: #008000;">#</span><span style="color: #008000;"> raise NotImplementedError的使用</span>
+<span style="color: #008080;">163</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">164</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">raise NotImplementedError的用法：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">165</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况1：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">166</span> a = PersonTwo(<span style="color: #800000;">'</span><span style="color: #800000;">小李</span><span style="color: #800000;">'</span>, 28<span style="color: #000000;">)
+</span><span style="color: #008080;">167</span> <span style="color: #000000;">a.Test_Error()
+</span><span style="color: #008080;">168</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">169</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">情况2：</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">170</span> b = PersonThree(<span style="color: #800000;">'</span><span style="color: #800000;">小王</span><span style="color: #800000;">'</span>, 35<span style="color: #000000;">)
+</span><span style="color: #008080;">171</span> <span style="color: #000000;">b.Test_Error2()
+</span><span style="color: #008080;">172</span> b.Test_Error() <span style="color: #008000;">#</span><span style="color: #008000;"> 删除这行不报错</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/exercise/python_class.py</span><span style="color: #800000;">"</span>
+*args与**<span style="color: #000000;">kwargs的用法：
+必选参数： 花名册
+位置参数： (</span>1, 2, 3, 4<span style="color: #000000;">)
+位置参数求和结果： </span>10<span style="color: #000000;">
+关键字参数数据类型： </span>&lt;<span style="color: #0000ff;">class</span> <span style="color: #800000;">'</span><span style="color: #800000;">dict</span><span style="color: #800000;">'</span>&gt;
+************花名册************<span style="color: #000000;">
+第1个学生的姓名： 小明
+第1个学生的信息：
+年龄 ： </span>15<span style="color: #000000;">
+身高 ： </span>165<span style="color: #000000;">
+体重 ： </span>55<span style="color: #000000;">
+第2个学生的姓名： 小红
+第2个学生的信息：
+年龄 ： </span>18<span style="color: #000000;">
+身高 ： </span>170<span style="color: #000000;">
+体重 ： </span>60<span style="color: #000000;">
+第3个学生的姓名： 小王
+第3个学生的信息：
+年龄 ： </span>25<span style="color: #000000;">
+身高 ： </span>180<span style="color: #000000;">
+体重 ： </span>66<span style="color: #000000;">
+第4个学生的姓名： 小张
+第4个学生的信息：
+年龄 ： </span>30<span style="color: #000000;">
+身高 ： </span>175<span style="color: #000000;">
+体重 ： </span>58
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+@property的用法：
+姓名： 小红
+</span>---------------------<span style="color: #000000;">
+情况1：
+年龄：18岁
+</span>---------------------<span style="color: #000000;">
+情况2：
+年龄必须大于18岁
+年龄：18岁
+</span>---------------------<span style="color: #000000;">
+情况3：
+年龄：20岁
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+pass的用法：
+情况1：父类
+</span>---------------------<span style="color: #000000;">
+情况2：PersonTwo子类
+我现在想好了，准备写这段话！
+</span>---------------------<span style="color: #000000;">
+情况3：PersonThree子类
+</span>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+@abc.abstractmethod的用法：
+体重： </span>55
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<span style="color: #000000;">
+super().</span><span style="color: #800080;">__init__的用法</span><span style="color: #000000;">：
+姓名： 小张
+年龄： </span>18<span style="color: #000000;">
+身高： </span>170
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<span style="color: #0000ff;">raise</span><span style="color: #000000;"> NotImplementedError的用法：
+情况1：
+你好！
+我重写了父类Person中的Test_Error方法！
+因此没有抛出NotImplementedError异常！
+</span>---------------------<span style="color: #000000;">
+情况2：
+Sorry！
+
+Traceback (most recent call last):
+  File </span><span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/exercise/python_class.py</span><span style="color: #800000;">"</span>, line 172, <span style="color: #0000ff;">in</span> &lt;module&gt;<span style="color: #000000;">
+    b.Test_Error() </span><span style="color: #008000;">#</span><span style="color: #008000;"> 删除这行不报错</span>
+  File <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/exercise/python_class.py</span><span style="color: #800000;">"</span>, line 51, <span style="color: #0000ff;">in</span><span style="color: #000000;"> Test_Error
+    </span><span style="color: #0000ff;">raise</span> NotImplementedError(<span style="color: #800000;">"</span><span style="color: #800000;">没有重写Test_Error方法，因此抛出NotImplementedError异常！</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+NotImplementedError: 没有重写Test_Error方法，因此抛出NotImplementedError异常！
+
+Process finished with exit code </span>1</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意：代码中最后一行是为了说明raise NotImplementedError的作用，把最后一行&nbsp;<span class="cnblogs_code">b.Test_Error()</span>&nbsp;删掉后，程序就不会报错了。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：下面这个程序用于判断输入的类名称是否是子类，是，则返回该子类。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 判断输入的类名称是否是子类，是，则返回该子类</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> BaseClass:
+</span><span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self):
+</span><span style="color: #008080;"> 7</span>         self.value =<span style="color: #000000;"> 0
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> set_value(self, value):
+</span><span style="color: #008080;">10</span>         self.value =<span style="color: #000000;"> value
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> get_value(self):
+</span><span style="color: #008080;">13</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> self.value
+</span><span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> SubClass(BaseClass):
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self):
+</span><span style="color: #008080;">17</span>         super().<span style="color: #800080;">__init__</span><span style="color: #000000;">()
+</span><span style="color: #008080;">18</span>         self.value = 1
+<span style="color: #008080;">19</span> 
+<span style="color: #008080;">20</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> set_value(self, value):
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        super().set_value(value)
+</span><span style="color: #008080;">22</span>         self.value += 1
+<span style="color: #008080;">23</span> 
+<span style="color: #008080;">24</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> get_value(self):
+</span><span style="color: #008080;">25</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> self.value
+</span><span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 这段代码定义了一个名为get_subclass的函数，它接受两个参数：base_class表示基类，class_name表示要查找的子类名称。</span>
+<span style="color: #008080;">28</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 该函数使用递归的方式来查找基类的所有子类，并返回其中名称与子类名称相同的子类。如果找不到名称相同的子类，则返回None。</span>
+<span style="color: #008080;">29</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 在函数体内，首先使用__subclasses__方法获取基类的所有子类，然后使用get_subclass函数递归地查找每个子类。</span>
+<span style="color: #008080;">30</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 如果找到了名称与子类名称相同的子类，则返回该子类。如果没有找到，则返回None。</span>
+<span style="color: #008080;">31</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 请注意，这段代码假设基类中的所有子类都是可枚举的，即它们都有一个唯一的名称。</span>
+<span style="color: #008080;">32</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 如果基类中的子类是可变的，则需要使用其他方法来查找子类。</span>
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> get_subclass(base_class, class_name):
+</span><span style="color: #008080;">34</span>     <span style="color: #0000ff;">for</span> c <span style="color: #0000ff;">in</span> base_class.<span style="color: #800080;">__subclasses__</span><span style="color: #000000;">():
+</span><span style="color: #008080;">35</span>         <span style="color: #0000ff;">if</span> c.<span style="color: #800080;">__name__</span> ==<span style="color: #000000;"> class_name:
+</span><span style="color: #008080;">36</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;"> c
+</span><span style="color: #008080;">37</span>     <span style="color: #0000ff;">for</span> c <span style="color: #0000ff;">in</span> base_class.<span style="color: #800080;">__subclasses__</span><span style="color: #000000;">():
+</span><span style="color: #008080;">38</span>         temp_c =<span style="color: #000000;"> get_subclass(c, class_name)
+</span><span style="color: #008080;">39</span>         <span style="color: #0000ff;">if</span> temp_c <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> None:
+</span><span style="color: #008080;">40</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;"> temp_c
+</span><span style="color: #008080;">41</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> None
+</span><span style="color: #008080;">42</span> 
+<span style="color: #008080;">43</span> subclass =<span style="color: #000000;"> SubClass()
+</span><span style="color: #008080;">44</span> result = get_subclass(BaseClass, <span style="color: #800000;">"</span><span style="color: #800000;">SubClass</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">45</span> <span style="color: #0000ff;">if</span> result <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> None:
+</span><span style="color: #008080;">46</span>     <span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">SubClass {subclass.value} is a subclass of BaseClass</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">47</span> <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">48</span>     <span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">SubClass {subclass.value} is not a subclass of BaseClass</span><span style="color: #800000;">"</span>)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>SubClass 1 <span style="color: #0000ff;">is</span> a subclass of BaseClass</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">可以看到，SubClass属于基类BaseClass中的子类，因此调用子类，返回值1。</span></p>

@@ -1,0 +1,66 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：解决strftime()中国时区乱码问题</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. mytest.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：解决strftime()中国时区乱码问题</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> datetime
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> dateutil.tz
+</span><span style="color: #008080;"> 7</span> now =<span style="color: #000000;"> datetime.datetime.now(dateutil.tz.tzlocal())
+</span><span style="color: #008080;"> 8</span> timestamp = now.strftime(<span style="color: #800000;">'</span><span style="color: #800000;">%Y-%m-%d %A %H:%M:%S %Z</span><span style="color: #800000;">'</span>).encode(<span style="color: #800000;">'</span><span style="color: #800000;">latin-1</span><span style="color: #800000;">'</span>).decode(<span style="color: #800000;">'</span><span style="color: #800000;">GBK</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 9</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法1：datetime模块 | </span><span style="color: #800000;">'</span><span style="color: #000000;">, timestamp)
+</span><span style="color: #008080;">10</span> <span style="color: #008000;">#</span><span style="color: #008000;"> --------------------------------------------------------------------------------------</span>
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> time
+</span><span style="color: #008080;">12</span> timestamp = time.strftime(<span style="color: #800000;">'</span><span style="color: #800000;">%Y-%m-%d %A %H:%M:%S %Z</span><span style="color: #800000;">'</span>).encode(<span style="color: #800000;">'</span><span style="color: #800000;">latin-1</span><span style="color: #800000;">'</span>).decode(<span style="color: #800000;">'</span><span style="color: #800000;">GBK</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法1：time模块     | </span><span style="color: #800000;">'</span><span style="color: #000000;">, timestamp)
+</span><span style="color: #008080;">14</span> <span style="color: #008000;">#</span><span style="color: #008000;"> --------------------------------------------------------------------------------------</span>
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> time
+</span><span style="color: #008080;">16</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> locale
+</span><span style="color: #008080;">17</span> locale.setlocale(locale.LC_ALL, <span style="color: #800000;">''</span><span style="color: #000000;">)
+</span><span style="color: #008080;">18</span> timestamp = time.strftime(<span style="color: #800000;">'</span><span style="color: #800000;">%Y-%m-%d %A  %H:%M:%S %Z</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">19</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方法2：time模块     | </span><span style="color: #800000;">'</span><span style="color: #000000;">, timestamp)
+</span><span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %y 两位数的年份表示(00-99)</span>
+<span style="color: #008080;">22</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %Y 四位数的年份表示(000-9999)</span>
+<span style="color: #008080;">23</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %m 月份(01-12)</span>
+<span style="color: #008080;">24</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %d 月内中的一天(0-31)</span>
+<span style="color: #008080;">25</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %H 24小时制小时数(0-23)</span>
+<span style="color: #008080;">26</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %I 12小时制小时数(01-12)</span>
+<span style="color: #008080;">27</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %M 分钟数(00=59)</span>
+<span style="color: #008080;">28</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %S 秒(00-59)</span>
+<span style="color: #008080;">29</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %a 本地简化星期名称</span>
+<span style="color: #008080;">30</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %A 本地完整星期名称</span>
+<span style="color: #008080;">31</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %b 本地简化的月份名称</span>
+<span style="color: #008080;">32</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %B 本地完整的月份名称</span>
+<span style="color: #008080;">33</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %c 本地相应的日期表示和时间表示</span>
+<span style="color: #008080;">34</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %j 年内的一天(001-366)</span>
+<span style="color: #008080;">35</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %p 本地A.M.或P.M.的等价符</span>
+<span style="color: #008080;">36</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %U 一年中的星期数(00-53)星期天为星期的开始</span>
+<span style="color: #008080;">37</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %w 星期(0-6)，星期天为星期的开始</span>
+<span style="color: #008080;">38</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %W 一年中的星期数(00-53)星期一为星期的开始</span>
+<span style="color: #008080;">39</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %x 本地相应的日期表示</span>
+<span style="color: #008080;">40</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %X 本地相应的时间表示</span>
+<span style="color: #008080;">41</span> <span style="color: #008000;">#</span><span style="color: #008000;"> %Z 当前时区的名称</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">方法1：datetime模块 </span>|  2023-04-18 Tuesday 18:10:43<span style="color: #000000;"> 中国标准时间
+方法1：time模块     </span>|  2023-04-18 Tuesday 18:10:43<span style="color: #000000;"> 中国标准时间
+方法2：time模块     </span>|  2023-04-18 星期二  18:10:43<span style="color: #000000;"> 中国标准时间<br /></span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">乱码问题是在Windows下出现的。例如："中国标准时间"六个汉字成了："&Ouml;&ETH;&sup1;&uacute;&plusmn;&ecirc;&times;&frac14;&Ecirc;&plusmn;&frac14;&auml;"。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">如果用Ubuntu，则直接使用如下代码：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> datetime
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> dateutil.tz
+</span><span style="color: #008080;">3</span> now =<span style="color: #000000;"> datetime.datetime.now(dateutil.tz.tzlocal())
+</span><span style="color: #008080;">4</span> timestamp = now.strftime(<span style="color: #800000;">'</span><span style="color: #800000;">%Y-%m-%d %A %H:%M:%S %Z</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">5</span> <span style="color: #0000ff;">print</span>(timestamp)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>2023-04-18 Tuesday 18:16:42 CST</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">其中CST表示中国标准时间(China Standard Time)。</span></p>

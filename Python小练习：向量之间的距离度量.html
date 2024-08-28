@@ -1,0 +1,195 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：向量之间的距离度量</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文主要用Python实现三种常见的向量之间的距离度量方式：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">1）曼哈顿距离(Manhattan distance, L1范数)：$d(x,y) = \sum\limits_{i = 1}^n {\left| {{x_i} - {y_i}} \right|} $</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2）欧氏距离(Euclidean distance，L2范数)：$d(x,y) = \sqrt {\sum\limits_{i = 1}^n {{{({x_i} - {y_i})}^2}} } $</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">3）余弦相似度(Cosine similarity)：$d(x,y) = \frac{{x{y^T}}}{{\left\| x \right\|\left\| y \right\|}}$</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">其中，$x,y \in \mathbb{R}{^{1 \times n}}$</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. loss_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：向量之间的距离度量</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python实现两向量之间的：</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 1）曼哈顿距离(Manhattan distance, L1范数)</span>
+<span style="color: #008080;"> 7</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 2）欧氏距离(Euclidean distance，L2范数)</span>
+<span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 3）余弦相似度(Cosine similarity)</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;">10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn.functional as F
+</span><span style="color: #008080;">11</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 自己写的距离度量函数</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">def</span> compute_l1_similarity(e1, e2): <span style="color: #008000;">#</span><span style="color: #008000;"> L1距离</span>
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">return</span> torch.abs(e1 - e2).sum(-1<span style="color: #000000;">)
+</span><span style="color: #008080;">14</span> <span style="color: #0000ff;">def</span> compute_l2_similarity(e1, e2): <span style="color: #008000;">#</span><span style="color: #008000;"> L2距离</span>
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">return</span> ((e1 - e2)**2).sum(-1<span style="color: #000000;">).sqrt()
+</span><span style="color: #008080;">16</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 注意：这里开根号了，没平方</span>
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">def</span> compute_cosine_similarity(e1, e2): <span style="color: #008000;">#</span><span style="color: #008000;"> cosine距离</span>
+<span style="color: #008080;">18</span>     e1 = e1 / torch.norm(e1, dim=-1, p=2, keepdim=<span style="color: #000000;">True)
+</span><span style="color: #008080;">19</span>     e2 = e2 / torch.norm(e2, dim=-1, p=2, keepdim=<span style="color: #000000;">True)
+</span><span style="color: #008080;">20</span>     similarity = torch.mul(e1, e2).sum(1) <span style="color: #008000;">#</span><span style="color: #008000;"> mul: 点乘</span>
+<span style="color: #008080;">21</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> similarity
+</span><span style="color: #008080;">22</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 后两行也可替换为：</span>
+<span style="color: #008080;">23</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> similarity = torch.mm(e1, torch.t(e2)) # mm: 相乘，torch.t: 转置</span>
+<span style="color: #008080;">24</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> return torch.diag(similarity) # 只取对角线元素</span>
+<span style="color: #008080;">25</span> 
+<span style="color: #008080;">26</span> torch.manual_seed(1<span style="color: #000000;">)
+</span><span style="color: #008080;">27</span> n = 3 <span style="color: #008000;">#</span><span style="color: #008000;"> 样本个数</span>
+<span style="color: #008080;">28</span> m = 5 <span style="color: #008000;">#</span><span style="color: #008000;"> 样本维度</span>
+<span style="color: #008080;">29</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 仅考虑e1的第i个样本和e2的第i个样本之间计算距离</span>
+<span style="color: #008080;">30</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 不考虑e1的i个样本和e2的第j个样本之间的距离(i&ne;j)</span>
+<span style="color: #008080;">31</span> e1 =<span style="color: #000000;"> torch.randn(n, m)
+</span><span style="color: #008080;">32</span> e2 =<span style="color: #000000;"> torch.randn(n, m)
+</span><span style="color: #008080;">33</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">原始数据为：\n</span><span style="color: #800000;">'</span>, e1, <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, e2)
+</span><span style="color: #008080;">34</span> loss_l1_1 =<span style="color: #000000;"> torch.zeros(n)
+</span><span style="color: #008080;">35</span> loss_l2_1 =<span style="color: #000000;"> torch.zeros(n)
+</span><span style="color: #008080;">36</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 自己写的距离度量函数</span>
+<span style="color: #008080;">37</span> loss_l1 =<span style="color: #000000;"> compute_l1_similarity(e1, e2)
+</span><span style="color: #008080;">38</span> loss_l2 =<span style="color: #000000;"> compute_l2_similarity(e1, e2)
+</span><span style="color: #008080;">39</span> loss_cosine =<span style="color: #000000;"> compute_cosine_similarity(e1, e2)
+</span><span style="color: #008080;">40</span> <span style="color: #008000;">#</span><span style="color: #008000;"> pytorch库里自带的距离度量函数</span>
+<span style="color: #008080;">41</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(n):
+</span><span style="color: #008080;">42</span>     loss_l1_1[i] = torch.dist(e1[i], e2[i], p=1<span style="color: #000000;">)
+</span><span style="color: #008080;">43</span>     loss_l2_1[i] = torch.dist(e1[i], e2[i], p=2<span style="color: #000000;">)
+</span><span style="color: #008080;">44</span> loss_cosine_1 =<span style="color: #000000;"> F.cosine_similarity(e1, e2)
+</span><span style="color: #008080;">45</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 第一个结果是自己写的函数</span>
+<span style="color: #008080;">46</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 第二个结果是pytorch库里自带的函数</span>
+<span style="color: #008080;">47</span> <span style="color: #008000;">#</span><span style="color: #008000;"> n是多少，就出来多少个值</span>
+<span style="color: #008080;">48</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">两者的曼哈顿距离为：\n</span><span style="color: #800000;">'</span>, loss_l1, <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, loss_l1_1)
+</span><span style="color: #008080;">49</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">两者的欧式距离为：\n</span><span style="color: #800000;">'</span>, loss_l2, <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, loss_l2_1)
+</span><span style="color: #008080;">50</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">两者的余弦相似度为：\n</span><span style="color: #800000;">'</span>, loss_cosine, <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>, loss_cosine_1)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/loss/loss_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+原始数据为：
+ tensor([[ </span>0.6614,  0.2669,  0.0617,  0.6213, -0.4519<span style="color: #000000;">],
+        [</span>-0.1661, -1.5228,  0.3817, -1.0276, -0.5631<span style="color: #000000;">],
+        [</span>-0.8923, -0.0583, -0.1955, -0.9656,  0.4224<span style="color: #000000;">]]) 
+ tensor([[ </span>0.2673, -0.4212, -0.5107, -1.5727, -0.1232<span style="color: #000000;">],
+        [ </span>3.5870, -1.8313,  1.5987, -1.2770,  0.3255<span style="color: #000000;">],
+        [</span>-0.4791,  1.3790,  2.5286,  0.4107, -0.9880<span style="color: #000000;">]])
+两者的曼哈顿距离为：
+ tensor([</span>4.1772, 6.4166, 7.3613<span style="color: #000000;">]) 
+ tensor([</span>4.1772, 6.4166, 7.3613<span style="color: #000000;">])
+两者的欧式距离为：
+ tensor([</span>2.4245, 4.0637, 3.6798<span style="color: #000000;">]) 
+ tensor([</span>2.4245, 4.0637, 3.6798<span style="color: #000000;">])
+两者的余弦相似度为：
+ tensor([</span>-0.4887,  0.4416, -0.2214<span style="color: #000000;">]) 
+ tensor([</span>-0.4887,  0.4416, -0.2214<span style="color: #000000;">])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意：这里只是求向量之间的距离度量，并不是矩阵范数。上下两个结果分别为自己根据距离定义写的函数、pytorch自带的函数，可以看到得到的结果是一致的。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 余弦相似性值越大两向量越相似，曼哈顿距离与欧式距离值越小两向量越相似。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：将距离度量应用在聚类划分上。给定原始数据与训练好的聚类中心，根据上述几种距离度量指标，计算原始数据与聚类中心之间的相似度，依照相似度值来划分数据，判断每一个样本属于哪一个类别，并得到每一个样本的类标签。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 已知数据与聚类中心，根据距离度量指标将数据划分为不同的类</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> 
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">def</span> compute_l1_similarity(e1, e2):  <span style="color: #008000;">#</span><span style="color: #008000;"> L1距离</span>
+<span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">return</span> torch.abs(e1 - e2).sum(-1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">def</span> compute_l2_similarity(e1, e2):  <span style="color: #008000;">#</span><span style="color: #008000;"> L2距离</span>
+<span style="color: #008080;">11</span>     <span style="color: #0000ff;">return</span> ((e1 - e2) ** 2).sum(-1<span style="color: #000000;">).sqrt()
+</span><span style="color: #008080;">12</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 注意：这里开根号了，没平方</span>
+<span style="color: #008080;">13</span> 
+<span style="color: #008080;">14</span> <span style="color: #0000ff;">def</span> compute_cosine_similarity(e1, e2):  <span style="color: #008000;">#</span><span style="color: #008000;"> cosine距离</span>
+<span style="color: #008080;">15</span>     e1 = e1 / torch.norm(e1, dim=-1, p=2, keepdim=<span style="color: #000000;">True)
+</span><span style="color: #008080;">16</span>     e2 = e2 / torch.norm(e2, dim=-1, p=2, keepdim=<span style="color: #000000;">True)
+</span><span style="color: #008080;">17</span>     similarity = torch.mul(e1, e2).sum()  <span style="color: #008000;">#</span><span style="color: #008000;"> mul: 点乘</span>
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> similarity
+</span><span style="color: #008080;">19</span> 
+<span style="color: #008080;">20</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> compute_label(data, center, method):
+</span><span style="color: #008080;">21</span>     <span style="color: #0000ff;">global</span><span style="color: #000000;"> label
+</span><span style="color: #008080;">22</span>     z_sim =<span style="color: #000000;"> torch.zeros([len(data), len(center)])
+</span><span style="color: #008080;">23</span>     <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(len(data)):
+</span><span style="color: #008080;">24</span>         <span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(len(center)):
+</span><span style="color: #008080;">25</span>             <span style="color: #0000ff;">if</span> method == <span style="color: #800000;">'</span><span style="color: #800000;">L1</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">26</span>                 z_sim[i][j] =<span style="color: #000000;"> compute_l1_similarity(data[i], center[j])
+</span><span style="color: #008080;">27</span>                 label = z_sim.argmin(dim=1<span style="color: #000000;">).numpy()
+</span><span style="color: #008080;">28</span>             <span style="color: #0000ff;">elif</span> method == <span style="color: #800000;">'</span><span style="color: #800000;">L2</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">29</span>                 z_sim[i][j] =<span style="color: #000000;"> compute_l2_similarity(data[i], center[j])
+</span><span style="color: #008080;">30</span>                 label = z_sim.argmin(dim=1<span style="color: #000000;">).numpy()
+</span><span style="color: #008080;">31</span>             <span style="color: #0000ff;">elif</span> method == <span style="color: #800000;">'</span><span style="color: #800000;">cosine</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">32</span>                 z_sim[i][j] =<span style="color: #000000;"> compute_cosine_similarity(data[i], center[j])
+</span><span style="color: #008080;">33</span>                 label = z_sim.argmax(dim=1<span style="color: #000000;">).numpy()
+</span><span style="color: #008080;">34</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">%s相似性：\n</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> method, z_sim)
+</span><span style="color: #008080;">35</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">样本类别标签：</span><span style="color: #800000;">'</span><span style="color: #000000;">, label)
+</span><span style="color: #008080;">36</span> 
+<span style="color: #008080;">37</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 样本</span>
+<span style="color: #008080;">38</span> data = (torch.tensor([[1, 1, 1, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">39</span>                       [-1, -2, -3, -4, -5<span style="color: #000000;">],
+</span><span style="color: #008080;">40</span>                       [2, 4, 6, 8, 11<span style="color: #000000;">],
+</span><span style="color: #008080;">41</span>                       [-1, -1, -1, 1, -1<span style="color: #000000;">],
+</span><span style="color: #008080;">42</span>                       [10, 9, 8, 6, 5<span style="color: #000000;">],
+</span><span style="color: #008080;">43</span>                       [-7, -3, -2, 4, -5<span style="color: #000000;">],
+</span><span style="color: #008080;">44</span>                       [3, -2, 5, 8, 5]])) * 1.0
+<span style="color: #008080;">45</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 聚类中心</span>
+<span style="color: #008080;">46</span> center = (torch.tensor([[2, 2, 6, 2, 2<span style="color: #000000;">],
+</span><span style="color: #008080;">47</span>                         [-1, -1, -1, 5, -1<span style="color: #000000;">],
+</span><span style="color: #008080;">48</span>                         [1, -1, 3, 4, 5]])) * 1.0
+<span style="color: #008080;">49</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">样本： \n</span><span style="color: #800000;">'</span><span style="color: #000000;">, data)
+</span><span style="color: #008080;">50</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">聚类中心： \n</span><span style="color: #800000;">'</span><span style="color: #000000;">, center)
+</span><span style="color: #008080;">51</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">52</span> compute_label(data, center, <span style="color: #800000;">'</span><span style="color: #800000;">L1</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">53</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">54</span> compute_label(data, center, <span style="color: #800000;">'</span><span style="color: #800000;">L2</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">55</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">56</span> compute_label(data, center, <span style="color: #800000;">'</span><span style="color: #800000;">cosine</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/向量间的距离度量/test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+样本： 
+ tensor([[ </span>1.,  1.,  1.,  1.,  1<span style="color: #000000;">.],
+        [</span>-1., -2., -3., -4., -5<span style="color: #000000;">.],
+        [ </span>2.,  4.,  6.,  8., 11<span style="color: #000000;">.],
+        [</span>-1., -1., -1.,  1., -1<span style="color: #000000;">.],
+        [</span>10.,  9.,  8.,  6.,  5<span style="color: #000000;">.],
+        [</span>-7., -3., -2.,  4., -5<span style="color: #000000;">.],
+        [ </span>3., -2.,  5.,  8.,  5<span style="color: #000000;">.]])
+聚类中心： 
+ tensor([[ </span>2.,  2.,  6.,  2.,  2<span style="color: #000000;">.],
+        [</span>-1., -1., -1.,  5., -1<span style="color: #000000;">.],
+        [ </span>1., -1.,  3.,  4.,  5<span style="color: #000000;">.]])
+</span>------------------------------------<span style="color: #000000;">
+L1相似性：
+ tensor([[ </span>9., 12., 11<span style="color: #000000;">.],
+        [</span>29., 16., 27<span style="color: #000000;">.],
+        [</span>17., 30., 19<span style="color: #000000;">.],
+        [</span>17.,  4., 15<span style="color: #000000;">.],
+        [</span>24., 37., 26<span style="color: #000000;">.],
+        [</span>31., 14., 25<span style="color: #000000;">.],
+        [</span>15., 20.,  9<span style="color: #000000;">.]])
+样本类别标签： [0 </span>1 0 1 0 1 2<span style="color: #000000;">]
+</span>------------------------------------<span style="color: #000000;">
+L2相似性：
+ tensor([[ </span>5.3852,  5.6569,  5.7446<span style="color: #000000;">],
+        [</span>13.8203, 10.0995, 14.3178<span style="color: #000000;">],
+        [</span>11.0000, 15.3623,  9.3274<span style="color: #000000;">],
+        [ </span>8.7750,  4.0000,  8.0623<span style="color: #000000;">],
+        [</span>11.9164, 18.4120, 14.4914<span style="color: #000000;">],
+        [</span>14.9332,  7.6158, 13.8924<span style="color: #000000;">],
+        [ </span>7.9373,  9.8995,  5.0000<span style="color: #000000;">]])
+样本类别标签： [0 </span>1 2 1 0 1 2<span style="color: #000000;">]
+</span>------------------------------------<span style="color: #000000;">
+cosine相似性：
+ tensor([[ </span>0.8682,  0.0830,  0.7442<span style="color: #000000;">],
+        [</span>-0.7854, -0.2254, -0.9162<span style="color: #000000;">],
+        [ </span>0.7682,  0.2033,  0.9201<span style="color: #000000;">],
+        [</span>-0.6202,  0.7474, -0.2481<span style="color: #000000;">],
+        [ </span>0.8562, -0.0212,  0.5866<span style="color: #000000;">],
+        [</span>-0.4646,  0.6770, -0.2596<span style="color: #000000;">],
+        [ </span>0.7137,  0.4779,  0.9475<span style="color: #000000;">]])
+样本类别标签： [0 </span>1 2 1 0 1 2<span style="color: #000000;">]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意：data为原始数据，一共有7个样本，每个样本维度都为5，center为聚类中心，有3个聚类中心(类别)。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] <a href="https://www.cnblogs.com/kailugaji/p/11911433.html" target="_blank">相似性度量</a> &ndash; 凯鲁嘎吉 &ndash; 博客园</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] <a href="https://www.cnblogs.com/kailugaji/p/11608558.html" target="_blank">向量范数与矩阵范数</a> &ndash; 凯鲁嘎吉 &ndash; 博客园</span></p>

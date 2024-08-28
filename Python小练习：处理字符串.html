@@ -1,0 +1,85 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：处理字符串</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">介绍3种处理字符串的方式：1. 将英语名词单数转化为复数形式(仅适用于一般形式)，2. 将字符串(带有下换线_)转化为驼峰化形式，3. 左对齐右对齐。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. word_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：处理字符串</span>
+<span style="color: #008080;"> 5</span> 
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 名词的复数形式</span>
+<span style="color: #008080;"> 7</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 这是一个Python函数，用于将单词转换为其不同的形式。它接受一个单词作为参数，并返回该单词的不同形式。</span>
+<span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 该函数首先检查单词是否以&ldquo;y&rdquo;结尾，如果是，则返回单词的前半部分，即&ldquo;ies&rdquo;。</span>
+<span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 如果单词以&ldquo;x&rdquo;结尾，则返回单词的后半部分，即&ldquo;es&rdquo;。</span>
+<span style="color: #008080;">10</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 如果单词以&ldquo;an&rdquo;结尾，则返回单词的前半部分，即&ldquo;en&rdquo;。</span>
+<span style="color: #008080;">11</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 否则，返回单词本身，并在单词后添加&ldquo;s&rdquo;。</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> _plural(word):
+</span><span style="color: #008080;">13</span>     <span style="color: #0000ff;">if</span> word.endswith(<span style="color: #800000;">'</span><span style="color: #800000;">y</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #008080;">14</span>         <span style="color: #0000ff;">return</span> word[:-1] + <span style="color: #800000;">'</span><span style="color: #800000;">ies</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">elif</span> word[-1] <span style="color: #0000ff;">in</span> <span style="color: #800000;">'</span><span style="color: #800000;">sx</span><span style="color: #800000;">'</span> <span style="color: #0000ff;">or</span> word[-2:] <span style="color: #0000ff;">in</span> [<span style="color: #800000;">'</span><span style="color: #800000;">sh</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">ch</span><span style="color: #800000;">'</span><span style="color: #000000;">]:
+</span><span style="color: #008080;">16</span>         <span style="color: #0000ff;">return</span> word + <span style="color: #800000;">'</span><span style="color: #800000;">es</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">17</span>     <span style="color: #0000ff;">elif</span> word.endswith(<span style="color: #800000;">'</span><span style="color: #800000;">an</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #008080;">18</span>         <span style="color: #0000ff;">return</span> word[:-2] + <span style="color: #800000;">'</span><span style="color: #800000;">en</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">19</span>     <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">20</span>         <span style="color: #0000ff;">return</span> word + <span style="color: #800000;">'</span><span style="color: #800000;">s</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 这段代码定义了一个名为_under_score_to_camel的函数</span>
+<span style="color: #008080;">23</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 它接受一个参数word，并返回该字符串的驼峰化形式。</span>
+<span style="color: #008080;">24</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 该函数使用了split方法将字符串按照_分割成多个部分，并将每个部分转换成大写形式</span>
+<span style="color: #008080;">25</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 然后使用join方法将所有部分连接起来，形成驼峰化的形式。</span>
+<span style="color: #008080;">26</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> _under_score_to_camel(word):
+</span><span style="color: #008080;">27</span>     parts = word.split(<span style="color: #800000;">'</span><span style="color: #800000;">_</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">28</span>     parts = [p[0].upper() + p[1:] <span style="color: #0000ff;">for</span> p <span style="color: #0000ff;">in</span><span style="color: #000000;"> parts]
+</span><span style="color: #008080;">29</span>     <span style="color: #0000ff;">return</span> <span style="color: #800000;">''</span><span style="color: #000000;">.join(parts)
+</span><span style="color: #008080;">30</span> 
+<span style="color: #008080;">31</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 字符串对齐</span>
+<span style="color: #008080;">32</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用了 rjust() 方法来对键值对进行右对齐</span>
+<span style="color: #008080;">33</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用了 format() 方法来对键值对进行左对齐</span>
+<span style="color: #008080;">34</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用了 round() 函数来对结果进行四舍五入</span>
+<span style="color: #008080;">35</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> format_for_process(params):
+</span><span style="color: #008080;">36</span>     new_params =<span style="color: #000000;"> []
+</span><span style="color: #008080;">37</span>     <span style="color: #0000ff;">for</span> k, v <span style="color: #0000ff;">in</span><span style="color: #000000;"> params.items():
+</span><span style="color: #008080;">38</span>         k = k.rjust(18)  <span style="color: #008000;">#</span><span style="color: #008000;"> 右对齐</span>
+<span style="color: #008080;">39</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> rjust() 方法是向字符串的左侧填充指定字符，从而达到右对齐文本的目的。</span>
+<span style="color: #008080;">40</span>         v = <span style="color: #800000;">'</span><span style="color: #800000;">{:&lt;12}</span><span style="color: #800000;">'</span>.format(round(v, 6))[:12]  <span style="color: #008000;">#</span><span style="color: #008000;"> 左对齐，并且保留6位小数</span>
+<span style="color: #008080;">41</span> <span style="color: #000000;">        new_params.append([k, v])
+</span><span style="color: #008080;">42</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> new_params
+</span><span style="color: #008080;">43</span> 
+<span style="color: #008080;">44</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">agent</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">45</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _plural(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：agents</span>
+<span style="color: #008080;">46</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">policy</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">47</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _plural(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：policies</span>
+<span style="color: #008080;">48</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">lynx</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">49</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _plural(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：lynxes</span>
+<span style="color: #008080;">50</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">woman</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">51</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _plural(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：women</span>
+<span style="color: #008080;">52</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-----------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">53</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">book_story</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">54</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _under_score_to_camel(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：BookStory</span>
+<span style="color: #008080;">55</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">activity</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">56</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _under_score_to_camel(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：Activity</span>
+<span style="color: #008080;">57</span> word = <span style="color: #800000;">'</span><span style="color: #800000;">lynx_woman_hello</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">58</span> <span style="color: #0000ff;">print</span>(word, <span style="color: #800000;">'</span><span style="color: #800000;">-&gt;</span><span style="color: #800000;">'</span>, _under_score_to_camel(word))  <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：LynxWomanHello</span>
+<span style="color: #008080;">59</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-----------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">60</span> params={<span style="color: #800000;">"</span><span style="color: #800000;">name</span><span style="color: #800000;">"</span>: 127.1234567587, <span style="color: #800000;">"</span><span style="color: #800000;">height</span><span style="color: #800000;">"</span>: 185.123456789, <span style="color: #800000;">"</span><span style="color: #800000;">score</span><span style="color: #800000;">"</span>: 10.123456852<span style="color: #000000;">}
+</span><span style="color: #008080;">61</span> new_params =<span style="color: #000000;"> format_for_process(params)
+</span><span style="color: #008080;">62</span> <span style="color: #0000ff;">print</span>(new_params)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/time/word_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+agent </span>-&gt;<span style="color: #000000;"> agents
+policy </span>-&gt;<span style="color: #000000;"> policies
+lynx </span>-&gt;<span style="color: #000000;"> lynxes
+woman </span>-&gt;<span style="color: #000000;"> women
+</span>-----------------------------------<span style="color: #000000;">
+book_story </span>-&gt;<span style="color: #000000;"> BookStory
+activity </span>-&gt;<span style="color: #000000;"> Activity
+lynx_woman_hello </span>-&gt;<span style="color: #000000;"> LynxWomanHello
+</span>-----------------------------------<span style="color: #000000;">
+[[</span><span style="color: #800000;">'</span><span style="color: #800000;">              name</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">127.123457  </span><span style="color: #800000;">'</span>], [<span style="color: #800000;">'</span><span style="color: #800000;">            height</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">185.123457  </span><span style="color: #800000;">'</span>], [<span style="color: #800000;">'</span><span style="color: #800000;">             score</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">10.123457   </span><span style="color: #800000;">'</span><span style="color: #000000;">]]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">后续如果有更多字符串处理的案例，还会继续补充完整。</span></p>

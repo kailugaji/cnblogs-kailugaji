@@ -1,0 +1,58 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：从正态分布中采样</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文用Python实现三种从正态(高斯)分布中的采样方式：确定性采样、重参数化技巧(推荐)、直接采样。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;normal_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：从正态分布中采样</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">from</span> torch.distributions <span style="color: #0000ff;">import</span><span style="color: #000000;"> Normal
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> my_normal(means, std, str):
+</span><span style="color: #008080;"> 8</span>     dist =<span style="color: #000000;"> Normal(means, std)
+</span><span style="color: #008080;"> 9</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> Normal(loc: torch.Size([10]), scale: torch.Size([10]))</span>
+<span style="color: #008080;">10</span>     <span style="color: #0000ff;">if</span> str == <span style="color: #800000;">'</span><span style="color: #800000;">deterministic</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">11</span>         out_pred =<span style="color: #000000;"> means
+</span><span style="color: #008080;">12</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果是确定性采样，均值就是输出</span>
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">elif</span> str == <span style="color: #800000;">'</span><span style="color: #800000;">reparameterize</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">14</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 重参数化技巧</span>
+<span style="color: #008080;">15</span>         out_pred =<span style="color: #000000;"> dist.rsample()
+</span><span style="color: #008080;">16</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> rsample()不是在定义的正态分布上采样</span>
+<span style="color: #008080;">17</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 而是mean+std&times;采样值eps，其中eps~N(0, I)</span>
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">19</span>         out_pred =<span style="color: #000000;"> dist.sample()
+</span><span style="color: #008080;">20</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 直接从定义的正态分布（均值为mean，标准差std）上采样</span>
+<span style="color: #008080;">21</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> out_pred
+</span><span style="color: #008080;">22</span> 
+<span style="color: #008080;">23</span> str = [<span style="color: #800000;">'</span><span style="color: #800000;">deterministic</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">reparameterize</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">sample</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #008080;">24</span> means = torch.arange(1, 11) * 1.0
+<span style="color: #008080;">25</span> <span style="color: #008000;">#</span><span style="color: #008000;"> tensor([ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10.])</span>
+<span style="color: #008080;">26</span> std = torch.arange(1, 0, -0.1<span style="color: #000000;">)
+</span><span style="color: #008080;">27</span> <span style="color: #008000;">#</span><span style="color: #008000;"> tensor([1.0000, 0.9000, 0.8000, 0.7000, 0.6000, 0.5000, 0.4000, 0.3000, 0.2000, 0.1000])</span>
+<span style="color: #008080;">28</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">均值：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, means)
+</span><span style="color: #008080;">29</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">方差：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, std)
+</span><span style="color: #008080;">30</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> str:
+</span><span style="color: #008080;">31</span>     out_pred =<span style="color: #000000;"> my_normal(means, std, i)
+</span><span style="color: #008080;">32</span>     <span style="color: #0000ff;">print</span>(i, <span style="color: #800000;">'</span><span style="color: #800000;">下的采样结果：\n</span><span style="color: #800000;">'</span>, out_pred)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Other/normal_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+均值：
+ tensor([ </span>1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10<span style="color: #000000;">.])
+方差：
+ tensor([</span>1.0000, 0.9000, 0.8000, 0.7000, 0.6000, 0.5000, 0.4000, 0.3000, 0.2000<span style="color: #000000;">,
+        </span>0.1000<span style="color: #000000;">])
+deterministic 下的采样结果：
+ tensor([ </span>1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10<span style="color: #000000;">.])
+reparameterize 下的采样结果：
+ tensor([</span>1.7890, 1.6882, 2.9405, 3.5366, 4.5679, 6.0867, 6.7917, 8.0406, 9.0113<span style="color: #000000;">,
+        </span>9.9845<span style="color: #000000;">])
+sample 下的采样结果：
+ tensor([</span>0.4161, 1.5916, 3.0199, 3.5160, 4.6002, 5.7837, 7.1503, 8.2893, 8.7639<span style="color: #000000;">,
+        </span>9.9661<span style="color: #000000;">])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">注意：每次采样结果是不一样的。</span></p>

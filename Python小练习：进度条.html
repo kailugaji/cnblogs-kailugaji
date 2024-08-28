@@ -1,0 +1,271 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：进度条</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">用Python两种方式实现进度条功能，一种是自定义的进度条，一种是调用tqdm库来实现。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. process_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;">  2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;">  3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;">  4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：进度条</span>
+<span style="color: #008080;">  5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> time
+</span><span style="color: #008080;">  6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> math
+</span><span style="color: #008080;">  7</span> <span style="color: #0000ff;">from</span> tqdm <span style="color: #0000ff;">import</span><span style="color: #000000;"> tqdm
+</span><span style="color: #008080;">  8</span> 
+<span style="color: #008080;">  9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 字符串左对齐右对齐</span>
+<span style="color: #008080;"> 10</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> format_for_process(params):
+</span><span style="color: #008080;"> 11</span>     new_params =<span style="color: #000000;"> []
+</span><span style="color: #008080;"> 12</span>     <span style="color: #0000ff;">for</span> k, v <span style="color: #0000ff;">in</span><span style="color: #000000;"> params.items():
+</span><span style="color: #008080;"> 13</span>         k = k.rjust(18)  <span style="color: #008000;">#</span><span style="color: #008000;"> 右对齐</span>
+<span style="color: #008080;"> 14</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> rjust() 方法是向字符串的左侧填充指定字符，从而达到右对齐文本的目的。</span>
+<span style="color: #008080;"> 15</span>         v = <span style="color: #800000;">'</span><span style="color: #800000;">{:&lt;12}</span><span style="color: #800000;">'</span>.format(round(v, 6))[:12]  <span style="color: #008000;">#</span><span style="color: #008000;"> 左对齐，并且保留6位小数</span>
+<span style="color: #008080;"> 16</span> <span style="color: #000000;">        new_params.append([k, v])
+</span><span style="color: #008080;"> 17</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> new_params
+</span><span style="color: #008080;"> 18</span> 
+<span style="color: #008080;"> 19</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Progress:
+</span><span style="color: #008080;"> 20</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 用于在控制台中显示进度条</span>
+<span style="color: #008080;"> 21</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span>(self, total, name=<span style="color: #800000;">'</span><span style="color: #800000;">Progress</span><span style="color: #800000;">'</span>, ncol=3, max_length=30, indent=0, line_width=100, speed_update_freq=50<span style="color: #000000;">):
+</span><span style="color: #008080;"> 22</span>         self.total = total <span style="color: #008000;">#</span><span style="color: #008000;"> 进度总量</span>
+<span style="color: #008080;"> 23</span>         self.name = name <span style="color: #008000;">#</span><span style="color: #008000;"> 进度条的名称</span>
+<span style="color: #008080;"> 24</span>         self.ncol = ncol  <span style="color: #008000;">#</span><span style="color: #008000;"> 3 # 进度条的列数</span>
+<span style="color: #008080;"> 25</span>         self.max_length = max_length  <span style="color: #008000;">#</span><span style="color: #008000;"> 30 进度条的最大长度</span>
+<span style="color: #008080;"> 26</span>         self.indent = indent  <span style="color: #008000;">#</span><span style="color: #008000;"> 0 进度条的缩进量</span>
+<span style="color: #008080;"> 27</span>         self.line_width = line_width  <span style="color: #008000;">#</span><span style="color: #008000;"> 100 进度条的宽度</span>
+<span style="color: #008080;"> 28</span>         self._speed_update_freq = speed_update_freq  <span style="color: #008000;">#</span><span style="color: #008000;"> 50 进度条的速度更新频率</span>
+<span style="color: #008080;"> 29</span>         self._step = 0 <span style="color: #008000;">#</span><span style="color: #008000;"> 进度条的当前步数</span>
+<span style="color: #008080;"> 30</span>         self._prev_line = <span style="color: #800000;">'</span><span style="color: #800000;">\033[F</span><span style="color: #800000;">'</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 上一次进度条的内容</span>
+<span style="color: #008080;"> 31</span>         self._clear_line = <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> * self.line_width  <span style="color: #008000;">#</span><span style="color: #008000;"> 100, ''中间空100个字符 清空进度条的内容</span>
+<span style="color: #008080;"> 32</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> '                         '</span>
+<span style="color: #008080;"> 33</span>         self._pbar_size = self.ncol * self.max_length  <span style="color: #008000;">#</span><span style="color: #008000;"> 3*30 进度条的分组大小</span>
+<span style="color: #008080;"> 34</span>         self._complete_pbar = <span style="color: #800000;">'</span><span style="color: #800000;">#</span><span style="color: #800000;">'</span> * self._pbar_size  <span style="color: #008000;">#</span><span style="color: #008000;"> # * 90,90个# 完成进度条的内容</span>
+<span style="color: #008080;"> 35</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> #######################################</span>
+<span style="color: #008080;"> 36</span>         self._incomplete_pbar = <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> * self._pbar_size <span style="color: #008000;">#</span><span style="color: #008000;"> 未完成进度条的内容</span>
+<span style="color: #008080;"> 37</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> '                                  '</span>
+<span style="color: #008080;"> 38</span>         self.lines = [<span style="color: #800000;">''</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> 进度条的内容列表</span>
+<span style="color: #008080;"> 39</span>         self.fraction = <span style="color: #800000;">'</span><span style="color: #800000;">{} / {}</span><span style="color: #800000;">'</span>.format(0, self.total) <span style="color: #008000;">#</span><span style="color: #008000;"> 进度条的进度</span>
+<span style="color: #008080;"> 40</span>         self.resume() <span style="color: #008000;">#</span><span style="color: #008000;"> 重新开始进度条的计时</span>
+<span style="color: #008080;"> 41</span> 
+<span style="color: #008080;"> 42</span>     <span style="color: #0000ff;">def</span> update(self, n=1<span style="color: #000000;">):
+</span><span style="color: #008080;"> 43</span>         self._step +=<span style="color: #000000;"> n
+</span><span style="color: #008080;"> 44</span>         <span style="color: #0000ff;">if</span> self._step % self._speed_update_freq ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;"> 45</span>             self._time0 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 46</span>             self._step0 =<span style="color: #000000;"> self._step
+</span><span style="color: #008080;"> 47</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 该方法的作用是更新步数_step并在每次更新后打印当前时间_time0和步数_step0。</span>
+<span style="color: #008080;"> 48</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 如果_step的值是_speed_update_freq的倍数，则打印一个换行符，并将_time0和_step0设置为当前时间和步数。</span>
+<span style="color: #008080;"> 49</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 如果_step的值不是_speed_update_freq的倍数，则不打印任何内容，并将_time0和_step0设置为当前时间和步数。</span>
+<span style="color: #008080;"> 50</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 如果_step的值是0，则打印一个换行符，并将_time0和_step0设置为当前时间和步数。</span>
+<span style="color: #008080;"> 51</span> 
+<span style="color: #008080;"> 52</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> resume(self):
+</span><span style="color: #008080;"> 53</span>         self._skip_lines = 1
+<span style="color: #008080;"> 54</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>, end=<span style="color: #800000;">''</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 55</span>         self._time0 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 56</span>         self._step0 =<span style="color: #000000;"> self._step
+</span><span style="color: #008080;"> 57</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> self._skip_lines是一个实例变量，其值为1表示正在执行代码块，为0表示已经执行完毕。</span>
+<span style="color: #008080;"> 58</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 该方法的作用是在每次更新后打印一个换行符，并将_time0和_step0设置为当前时间和步数。</span>
+<span style="color: #008080;"> 59</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 如果self._skip_lines的值是1，则在每行代码末尾打印一个换行符。</span>
+<span style="color: #008080;"> 60</span> 
+<span style="color: #008080;"> 61</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> pause(self):
+</span><span style="color: #008080;"> 62</span> <span style="color: #000000;">        self._clear()
+</span><span style="color: #008080;"> 63</span>         self._skip_lines = 1
+<span style="color: #008080;"> 64</span> 
+<span style="color: #008080;"> 65</span>     <span style="color: #0000ff;">def</span> set_description(self, params=<span style="color: #000000;">[]):
+</span><span style="color: #008080;"> 66</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> Position</span>
+<span style="color: #008080;"> 67</span> <span style="color: #000000;">        self._clear()
+</span><span style="color: #008080;"> 68</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> Percent</span>
+<span style="color: #008080;"> 69</span>         percent, fraction =<span style="color: #000000;"> self._format_percent(self._step, self.total)
+</span><span style="color: #008080;"> 70</span>         self.fraction =<span style="color: #000000;"> fraction
+</span><span style="color: #008080;"> 71</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> Speed</span>
+<span style="color: #008080;"> 72</span>         speed =<span style="color: #000000;"> self._format_speed(self._step)
+</span><span style="color: #008080;"> 73</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> Params</span>
+<span style="color: #008080;"> 74</span>         num_params =<span style="color: #000000;"> len(params)
+</span><span style="color: #008080;"> 75</span>         nrow = math.ceil(num_params / self.ncol)  <span style="color: #008000;">#</span><span style="color: #008000;"> 返回大于等于参数x的最小整数,即对浮点数向上取整</span>
+<span style="color: #008080;"> 76</span>         params_split =<span style="color: #000000;"> self._chunk(params, self.ncol)
+</span><span style="color: #008080;"> 77</span>         params_string, lines =<span style="color: #000000;"> self._format(params_split)
+</span><span style="color: #008080;"> 78</span>         self.lines =<span style="color: #000000;"> lines
+</span><span style="color: #008080;"> 79</span> 
+<span style="color: #008080;"> 80</span>         description = <span style="color: #800000;">'</span><span style="color: #800000;">{} | {}{}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(percent, speed, params_string)
+</span><span style="color: #008080;"> 81</span>         <span style="color: #0000ff;">print</span><span style="color: #000000;">(description)
+</span><span style="color: #008080;"> 82</span>         self._skip_lines = nrow + 1
+<span style="color: #008080;"> 83</span> 
+<span style="color: #008080;"> 84</span>     <span style="color: #0000ff;">def</span> set_description2(self, params=<span style="color: #000000;">[]):
+</span><span style="color: #008080;"> 85</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> Params</span>
+<span style="color: #008080;"> 86</span>         num_params =<span style="color: #000000;"> len(params)
+</span><span style="color: #008080;"> 87</span>         nrow = math.ceil(num_params / self.ncol)  <span style="color: #008000;">#</span><span style="color: #008000;"> 返回大于等于参数x的最小整数,即对浮点数向上取整</span>
+<span style="color: #008080;"> 88</span>         params_split =<span style="color: #000000;"> self._chunk(params, self.ncol)
+</span><span style="color: #008080;"> 89</span>         params_string, lines =<span style="color: #000000;"> self._format(params_split)
+</span><span style="color: #008080;"> 90</span>         <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, params_string)
+</span><span style="color: #008080;"> 91</span> 
+<span style="color: #008080;"> 92</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _clear(self):
+</span><span style="color: #008080;"> 93</span>         position = self._prev_line *<span style="color: #000000;"> self._skip_lines
+</span><span style="color: #008080;"> 94</span>         empty = <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span>.join([self._clear_line <span style="color: #0000ff;">for</span> _ <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(self._skip_lines)])
+</span><span style="color: #008080;"> 95</span>         <span style="color: #0000ff;">print</span>(position, end=<span style="color: #800000;">''</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 96</span>         <span style="color: #0000ff;">print</span><span style="color: #000000;">(empty)
+</span><span style="color: #008080;"> 97</span>         <span style="color: #0000ff;">print</span>(position, end=<span style="color: #800000;">''</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 98</span> 
+<span style="color: #008080;"> 99</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _format_percent(self, n, total):
+</span><span style="color: #008080;">100</span>         <span style="color: #0000ff;">if</span><span style="color: #000000;"> total:
+</span><span style="color: #008080;">101</span>             percent = n /<span style="color: #000000;"> float(total)
+</span><span style="color: #008080;">102</span> 
+<span style="color: #008080;">103</span>             complete_entries = int(percent *<span style="color: #000000;"> self._pbar_size)
+</span><span style="color: #008080;">104</span>             incomplete_entries = self._pbar_size -<span style="color: #000000;"> complete_entries
+</span><span style="color: #008080;">105</span> 
+<span style="color: #008080;">106</span>             pbar = self._complete_pbar[:complete_entries] +<span style="color: #000000;"> self._incomplete_pbar[:incomplete_entries]
+</span><span style="color: #008080;">107</span>             fraction = <span style="color: #800000;">'</span><span style="color: #800000;">{} / {}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(n, total)
+</span><span style="color: #008080;">108</span>             string = <span style="color: #800000;">'</span><span style="color: #800000;">{} [{}] {:3d}%</span><span style="color: #800000;">'</span>.format(fraction, pbar, int(percent * 100<span style="color: #000000;">))
+</span><span style="color: #008080;">109</span>         <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">110</span>             fraction = <span style="color: #800000;">'</span><span style="color: #800000;">{}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(n)
+</span><span style="color: #008080;">111</span>             string = <span style="color: #800000;">'</span><span style="color: #800000;">{} iterations</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(n)
+</span><span style="color: #008080;">112</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> string, fraction
+</span><span style="color: #008080;">113</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> string:</span>
+<span style="color: #008080;">114</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 9 / 10 [#################################################################################         ]  90%</span>
+<span style="color: #008080;">115</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> fraction: 9 / 10</span>
+<span style="color: #008080;">116</span> 
+<span style="color: #008080;">117</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 输出x.x Hz</span>
+<span style="color: #008080;">118</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _format_speed(self, n):
+</span><span style="color: #008080;">119</span>         num_steps = n -<span style="color: #000000;"> self._step0
+</span><span style="color: #008080;">120</span>         t = time.time() -<span style="color: #000000;"> self._time0
+</span><span style="color: #008080;">121</span>         speed = num_steps / (t + float(<span style="color: #800000;">"</span><span style="color: #800000;">1e-8</span><span style="color: #800000;">"</span><span style="color: #000000;">))
+</span><span style="color: #008080;">122</span>         string = <span style="color: #800000;">'</span><span style="color: #800000;">{:.1E} Hz</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(speed)
+</span><span style="color: #008080;">123</span>         <span style="color: #0000ff;">if</span> num_steps &gt;<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">124</span>             self._speed =<span style="color: #000000;"> string
+</span><span style="color: #008080;">125</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> string
+</span><span style="color: #008080;">126</span> 
+<span style="color: #008080;">127</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _chunk(self, l, n):
+</span><span style="color: #008080;">128</span>         <span style="color: #0000ff;">return</span> [l[i:i + n] <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(0, len(l), n)]
+</span><span style="color: #008080;">129</span> 
+<span style="color: #008080;">130</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _format(self, chunks):
+</span><span style="color: #008080;">131</span>         lines = [self._format_chunk(chunk) <span style="color: #0000ff;">for</span> chunk <span style="color: #0000ff;">in</span><span style="color: #000000;"> chunks]
+</span><span style="color: #008080;">132</span>         lines.insert(0, <span style="color: #800000;">''</span><span style="color: #000000;">)
+</span><span style="color: #008080;">133</span>         padding = <span style="color: #800000;">'</span><span style="color: #800000;">\n</span><span style="color: #800000;">'</span> + <span style="color: #800000;">'</span> <span style="color: #800000;">'</span> *<span style="color: #000000;"> self.indent
+</span><span style="color: #008080;">134</span>         string =<span style="color: #000000;"> padding.join(lines)
+</span><span style="color: #008080;">135</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> string, lines
+</span><span style="color: #008080;">136</span> 
+<span style="color: #008080;">137</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _format_chunk(self, chunk):
+</span><span style="color: #008080;">138</span>         line = <span style="color: #800000;">'</span><span style="color: #800000;"> | </span><span style="color: #800000;">'</span>.join([self._format_param(param) <span style="color: #0000ff;">for</span> param <span style="color: #0000ff;">in</span><span style="color: #000000;"> chunk])
+</span><span style="color: #008080;">139</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> line
+</span><span style="color: #008080;">140</span> 
+<span style="color: #008080;">141</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> _format_param(self, param):
+</span><span style="color: #008080;">142</span>         k, v =<span style="color: #000000;"> param
+</span><span style="color: #008080;">143</span>         <span style="color: #0000ff;">return</span> <span style="color: #800000;">'</span><span style="color: #800000;">{} : {}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(k, v)[:self.max_length]
+</span><span style="color: #008080;">144</span> 
+<span style="color: #008080;">145</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> stamp(self):
+</span><span style="color: #008080;">146</span>         <span style="color: #0000ff;">if</span> self.lines != [<span style="color: #800000;">''</span><span style="color: #000000;">]:
+</span><span style="color: #008080;">147</span>             params = <span style="color: #800000;">'</span><span style="color: #800000;"> | </span><span style="color: #800000;">'</span><span style="color: #000000;">.join(self.lines)
+</span><span style="color: #008080;">148</span>             string = <span style="color: #800000;">'</span><span style="color: #800000;">[ {} ] {}{} | {}</span><span style="color: #800000;">'</span><span style="color: #000000;">.format(self.name, self.fraction, params, self._speed)
+</span><span style="color: #008080;">149</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> name: Process</span>
+<span style="color: #008080;">150</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> fraction: 6 / 6</span>
+<span style="color: #008080;">151</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 输出：</span>
+<span style="color: #008080;">152</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> [ Progress ] 6 / 6 |             weight : 149.8228  |             height : 214.32345 |             repeat : 45.8241   |              alpha : 43.32475  |               beta : 50.8254   |              gamma : 60.32605  | 6.0E+03 Hz</span>
+<span style="color: #008080;">153</span> <span style="color: #000000;">            self._clear()
+</span><span style="color: #008080;">154</span>             <span style="color: #0000ff;">print</span><span style="color: #000000;">(string)
+</span><span style="color: #008080;">155</span>             self._skip_lines = 1
+<span style="color: #008080;">156</span>         <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">157</span> <span style="color: #000000;">            self._clear()
+</span><span style="color: #008080;">158</span>             self._skip_lines =<span style="color: #000000;"> 0
+</span><span style="color: #008080;">159</span> 
+<span style="color: #008080;">160</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> close(self):
+</span><span style="color: #008080;">161</span> <span style="color: #000000;">        self.pause()
+</span><span style="color: #008080;">162</span> 
+<span style="color: #008080;">163</span> total_num = 6
+<span style="color: #008080;">164</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 自己实现的进度条功能</span>
+<span style="color: #008080;">165</span> progress =<span style="color: #000000;"> Progress(total_num)
+</span><span style="color: #008080;">166</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(total_num):
+</span><span style="color: #008080;">167</span> <span style="color: #000000;">    progress.update()
+</span><span style="color: #008080;">168</span>     params = {<span style="color: #800000;">"</span><span style="color: #800000;">weight</span><span style="color: #800000;">"</span>: 127.0 - (i+1.5)*3.5112<span style="color: #000000;">,
+</span><span style="color: #008080;">169</span>               <span style="color: #800000;">"</span><span style="color: #800000;">height</span><span style="color: #800000;">"</span>: 185.0 - (i+1.5)*4.5113<span style="color: #000000;">,
+</span><span style="color: #008080;">170</span>               <span style="color: #800000;">"</span><span style="color: #800000;">repeat</span><span style="color: #800000;">"</span>: 10.0 - (i+1.5)*5.5114<span style="color: #000000;">,
+</span><span style="color: #008080;">171</span>               <span style="color: #800000;">"</span><span style="color: #800000;">alpha</span><span style="color: #800000;">"</span>: 1.0 + (i+1.5)*6.5115<span style="color: #000000;">,
+</span><span style="color: #008080;">172</span>               <span style="color: #800000;">"</span><span style="color: #800000;">beta</span><span style="color: #800000;">"</span>: 2.0 + (i+1.5)*7.5116<span style="color: #000000;">,
+</span><span style="color: #008080;">173</span>               <span style="color: #800000;">"</span><span style="color: #800000;">gamma</span><span style="color: #800000;">"</span>: 5.0 + (i+1.5)*8.5117<span style="color: #000000;">}
+</span><span style="color: #008080;">174</span> <span style="color: #000000;">    progress.set_description(format_for_process(params))
+</span><span style="color: #008080;">175</span> <span style="color: #000000;">progress.stamp()
+</span><span style="color: #008080;">176</span> <span style="color: #000000;">progress.close()
+</span><span style="color: #008080;">177</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-------------------------------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">178</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python自带的进度条包</span>
+<span style="color: #008080;">179</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> tqdm(range(total_num)):
+</span><span style="color: #008080;">180</span>      time.sleep(0.1<span style="color: #000000;">)
+</span><span style="color: #008080;">181</span>      params = {<span style="color: #800000;">"</span><span style="color: #800000;">weight</span><span style="color: #800000;">"</span>: 127.0 - (i + 1.5) * 3.5112<span style="color: #000000;">,
+</span><span style="color: #008080;">182</span>                <span style="color: #800000;">"</span><span style="color: #800000;">height</span><span style="color: #800000;">"</span>: 185.0 - (i + 1.5) * 4.5113<span style="color: #000000;">,
+</span><span style="color: #008080;">183</span>                <span style="color: #800000;">"</span><span style="color: #800000;">repeat</span><span style="color: #800000;">"</span>: 10.0 - (i + 1.5) * 5.5114<span style="color: #000000;">,
+</span><span style="color: #008080;">184</span>                <span style="color: #800000;">"</span><span style="color: #800000;">alpha</span><span style="color: #800000;">"</span>: 1.0 + (i + 1.5) * 6.5115<span style="color: #000000;">,
+</span><span style="color: #008080;">185</span>                <span style="color: #800000;">"</span><span style="color: #800000;">beta</span><span style="color: #800000;">"</span>: 2.0 + (i + 1.5) * 7.5116<span style="color: #000000;">,
+</span><span style="color: #008080;">186</span>                <span style="color: #800000;">"</span><span style="color: #800000;">gamma</span><span style="color: #800000;">"</span>: 5.0 + (i + 1.5) * 8.5117<span style="color: #000000;">}
+</span><span style="color: #008080;">187</span> <span style="color: #000000;">     progress.set_description2(format_for_process(params))
+</span><span style="color: #008080;">188</span> <span style="color: #000000;">progress.stamp()
+</span><span style="color: #008080;">189</span> progress.close()</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/time/process_test.py</span><span style="color: #800000;">"</span>
+
+                                                                                                    
+1 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">##############                                                                           ]  16% | 1.0E+08 Hz</span>
+            weight : 121.7332  |             height : 178.23305 |             repeat : 1.7329<span style="color: #000000;">   
+             alpha : </span>10.76725  |               beta : 13.2674   |              gamma : 17.76755 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+2 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">#############################                                                            ]  33% | 2.0E+08 Hz</span>
+            weight : 118.222   |             height : 173.72175 |             repeat : -3.7785<span style="color: #000000;">  
+             alpha : </span>17.27875  |               beta : 20.779    |              gamma : 26.27925 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+3 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">############################################                                             ]  50% | 3.0E+08 Hz</span>
+            weight : 114.7108  |             height : 169.21045 |             repeat : -9.2899<span style="color: #000000;">  
+             alpha : </span>23.79025  |               beta : 28.2906   |              gamma : 34.79095 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+4 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">###########################################################                              ]  66% | 4.0E+08 Hz</span>
+            weight : 111.1996  |             height : 164.69915 |             repeat : -14.8013<span style="color: #000000;"> 
+             alpha : </span>30.30175  |               beta : 35.8022   |              gamma : 43.30265 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+5 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">##########################################################################               ]  83% | 5.0E+03 Hz</span>
+            weight : 107.6884  |             height : 160.18785 |             repeat : -20.3127<span style="color: #000000;"> 
+             alpha : </span>36.81325  |               beta : 43.3138   |              gamma : 51.81435 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+6 / 6 [<span style="color: #008000;">#</span><span style="color: #008000;">#########################################################################################] 100% | 6.0E+03 Hz</span>
+            weight : 104.1772  |             height : 155.67655 |             repeat : -25.8241<span style="color: #000000;"> 
+             alpha : </span>43.32475  |               beta : 50.8254   |              gamma : 60.32605<span style="color: #000000;"> 
+                                                                                                    
+                                                                                                    
+                                                                                                    
+[ Progress ] </span>6 / 6 |             weight : 104.1772  |             height : 155.67655 |             repeat : -25.8241  |              alpha : 43.32475  |               beta : 50.8254   |              gamma : 60.32605  | 6.0E+03<span style="color: #000000;"> Hz
+                                                                                                    
+</span>-------------------------------------------------------------------------<span style="color: #000000;">
+  0</span>%|          | 0/6 [00:00&lt;?, ?it/<span style="color: #000000;">s]
+ </span>17%|█▋        | 1/6 [00:00&lt;00:00,  9.95it/<span style="color: #000000;">s] 
+            weight : </span>121.7332  |             height : 178.23305 |             repeat : 1.7329<span style="color: #000000;">   
+             alpha : </span>10.76725  |               beta : 13.2674   |              gamma : 17.76755 
+
+ 33%|███▎      | 2/6 [00:00&lt;00:00,  9.63it/<span style="color: #000000;">s] 
+            weight : </span>118.222   |             height : 173.72175 |             repeat : -3.7785<span style="color: #000000;">  
+             alpha : </span>17.27875  |               beta : 20.779    |              gamma : 26.27925<span style="color: #000000;"> 
+
+ 
+            weight : </span>114.7108  |             height : 169.21045 |             repeat : -9.2899<span style="color: #000000;">  
+             alpha : </span>23.79025  |               beta : 28.2906   |              gamma : 34.79095 
+ 50%|█████     | 3/6 [00:00&lt;00:00,  9.46it/<span style="color: #000000;">s]
+ </span>67%|██████▋   | 4/6 [00:00&lt;00:00,  9.33it/<span style="color: #000000;">s] 
+            weight : </span>111.1996  |             height : 164.69915 |             repeat : -14.8013<span style="color: #000000;"> 
+             alpha : </span>30.30175  |               beta : 35.8022   |              gamma : 43.30265 
+
+ 83%|████████▎ | 5/6 [00:00&lt;00:00,  9.28it/<span style="color: #000000;">s] 
+            weight : </span>107.6884  |             height : 160.18785 |             repeat : -20.3127<span style="color: #000000;"> 
+             alpha : </span>36.81325  |               beta : 43.3138   |              gamma : 51.81435 
+
+100%|██████████| 6/6 [00:00&lt;00:00,  9.34it/<span style="color: #000000;">s]
+ 
+            weight : </span>104.1772  |             height : 155.67655 |             repeat : -25.8241<span style="color: #000000;"> 
+             alpha : </span>43.32475  |               beta : 50.8254   |              gamma : 60.32605<span style="color: #000000;"> 
+                                                                                                    
+[ Progress ] </span>6 / 6 |             weight : 104.1772  |             height : 155.67655 |             repeat : -25.8241  |              alpha : 43.32475  |               beta : 50.8254   |              gamma : 60.32605  | 6.0E+03<span style="color: #000000;"> Hz
+                                                                                                    
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">完成。</span></p>

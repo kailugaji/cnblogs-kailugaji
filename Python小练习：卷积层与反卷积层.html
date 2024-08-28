@@ -1,0 +1,347 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：卷积层与反卷积层</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">使用Pytorch中的nn.Conv2d与nn.ConvTranspose2d函数来创建卷积层与反卷积层，构建卷积神经网络(CNN)编码器与解码器（仅含卷积层/反卷积层与<a href="https://www.cnblogs.com/kailugaji/p/17262790.html" target="_blank">激活函数</a>）。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 卷积层代码</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.1 cnn_test.py</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：创建卷积层</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span><span style="color: #008080;"> 9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> imageio
+</span><span style="color: #008080;">10</span> <span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;">12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">from</span> pylab <span style="color: #0000ff;">import</span> *
+<span style="color: #008080;">14</span> <span style="color: #0000ff;">from</span> warnings <span style="color: #0000ff;">import</span><span style="color: #000000;"> simplefilter
+</span><span style="color: #008080;">15</span> simplefilter(action=<span style="color: #800000;">"</span><span style="color: #800000;">ignore</span><span style="color: #800000;">"</span>,category=<span style="color: #000000;">UserWarning)
+</span><span style="color: #008080;">16</span> 
+<span style="color: #008080;">17</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 构建卷积神经网络（仅用到卷积层）</span>
+<span style="color: #008080;">18</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> build_CNN(input_size):
+</span><span style="color: #008080;">19</span>     module_list =<span style="color: #000000;"> []
+</span><span style="color: #008080;">20</span>     last_h = input_size[2<span style="color: #000000;">]
+</span><span style="color: #008080;">21</span>     last_w = input_size[3<span style="color: #000000;">]
+</span><span style="color: #008080;">22</span>     cnn_kernels = [[input_size[1], 256, 4<span style="color: #000000;">],
+</span><span style="color: #008080;">23</span>                    [256, 128, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">24</span>                    [128, 64, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">25</span>                    [64, 32, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">26</span>                    [32, 3, 5, 2, 2, 1<span style="color: #000000;">]]
+</span><span style="color: #008080;">27</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 除了输入层，后面有5层，5个激活函数</span>
+<span style="color: #008080;">28</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 6个参数的含义：</span>
+<span style="color: #008080;">29</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 1. in_channels (int) &ndash; 输入图像中的通道数</span>
+<span style="color: #008080;">30</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 2. out_channels (int) &ndash; 卷积产生的通道数即输出图片的通道数</span>
+<span style="color: #008080;">31</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 3. kernel_size (int or tuple) &ndash; 卷积核的大小(可以是个数，也可以是元组)</span>
+<span style="color: #008080;">32</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 4. stride (int or tuple, optional) &mdash; 卷积的步幅。 默认值：1</span>
+<span style="color: #008080;">33</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 5. padding (int, tuple or str, optional) &ndash; 填充添加到输入的所有四个边。 默认值：0</span>
+<span style="color: #008080;">34</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 6. dilation (int or tuple, optional) &ndash; 内核元素之间的间距。 默认值：1。</span>
+<span style="color: #008080;">35</span>     act_func = [nn.LeakyReLU(), nn.Tanh(), nn.ReLU(), nn.ELU(), nn.CELU()] <span style="color: #008000;">#</span><span style="color: #008000;"> 激活函数</span>
+<span style="color: #008080;">36</span>     default = [None, None, None, 1, 0] <span style="color: #008000;">#</span><span style="color: #008000;"> in_c, out_c, kernel, stride, pad</span>
+<span style="color: #008080;">37</span>     <span style="color: #0000ff;">for</span> i, ck <span style="color: #0000ff;">in</span><span style="color: #000000;"> enumerate(cnn_kernels):
+</span><span style="color: #008080;">38</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> i: 0, 1, 2, 3, 4 ...</span>
+<span style="color: #008080;">39</span>         ck = ck +<span style="color: #000000;"> default[len(ck):]
+</span><span style="color: #008080;">40</span>         last_h = int((last_h + 2 * ck[4] - ck[2]) / ck[3] + 1) <span style="color: #008000;">#</span><span style="color: #008000;">(h+2*pad-k)/stride+1</span>
+<span style="color: #008080;">41</span>         last_w = int((last_w + 2 * ck[4] - ck[2]) / ck[3] + 1<span style="color: #000000;">)
+</span><span style="color: #008080;">42</span>         module_list.append(nn.Conv2d(*<span style="color: #000000;">ck))
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">        module_list.append(act_func[i])
+</span><span style="color: #008080;">44</span>     output_shape = (cnn_kernels[-1][1<span style="color: #000000;">], last_h, last_w)
+</span><span style="color: #008080;">45</span>     <span style="color: #0000ff;">return</span> nn.Sequential(*<span style="color: #000000;">module_list), output_shape
+</span><span style="color: #008080;">46</span> 
+<span style="color: #008080;">47</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用方法</span>
+<span style="color: #008080;">48</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 图像例子：</span>
+<span style="color: #008080;">49</span> path = <span style="color: #800000;">"</span><span style="color: #800000;">./img</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 打开存放图像的文件夹</span>
+<span style="color: #008080;">50</span> dirs = os.listdir(path) <span style="color: #008000;">#</span><span style="color: #008000;"> ['1.jpg', '2.jpg', '3.jpg']</span>
+<span style="color: #008080;">51</span> len_dir = len(dirs) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir张图片</span>
+<span style="color: #008080;">52</span> outs =<span style="color: #000000;"> []
+</span><span style="color: #008080;">53</span> count =<span style="color: #000000;"> 0
+</span><span style="color: #008080;">54</span> fig = plt.figure(figsize=(24, 6)) <span style="color: #008000;">#</span><span style="color: #008000;"> 画布布局</span>
+<span style="color: #008080;">55</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> dirs:
+</span><span style="color: #008080;">56</span>     image_pad = imageio.imread(os.path.join(path, i))  <span style="color: #008000;">#</span><span style="color: #008000;"> i: 'xxx.jpg'</span>
+<span style="color: #008080;">57</span>     image_pad = Image.fromarray(image_pad).resize((600, 300))  <span style="color: #008000;">#</span><span style="color: #008000;"> 重新调整图像尺寸</span>
+<span style="color: #008080;">58</span>     transf = transforms.ToTensor()  <span style="color: #008000;">#</span><span style="color: #008000;"> 将原始数据形式(图像)转换成tensor</span>
+<span style="color: #008080;">59</span>     outs.append(transf(image_pad)) <span style="color: #008000;">#</span><span style="color: #008000;"> tensor数据格式是torch(C,H,W)</span>
+<span style="color: #008080;">60</span>     plt.subplot(2, len_dir, count+1) <span style="color: #008000;">#</span><span style="color: #008000;"> 2行，len_dir列，第count+1个子图</span>
+<span style="color: #008080;">61</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">62</span> <span style="color: #000000;">    plt.imshow(image_pad)
+</span><span style="color: #008080;">63</span>     count += 1
+<span style="color: #008080;">64</span> outs= torch.tensor([np.array(item) <span style="color: #0000ff;">for</span> item <span style="color: #0000ff;">in</span> outs]) <span style="color: #008000;">#</span><span style="color: #008000;"> 将list转换为tensor</span>
+<span style="color: #008080;">65</span> model, output_shape =<span style="color: #000000;"> build_CNN(outs.shape)
+</span><span style="color: #008080;">66</span> <span style="color: #008000;">#</span><span style="color: #008000;"> N, C, H, W = outs.shape # 样本个数5, 通道数3, 高300, 宽600</span>
+<span style="color: #008080;">67</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">网络结构：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, model)
+</span><span style="color: #008080;">68</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">单个样本的输出维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, output_shape)
+</span><span style="color: #008080;">69</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入数据维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, outs.shape)
+</span><span style="color: #008080;">70</span> y = model(outs) <span style="color: #008000;">#</span><span style="color: #008000;"> 实例化</span>
+<span style="color: #008080;">71</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">实际输出维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, y.shape)
+</span><span style="color: #008080;">72</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(outs.shape[0]): <span style="color: #008000;">#</span><span style="color: #008000;"> 展示结果</span>
+<span style="color: #008080;">73</span>     toPIL =<span style="color: #000000;"> transforms.ToPILImage()
+</span><span style="color: #008080;">74</span>     pic =<span style="color: #000000;"> toPIL(y[i])
+</span><span style="color: #008080;">75</span>     plt.subplot(2, len_dir, int(i + 1 +<span style="color: #000000;"> outs.shape[0]))
+</span><span style="color: #008080;">76</span> <span style="color: #000000;">    plt.imshow(pic)
+</span><span style="color: #008080;">77</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">78</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">CNN_fig.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">79</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">80</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">81</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 随机数据例子：</span>
+<span style="color: #008080;">82</span> input_size = [10, 3, 84, 84<span style="color: #000000;">]
+</span><span style="color: #008080;">83</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 10张图片，3通道，每张图片长*宽为84*84</span>
+<span style="color: #008080;">84</span> model, output_shape =<span style="color: #000000;"> build_CNN(input_size)
+</span><span style="color: #008080;">85</span> x =<span style="color: #000000;"> torch.randn(input_size)
+</span><span style="color: #008080;">86</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入数据维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, x.shape)
+</span><span style="color: #008080;">87</span> y =<span style="color: #000000;"> model(x)
+</span><span style="color: #008080;">88</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">实际输出维度：</span><span style="color: #800000;">'</span>, y.shape)</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1.2 结果</span></h3>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Neural Network/cnn_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+网络结构：
+ Sequential(
+  (0): Conv2d(</span>3, 256, kernel_size=(4, 4), stride=(1, 1<span style="color: #000000;">))
+  (</span>1): LeakyReLU(negative_slope=0.01<span style="color: #000000;">)
+  (</span>2): Conv2d(256, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1<span style="color: #000000;">))
+  (</span>3<span style="color: #000000;">): Tanh()
+  (</span>4): Conv2d(128, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1<span style="color: #000000;">))
+  (</span>5<span style="color: #000000;">): ReLU()
+  (</span>6): Conv2d(64, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1<span style="color: #000000;">))
+  (</span>7): ELU(alpha=1.0<span style="color: #000000;">)
+  (</span>8): Conv2d(32, 3, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2<span style="color: #000000;">))
+  (</span>9): CELU(alpha=1.0<span style="color: #000000;">)
+)
+单个样本的输出维度： (</span>3, 19, 38<span style="color: #000000;">)
+输入数据维度： torch.Size([</span>5, 3, 300, 600<span style="color: #000000;">])
+实际输出维度： torch.Size([</span>5, 3, 19, 38<span style="color: #000000;">])
+</span>-------------------------------------------------<span style="color: #000000;">
+输入数据维度： torch.Size([</span>10, 3, 84, 84<span style="color: #000000;">])
+实际输出维度： torch.Size([</span>10, 3, 6, 6<span style="color: #000000;">])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230407100346243-700433557.png" alt="" width="1054" height="239" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 反卷积层代码</span></h2>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.1 cnn_trans_test.py</span></h3>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：创建反卷积层</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span><span style="color: #008080;"> 9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> imageio
+</span><span style="color: #008080;">10</span> <span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;">12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">from</span> pylab <span style="color: #0000ff;">import</span> *
+<span style="color: #008080;">14</span> <span style="color: #0000ff;">from</span> warnings <span style="color: #0000ff;">import</span><span style="color: #000000;"> simplefilter
+</span><span style="color: #008080;">15</span> simplefilter(action=<span style="color: #800000;">"</span><span style="color: #800000;">ignore</span><span style="color: #800000;">"</span>,category=<span style="color: #000000;">UserWarning)
+</span><span style="color: #008080;">16</span> 
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> build_CNN_trans(input_size):
+</span><span style="color: #008080;">18</span>     module_list =<span style="color: #000000;"> []
+</span><span style="color: #008080;">19</span>     last_h = input_size[2<span style="color: #000000;">]
+</span><span style="color: #008080;">20</span>     last_w = input_size[3<span style="color: #000000;">]
+</span><span style="color: #008080;">21</span>     cnn_trans_kernels = [[input_size[1], 256, 4<span style="color: #000000;">],
+</span><span style="color: #008080;">22</span>                    [256, 128, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">23</span>                    [128, 64, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">24</span>                    [64, 32, 3, 2, 1, 1<span style="color: #000000;">],
+</span><span style="color: #008080;">25</span>                    [32, 3, 5, 2, 2, 1<span style="color: #000000;">]]
+</span><span style="color: #008080;">26</span>     act_func = [nn.LeakyReLU(), nn.Tanh(), nn.ReLU(), nn.ELU(), nn.CELU()] <span style="color: #008000;">#</span><span style="color: #008000;"> 激活函数</span>
+<span style="color: #008080;">27</span>     default = [None, None, None, 1, 0, 0] <span style="color: #008000;">#</span><span style="color: #008000;"> in_c, out_c, kernel, stride, pad, outpad</span>
+<span style="color: #008080;">28</span>     <span style="color: #0000ff;">for</span> i, ck <span style="color: #0000ff;">in</span><span style="color: #000000;"> enumerate(cnn_trans_kernels):
+</span><span style="color: #008080;">29</span>         ck = ck +<span style="color: #000000;"> default[len(ck):]
+</span><span style="color: #008080;">30</span>         last_h = (last_h - 1) * ck[3] - 2 * ck[4] + ck[2] + ck[5<span style="color: #000000;">]
+</span><span style="color: #008080;">31</span>         last_w = (last_w - 1) * ck[3] - 2 * ck[4] + ck[2] + ck[5<span style="color: #000000;">]
+</span><span style="color: #008080;">32</span>         module_list.append(nn.ConvTranspose2d(*<span style="color: #000000;">ck))
+</span><span style="color: #008080;">33</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 用的是反卷积，不是卷积</span>
+<span style="color: #008080;">34</span> <span style="color: #000000;">        module_list.append(act_func[i])
+</span><span style="color: #008080;">35</span>     output_shape = (cnn_trans_kernels[-1][1<span style="color: #000000;">], last_h, last_w)
+</span><span style="color: #008080;">36</span>     <span style="color: #0000ff;">return</span> nn.Sequential(*<span style="color: #000000;">module_list), output_shape
+</span><span style="color: #008080;">37</span> 
+<span style="color: #008080;">38</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 使用方法</span>
+<span style="color: #008080;">39</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 图像例子：</span>
+<span style="color: #008080;">40</span> path = <span style="color: #800000;">"</span><span style="color: #800000;">./img</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 打开存放图像的文件夹</span>
+<span style="color: #008080;">41</span> dirs = os.listdir(path) <span style="color: #008000;">#</span><span style="color: #008000;"> ['1.jpg', '2.jpg', '3.jpg']</span>
+<span style="color: #008080;">42</span> len_dir = len(dirs) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir张图片</span>
+<span style="color: #008080;">43</span> outs =<span style="color: #000000;"> []
+</span><span style="color: #008080;">44</span> count =<span style="color: #000000;"> 0
+</span><span style="color: #008080;">45</span> fig = plt.figure(figsize=(24, 6)) <span style="color: #008000;">#</span><span style="color: #008000;"> 画布布局</span>
+<span style="color: #008080;">46</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> dirs:
+</span><span style="color: #008080;">47</span>     image_pad = imageio.imread(os.path.join(path, i))  <span style="color: #008000;">#</span><span style="color: #008000;"> i: 'xxx.jpg'</span>
+<span style="color: #008080;">48</span>     image_pad = Image.fromarray(image_pad).resize((38, 19))  <span style="color: #008000;">#</span><span style="color: #008000;"> 重新调整图像尺寸</span>
+<span style="color: #008080;">49</span>     transf = transforms.ToTensor()  <span style="color: #008000;">#</span><span style="color: #008000;"> 将原始数据形式(图像)转换成tensor</span>
+<span style="color: #008080;">50</span>     outs.append(transf(image_pad)) <span style="color: #008000;">#</span><span style="color: #008000;"> tensor数据格式是torch(C,H,W)</span>
+<span style="color: #008080;">51</span>     plt.subplot(2, len_dir, count+1) <span style="color: #008000;">#</span><span style="color: #008000;"> 2行，len_dir列，第count+1个子图</span>
+<span style="color: #008080;">52</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">    plt.imshow(image_pad)
+</span><span style="color: #008080;">54</span>     count += 1
+<span style="color: #008080;">55</span> outs= torch.tensor([np.array(item) <span style="color: #0000ff;">for</span> item <span style="color: #0000ff;">in</span> outs]) <span style="color: #008000;">#</span><span style="color: #008000;"> 将list转换为tensor</span>
+<span style="color: #008080;">56</span> model, output_shape =<span style="color: #000000;"> build_CNN_trans(outs.shape)
+</span><span style="color: #008080;">57</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">网络结构：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, model)
+</span><span style="color: #008080;">58</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">单个样本的输出维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, output_shape)
+</span><span style="color: #008080;">59</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入数据维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, outs.shape)
+</span><span style="color: #008080;">60</span> y = model(outs) <span style="color: #008000;">#</span><span style="color: #008000;"> 实例化</span>
+<span style="color: #008080;">61</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">实际输出维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, y.shape)
+</span><span style="color: #008080;">62</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(outs.shape[0]): <span style="color: #008000;">#</span><span style="color: #008000;"> 展示结果</span>
+<span style="color: #008080;">63</span>     toPIL =<span style="color: #000000;"> transforms.ToPILImage()
+</span><span style="color: #008080;">64</span>     pic =<span style="color: #000000;"> toPIL(y[i])
+</span><span style="color: #008080;">65</span>     plt.subplot(2, len_dir, int(i + 1 +<span style="color: #000000;"> outs.shape[0]))
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">    plt.imshow(pic)
+</span><span style="color: #008080;">67</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">68</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">CNN_trans_fig.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">69</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">70</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">71</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 随机数据例子：</span>
+<span style="color: #008080;">72</span> input_size = [10, 3, 6, 6<span style="color: #000000;">]
+</span><span style="color: #008080;">73</span> model, output_shape =<span style="color: #000000;"> build_CNN_trans(input_size)
+</span><span style="color: #008080;">74</span> x =<span style="color: #000000;"> torch.randn(input_size)
+</span><span style="color: #008080;">75</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入数据维度：</span><span style="color: #800000;">'</span><span style="color: #000000;">, x.shape)
+</span><span style="color: #008080;">76</span> y =<span style="color: #000000;"> model(x)
+</span><span style="color: #008080;">77</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">实际输出维度：</span><span style="color: #800000;">'</span>, y.shape)</pre>
+</div>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2.2 结果</span></h3>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Neural Network/cnn_trans_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+网络结构：
+ Sequential(
+  (0): ConvTranspose2d(</span>3, 256, kernel_size=(4, 4), stride=(1, 1<span style="color: #000000;">))
+  (</span>1): LeakyReLU(negative_slope=0.01<span style="color: #000000;">)
+  (</span>2): ConvTranspose2d(256, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), output_padding=(1, 1<span style="color: #000000;">))
+  (</span>3<span style="color: #000000;">): Tanh()
+  (</span>4): ConvTranspose2d(128, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), output_padding=(1, 1<span style="color: #000000;">))
+  (</span>5<span style="color: #000000;">): ReLU()
+  (</span>6): ConvTranspose2d(64, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), output_padding=(1, 1<span style="color: #000000;">))
+  (</span>7): ELU(alpha=1.0<span style="color: #000000;">)
+  (</span>8): ConvTranspose2d(32, 3, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2), output_padding=(1, 1<span style="color: #000000;">))
+  (</span>9): CELU(alpha=1.0<span style="color: #000000;">)
+)
+单个样本的输出维度： (</span>3, 352, 656<span style="color: #000000;">)
+输入数据维度： torch.Size([</span>5, 3, 19, 38<span style="color: #000000;">])
+实际输出维度： torch.Size([</span>5, 3, 352, 656<span style="color: #000000;">])
+</span>-------------------------------------------------<span style="color: #000000;">
+输入数据维度： torch.Size([</span>10, 3, 6, 6<span style="color: #000000;">])
+实际输出维度： torch.Size([</span>10, 3, 144, 144<span style="color: #000000;">])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230407150602580-1702475767.png" alt="" width="1055" height="240" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：卷积神经网络的调用：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：创建卷积层</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> build_cnn(
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">        input_shape,
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        cnn_kernels
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">):
+</span><span style="color: #008080;">13</span>     act_func =<span style="color: #000000;"> [nn.ReLU(), nn.ReLU(), nn.ReLU(), nn.ReLU()]
+</span><span style="color: #008080;">14</span>     module_list =<span style="color: #000000;"> []
+</span><span style="color: #008080;">15</span>     last_h = input_shape[1<span style="color: #000000;">]
+</span><span style="color: #008080;">16</span>     last_w = input_shape[2<span style="color: #000000;">]
+</span><span style="color: #008080;">17</span>     default = [None, None, None, 1<span style="color: #000000;">, 0]
+</span><span style="color: #008080;">18</span>     <span style="color: #0000ff;">for</span> i, ck <span style="color: #0000ff;">in</span><span style="color: #000000;"> enumerate(cnn_kernels):
+</span><span style="color: #008080;">19</span>         ck = ck +<span style="color: #000000;"> default[len(ck):]
+</span><span style="color: #008080;">20</span>         last_h = int((last_h + 2 * ck[4] - ck[2]) / ck[3] + 1)  <span style="color: #008000;">#</span><span style="color: #008000;"> (h+2*pad-k)/stride+1</span>
+<span style="color: #008080;">21</span>         last_w = int((last_w + 2 * ck[4] - ck[2]) / ck[3] + 1<span style="color: #000000;">)
+</span><span style="color: #008080;">22</span>         module_list.append(nn.Conv2d(*<span style="color: #000000;">ck))
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">        module_list.append(act_func[i])
+</span><span style="color: #008080;">24</span>     output_shape = (cnn_kernels[-1][1<span style="color: #000000;">], last_h, last_w)
+</span><span style="color: #008080;">25</span>     <span style="color: #0000ff;">return</span> nn.Sequential(*<span style="color: #000000;">module_list), output_shape
+</span><span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> CNN(nn.Module):
+</span><span style="color: #008080;">28</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">            self,
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">            input_shape,
+</span><span style="color: #008080;">31</span>             output_size=<span style="color: #000000;">None,
+</span><span style="color: #008080;">32</span>             cnn_kernels=[[-1, 32, 3, 2], [32, 32, 3, 1], [32, 32, 3, 1], [32, 32, 3, 1<span style="color: #000000;">]]
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">    ):
+</span><span style="color: #008080;">34</span>         super().<span style="color: #800080;">__init__</span><span style="color: #000000;">()
+</span><span style="color: #008080;">35</span>         self.cnn_kernels =<span style="color: #000000;"> cnn_kernels
+</span><span style="color: #008080;">36</span>         cnn_kernels[0][0] =<span style="color: #000000;"> input_shape[0]
+</span><span style="color: #008080;">37</span>         self.num_layers =<span style="color: #000000;"> len(cnn_kernels)
+</span><span style="color: #008080;">38</span>         self.input_shape =<span style="color: #000000;"> input_shape
+</span><span style="color: #008080;">39</span>         self.module, self.latent_shape =<span style="color: #000000;"> build_cnn(
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">            input_shape,
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">            cnn_kernels
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">        )
+</span><span style="color: #008080;">43</span>         self.latent_size =<span style="color: #000000;"> np.prod(self.latent_shape)
+</span><span style="color: #008080;">44</span>         <span style="color: #0000ff;">if</span> output_size <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> None:
+</span><span style="color: #008080;">45</span>             <span style="color: #0000ff;">assert</span> self.latent_size ==<span style="color: #000000;"> output_size, (self.latent_size, output_size)
+</span><span style="color: #008080;">46</span>         <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">47</span>             output_size =<span style="color: #000000;"> self.latent_size
+</span><span style="color: #008080;">48</span>         self.output_size =<span style="color: #000000;"> output_size
+</span><span style="color: #008080;">49</span>         self.output_shape =<span style="color: #000000;"> (output_size,)
+</span><span style="color: #008080;">50</span> 
+<span style="color: #008080;">51</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> process(self, obs):
+</span><span style="color: #008080;">52</span>         h =<span style="color: #000000;"> self.forward(obs)
+</span><span style="color: #008080;">53</span>         h = h.view(h.size(0), -1<span style="color: #000000;">)
+</span><span style="color: #008080;">54</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> h
+</span><span style="color: #008080;">55</span> 
+<span style="color: #008080;">56</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> forward(self, obs):
+</span><span style="color: #008080;">57</span>         obs = obs / 255.0
+<span style="color: #008080;">58</span>         h =<span style="color: #000000;"> self.module(obs)
+</span><span style="color: #008080;">59</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> h
+</span><span style="color: #008080;">60</span> 
+<span style="color: #008080;">61</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> process_feature_map(self, obs):
+</span><span style="color: #008080;">62</span>         h =<span style="color: #000000;"> self.forward(obs)
+</span><span style="color: #008080;">63</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> h
+</span><span style="color: #008080;">64</span> 
+<span style="color: #008080;">65</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> process_traj(self, obs):
+</span><span style="color: #008080;">66</span>         B, L, _, _, _ =<span style="color: #000000;"> obs.shape
+</span><span style="color: #008080;">67</span>         obs = obs.view(B * L, *<span style="color: #000000;">self.input_shape)
+</span><span style="color: #008080;">68</span>         h =<span style="color: #000000;"> self.forward(obs)
+</span><span style="color: #008080;">69</span>         h =<span style="color: #000000;"> h.view(B, L, self.output_size)
+</span><span style="color: #008080;">70</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> h
+</span><span style="color: #008080;">71</span> 
+<span style="color: #008080;">72</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -------------------------------</span>
+<span style="color: #008080;">73</span> data = torch.rand([10, 3, 84, 84<span style="color: #000000;">])
+</span><span style="color: #008080;">74</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 10个样本，每个样本的大小都是(3, 84, 84)的</span>
+<span style="color: #008080;">75</span> cnn = CNN([3, 84, 84<span style="color: #000000;">])
+</span><span style="color: #008080;">76</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 输出维度[32, 35, 35]</span>
+<span style="color: #008080;">77</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 32*35*35 = 39200</span>
+<span style="color: #008080;">78</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">CNN模型结构：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, cnn.module)
+</span><span style="color: #008080;">79</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">CNN输入尺寸：</span><span style="color: #800000;">'</span><span style="color: #000000;">, cnn.input_shape)
+</span><span style="color: #008080;">80</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">CNN输出尺寸：</span><span style="color: #800000;">'</span><span style="color: #000000;">, cnn.latent_shape)
+</span><span style="color: #008080;">81</span> data_process =<span style="color: #000000;"> cnn.process(data)
+</span><span style="color: #008080;">82</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">process：</span><span style="color: #800000;">'</span><span style="color: #000000;">, data_process.shape)
+</span><span style="color: #008080;">83</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -------------------------------</span>
+<span style="color: #008080;">84</span> data_forward =<span style="color: #000000;"> cnn.forward(data)
+</span><span style="color: #008080;">85</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">forward：</span><span style="color: #800000;">'</span><span style="color: #000000;">, data_forward.shape)
+</span><span style="color: #008080;">86</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -------------------------------</span>
+<span style="color: #008080;">87</span> data_process_feature_map =<span style="color: #000000;"> cnn.process_feature_map(data)
+</span><span style="color: #008080;">88</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">process_feature_map：</span><span style="color: #800000;">'</span><span style="color: #000000;">, data_process_feature_map.shape)
+</span><span style="color: #008080;">89</span> <span style="color: #008000;">#</span><span style="color: #008000;"> ----------------------------------------------------------------</span>
+<span style="color: #008080;">90</span> data = torch.rand([10, 6, 3, 84, 84<span style="color: #000000;">])
+</span><span style="color: #008080;">91</span> data_process_traj =<span style="color: #000000;"> cnn.process_traj(data)
+</span><span style="color: #008080;">92</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">process_traj：</span><span style="color: #800000;">'</span>, data_process_traj.shape)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Neural Network/CNN_class_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+CNN模型结构：
+ Sequential(
+  (0): Conv2d(</span>3, 32, kernel_size=(3, 3), stride=(2, 2<span style="color: #000000;">))
+  (</span>1<span style="color: #000000;">): ReLU()
+  (</span>2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1<span style="color: #000000;">))
+  (</span>3<span style="color: #000000;">): ReLU()
+  (</span>4): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1<span style="color: #000000;">))
+  (</span>5<span style="color: #000000;">): ReLU()
+  (</span>6): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1<span style="color: #000000;">))
+  (</span>7<span style="color: #000000;">): ReLU()
+)
+CNN输入尺寸： [</span>3, 84, 84<span style="color: #000000;">]
+CNN输出尺寸： (</span>32, 35, 35<span style="color: #000000;">)
+process： torch.Size([</span>10, 39200<span style="color: #000000;">])
+forward： torch.Size([</span>10, 32, 35, 35<span style="color: #000000;">])
+process_feature_map： torch.Size([</span>10, 32, 35, 35<span style="color: #000000;">])
+process_traj： torch.Size([</span>10, 6, 39200<span style="color: #000000;">])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-size: 16px;">完成。</span></span></p>

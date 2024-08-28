@@ -1,0 +1,92 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：argparse的用法</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">中文文档：<a href="https://docs.python.org/zh-cn/3/library/argparse.html#the-parse-args-method" target="_blank">argparse --- 命令行选项、参数和子命令解析器</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. test.py</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">#!/usr/bin/env python3
+# -*- coding=utf-8 -*-
+# 参考：argparse --- 命令行选项、参数和子命令解析器
+# https://docs.python.org/zh-cn/3/library/argparse.html#argumentparser-objects
+# --------------------------------------------------------------------------------
+# https://www.cnblogs.com/kailugaji/
+import argparse
+
+# I. 创建 ArgumentParser() 对象
+parser = argparse.ArgumentParser(
+    prog='kailugaji', usage='%(prog)s [options]',
+    description = 'argparse --- 命令行选项、参数和子命令解析器',
+    epilog = '凯鲁嘎吉 - 博客园: https://www.cnblogs.com/kailugaji/')
+
+# II. 调用 add_argument() 方法添加参数
+parser.add_argument('--dataset', '-ds', default='cifar10',
+                    choices=['cifar10', 'cifar100', 'tin', 'IN'], help='which dataset to use')
+parser.add_argument('--optimizer', '-opt', default='sgd',
+                    choices=['sgd', 'adam', 'adagrad'], help='which optimizer to use')
+parser.add_argument('--num_workers', '-cpus', default=16, type=int)
+parser.add_argument('--batch-size', '-bs', type=int, default=256, help='batch size for training')
+# 在参数解析时，参数中并不区分字符&lsquo;-&rsquo;和&lsquo;_&rsquo;
+# 如上所述，在添加是使用的是&rsquo;&ndash;batch-size&rsquo;，但是在解析时使用的是args.batch_size
+
+# III. 使用 parse_args() 解析添加的参数
+args = parser.parse_args()
+
+# 打印
+print("文件test.py的帮助信息：")
+parser.print_help()
+print("\n-------------------------------------------------------------------------------------------------------")
+print("方式一：")
+print("1. args: ", args)
+print("2. Dataset: ",args.dataset)
+print("3. Num_workers: ", args.num_workers)
+print("4. Batch Size: ", args.batch_size)
+print("5. Optimizer: ", args.optimizer)
+
+args_2 = parser.parse_args(
+    ['-bs', '128', '-ds', 'tin', '-opt', 'adagrad', '-cpus', '8'])
+# 打印
+print("\n-------------------------------------------------------------------------------------------------------")
+print("方式二：")
+print("1. args_2: ", args_2)
+print("2. Dataset: ",args_2.dataset)
+print("3. Num_workers: ", args_2.num_workers)
+print("4. Batch Size: ", args_2.batch_size)
+print("5. Optimizer: ", args_2.optimizer)</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">文件test.py的帮助信息：
+usage: kailugaji [options]
+
+argparse --- 命令行选项、参数和子命令解析器
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dataset {cifar10,cifar100,tin,IN}, -ds {cifar10,cifar100,tin,IN}
+                        which dataset to use
+  --optimizer {sgd,adam,adagrad}, -opt {sgd,adam,adagrad}
+                        which optimizer to use
+  --num_workers NUM_WORKERS, -cpus NUM_WORKERS
+  --batch-size BATCH_SIZE, -bs BATCH_SIZE
+                        batch size for training
+
+凯鲁嘎吉 - 博客园: https://www.cnblogs.com/kailugaji/
+
+-------------------------------------------------------------------------------------------------------
+方式一：
+1. args:  Namespace(batch_size=256, dataset='cifar10', num_workers=16, optimizer='sgd')
+2. Dataset:  cifar10
+3. Num_workers:  16
+4. Batch Size:  256
+5. Optimizer:  sgd
+
+-------------------------------------------------------------------------------------------------------
+方式二：
+1. args_2:  Namespace(batch_size=128, dataset='tin', num_workers=8, optimizer='adagrad')
+2. Dataset:  tin
+3. Num_workers:  8
+4. Batch Size:  128
+5. Optimizer:  adagrad
+</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><a href="https://docs.python.org/zh-cn/3/library/argparse.html#the-parse-args-method" target="_blank">argparse --- 命令行选项、参数和子命令解析器</a></span></p>

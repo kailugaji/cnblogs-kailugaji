@@ -1,0 +1,91 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：裁减函数(Clip Function)</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文介绍两种数据裁剪方法，将原始数据裁剪到某一指定范围内。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;clip_function_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：裁减函数(Clip Function)</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 8</span> plt.rc(<span style="color: #800000;">'</span><span style="color: #800000;">font</span><span style="color: #800000;">'</span>,family=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 裁剪范围</span>
+<span style="color: #008080;">10</span> LOG_STD_MAX = 2
+<span style="color: #008080;">11</span> LOG_STD_MIN = -10
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> clip_function(
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">    x: torch.Tensor,
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    bound_mode: str
+</span><span style="color: #008080;">15</span> ) -&gt;<span style="color: #000000;"> torch.Tensor:
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">if</span> bound_mode == <span style="color: #800000;">"</span><span style="color: #800000;">clamp</span><span style="color: #800000;">"</span>: <span style="color: #008000;">#</span><span style="color: #008000;"> 将x裁剪到[-10， 2]</span>
+<span style="color: #008080;">17</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 大于2的统一设为2，小于-10的统一设为-10</span>
+<span style="color: #008080;">18</span>         x =<span style="color: #000000;"> torch.clamp(x, LOG_STD_MIN, LOG_STD_MAX)
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">elif</span> bound_mode == <span style="color: #800000;">"</span><span style="color: #800000;">tanh</span><span style="color: #800000;">"</span>: <span style="color: #008000;">#</span><span style="color: #008000;"> 将x裁剪到[-10， 2]</span>
+<span style="color: #008080;">20</span>         scale = (LOG_STD_MAX-LOG_STD_MIN) / 2 <span style="color: #008000;">#</span><span style="color: #008000;"> 6</span>
+<span style="color: #008080;">21</span>         x = (torch.tanh(x)+1) * scale +<span style="color: #000000;"> LOG_STD_MIN
+</span><span style="color: #008080;">22</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> tanh：[-1, 1], torch.tanh()+1：[0, 2]</span>
+<span style="color: #008080;">23</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> (torch.tanh(x)+1) * scale：[0, 12]</span>
+<span style="color: #008080;">24</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> (torch.tanh(x)+1) * scale + LOG_STD_MIN：[-10, 2]</span>
+<span style="color: #008080;">25</span>     <span style="color: #0000ff;">elif</span> bound_mode == <span style="color: #800000;">"</span><span style="color: #800000;">no</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+</span><span style="color: #008080;">26</span>         x =<span style="color: #000000;"> x
+</span><span style="color: #008080;">27</span>     <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">28</span>         <span style="color: #0000ff;">raise</span><span style="color: #000000;"> NotImplementedError
+</span><span style="color: #008080;">29</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> x
+</span><span style="color: #008080;">30</span> 
+<span style="color: #008080;">31</span> <span style="color: #000000;">torch.manual_seed(0)
+</span><span style="color: #008080;">32</span> x = torch.randn(2, 3)*10
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">原始数据：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, x)
+</span><span style="color: #008080;">34</span> 
+<span style="color: #008080;">35</span> str1 = <span style="color: #800000;">'</span><span style="color: #800000;">clamp</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">36</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">裁剪算子：</span><span style="color: #800000;">'</span><span style="color: #000000;">, str1)
+</span><span style="color: #008080;">37</span> y =<span style="color: #000000;"> clip_function(x, str1)
+</span><span style="color: #008080;">38</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">裁剪后：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, y)
+</span><span style="color: #008080;">39</span> 
+<span style="color: #008080;">40</span> str2 = <span style="color: #800000;">'</span><span style="color: #800000;">tanh</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">41</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">裁剪算子：</span><span style="color: #800000;">'</span><span style="color: #000000;">, str2)
+</span><span style="color: #008080;">42</span> y =<span style="color: #000000;"> clip_function(x, str2)
+</span><span style="color: #008080;">43</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">裁剪后：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, y)
+</span><span style="color: #008080;">44</span> 
+<span style="color: #008080;">45</span> <span style="color: #008000;">#</span><span style="color: #008000;"> --------------------画图------------------------</span>
+<span style="color: #008080;">46</span> num = 1000
+<span style="color: #008080;">47</span> a = torch.randn(num)*10.0
+<span style="color: #008080;">48</span> a, _ =<span style="color: #000000;"> torch.sort(a)
+</span><span style="color: #008080;">49</span> b1 =<span style="color: #000000;"> clip_function(a, str1)
+</span><span style="color: #008080;">50</span> b2 =<span style="color: #000000;"> clip_function(a, str2)
+</span><span style="color: #008080;">51</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 手动设置横纵坐标范围</span>
+<span style="color: #008080;">52</span> <span style="color: #000000;">plt.xlim([0, num])
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">plt.ylim([a.min(), a.max()])
+</span><span style="color: #008080;">54</span> aa =<span style="color: #000000;"> np.arange(0, num)
+</span><span style="color: #008080;">55</span> plt.plot(aa, a, color = <span style="color: #800000;">'</span><span style="color: #800000;">green</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>, label = <span style="color: #800000;">'</span><span style="color: #800000;">data</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">56</span> plt.plot(aa, b1, color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>, label =<span style="color: #000000;"> str1)
+</span><span style="color: #008080;">57</span> plt.plot(aa, b2, color = <span style="color: #800000;">'</span><span style="color: #800000;">blue</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span>, label =<span style="color: #000000;"> str2)
+</span><span style="color: #008080;">58</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 画2条不起眼的虚线</span>
+<span style="color: #008080;">59</span> plt.plot([0, num], [LOG_STD_MIN, LOG_STD_MIN], color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span>, alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">60</span> plt.plot([0, num], [LOG_STD_MAX, LOG_STD_MAX], color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span>, alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">61</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 横纵坐标轴</span>
+<span style="color: #008080;">62</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">x</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">63</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">clip(x)</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">64</span> plt.legend(loc = 2<span style="color: #000000;">)
+</span><span style="color: #008080;">65</span> <span style="color: #000000;">plt.tight_layout()
+</span><span style="color: #008080;">66</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Clip Function.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">67</span> plt.show()</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Other/clip_function_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+原始数据：
+ tensor([[ </span>15.4100,  -2.9343, -21.7879<span style="color: #000000;">],
+        [  </span>5.6843, -10.8452, -13.9860<span style="color: #000000;">]])
+裁剪算子： clamp
+裁剪后：
+ tensor([[  </span>2.0000,  -2.9343, -10.0000<span style="color: #000000;">],
+        [  </span>2.0000, -10.0000, -10.0000<span style="color: #000000;">]])
+裁剪算子： tanh
+裁剪后：
+ tensor([[  </span>2.0000,  -9.9662, -10.0000<span style="color: #000000;">],
+        [  </span>1.9999, -10.0000, -10.0000<span style="color: #000000;">]])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230331083101223-2134564165.png" alt="" width="770" height="570" style="display: block; margin-left: auto; margin-right: auto;" /></p>

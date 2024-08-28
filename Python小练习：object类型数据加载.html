@@ -1,0 +1,206 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：object类型数据加载</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">给定npy文件，用Python加载后，发现该数据类型dtype=object，本文介绍object类型数据的调用/加载方法，并将数据转化为图像，保存为png与gif格式。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">所用数据pool.npy与TrajPool.npy为：<a href="https://files-cdn.cnblogs.com/files/kailugaji/Pool_Datasets.rar?t=1682420448&amp;download=true" target="_blank">https://files-cdn.cnblogs.com/files/kailugaji/Pool_Datasets.rar?t=1682420448&amp;download=true</a><a href="https://files-cdn.cnblogs.com/files/kailugaji/pool.rar?t=1681308366" target="_blank"><br /></a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. object_load.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：object类型数据加载</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 以强化学习经验回放池数据为例</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 数据来源：DeepMind Control Suite中的cheetah-run</span>
+<span style="color: #008080;"> 7</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 在当前时刻状态下，智能体随机产生动作，与环境交互，得到下一步的状态与奖励</span>
+<span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 交互50次，得到由50个样本集组成的经验回放池：{s, a, s', r, ter}</span>
+<span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 分别表示：当前时刻状态、动作、下一步的状态、奖励、终止符</span>
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;">12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;">13</span> <span style="color: #0000ff;">from</span> matplotlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> animation
+</span><span style="color: #008080;">14</span> <span style="color: #008000;">#</span><span style="color: #008000;"> DMControlEnv("cheetah","run")</span>
+<span style="color: #008080;">15</span> 
+<span style="color: #008080;">16</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> save_frames_as_gif(frames, path, index):
+</span><span style="color: #008080;">17</span>     filename = <span style="color: #800000;">'</span><span style="color: #800000;">gym_</span><span style="color: #800000;">'</span>+ index + <span style="color: #800000;">'</span><span style="color: #800000;">.gif</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">18</span>     patch =<span style="color: #000000;"> plt.imshow(frames[0])
+</span><span style="color: #008080;">19</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">20</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> animate(i):
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        patch.set_data(frames[i])
+</span><span style="color: #008080;">22</span>     anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50, repeat = True, repeat_delay = 10<span style="color: #000000;">)
+</span><span style="color: #008080;">23</span>     anim.save(path + filename, writer=<span style="color: #800000;">'</span><span style="color: #800000;">pillow</span><span style="color: #800000;">'</span>, fps=60<span style="color: #000000;">)
+</span><span style="color: #008080;">24</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> anim
+</span><span style="color: #008080;">25</span> 
+<span style="color: #008080;">26</span> num = 32
+<span style="color: #008080;">27</span> dataset = np.load(r<span style="color: #800000;">'</span><span style="color: #800000;">./pool.npy</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">28</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">数据类型：</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">dtype =</span><span style="color: #800000;">'</span><span style="color: #000000;">, dataset.dtype)
+</span><span style="color: #008080;">29</span> <span style="color: #008000;">#</span><span style="color: #008000;"> dtype=object</span>
+<span style="color: #008080;">30</span> observations = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">observations</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (50, 9, 64, 64)</span>
+<span style="color: #008080;">31</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">样本个数：</span><span style="color: #800000;">'</span>, len(observations)) <span style="color: #008000;">#</span><span style="color: #008000;"> 50</span>
+<span style="color: #008080;">32</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">每个样本包含的键名称：</span><span style="color: #800000;">'</span><span style="color: #000000;">, dataset.item().keys())
+</span><span style="color: #008080;">33</span> <span style="color: #008000;">#</span><span style="color: #008000;"> dict_keys(['observations', 'next_observations', 'actions', 'rewards', 'terminals'])</span>
+<span style="color: #008080;">34</span> next_observations = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">next_observations</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (50, 9, 64, 64)</span>
+<span style="color: #008080;">35</span> terminals = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">terminals</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (50, 1)</span>
+<span style="color: #008080;">36</span> rewards = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">rewards</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (50, 1)</span>
+<span style="color: #008080;">37</span> actions = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">actions</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (50, 6)</span>
+<span style="color: #008080;">38</span> toPIL =<span style="color: #000000;"> transforms.ToPILImage()
+</span><span style="color: #008080;">39</span> frames =<span style="color: #000000;"> []
+</span><span style="color: #008080;">40</span> fig = plt.figure(figsize=(15, 6<span style="color: #000000;">))
+</span><span style="color: #008080;">41</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">选取前%d个样本：</span><span style="color: #800000;">'</span>%<span style="color: #000000;">num)
+</span><span style="color: #008080;">42</span> <span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(num):
+</span><span style="color: #008080;">43</span>     state = observations[j, 0:3, :, :].transpose((1, 2<span style="color: #000000;">, 0))
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">    frames.append(state.astype(np.uint8))
+</span><span style="color: #008080;">45</span>     pic =<span style="color: #000000;"> toPIL(state.astype(np.uint8))
+</span><span style="color: #008080;">46</span>     plt.subplot(4, num//4, j+1<span style="color: #000000;">)
+</span><span style="color: #008080;">47</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">    plt.imshow(pic)
+</span><span style="color: #008080;">49</span>     <span style="color: #0000ff;">print</span><span style="color: #000000;">(j,
+</span><span style="color: #008080;">50</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t奖励：</span><span style="color: #800000;">'</span>, np.round(rewards[j], 3<span style="color: #000000;">),
+</span><span style="color: #008080;">51</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t动作：</span><span style="color: #800000;">'</span>, np.round(actions[j], 3<span style="color: #000000;">),
+</span><span style="color: #008080;">52</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t终止符：</span><span style="color: #800000;">'</span><span style="color: #000000;">, terminals[j])
+</span><span style="color: #008080;">53</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">cheetah-run.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">55</span> save_frames_as_gif(frames, path = <span style="color: #800000;">'</span><span style="color: #800000;">./</span><span style="color: #800000;">'</span>, index = <span style="color: #800000;">'</span><span style="color: #800000;">cheetah-run</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/dict/object_load.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+数据类型： dtype </span>=<span style="color: #000000;"> object
+样本个数： </span>50<span style="color: #000000;">
+每个样本包含的键名称： dict_keys([</span><span style="color: #800000;">'</span><span style="color: #800000;">observations</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">next_observations</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">actions</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rewards</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">terminals</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+选取前32个样本：
+0     奖励： [</span>0.125]     动作： [-0.807  0.717 -0.953  0.181 -0.283  0.841<span style="color: #000000;">]     终止符： [0.]
+</span>1     奖励： [0.099]     动作： [-0.449 -0.307  0.473  0.719  0.055 -0.44<span style="color: #000000;"> ]     终止符： [0.]
+</span>2     奖励： [0.075]     动作： [ 0.985 -0.704 -0.039 -0.867  0.092 -0.714<span style="color: #000000;">]     终止符： [0.]
+</span>3     奖励： [0.108]     动作： [ 0.128  0.358 -0.66   0.788 -0.447  0.014<span style="color: #000000;">]     终止符： [0.]
+</span>4     奖励： [0.105]     动作： [-0.871  0.691  0.301  0.521 -0.547  0.144<span style="color: #000000;">]     终止符： [0.]
+</span>5     奖励： [0.043]     动作： [-0.687  0.79   0.455  0.584  0.179  0.568<span style="color: #000000;">]     终止符： [0.]
+</span>6     奖励： [0.]     动作： [-0.022  0.306  0.66   0.978 -0.361 -0.869<span style="color: #000000;">]     终止符： [0.]
+</span>7     奖励： [0.]     动作： [ 0.503  0.017  0.505 -0.649 -0.205 -0.179<span style="color: #000000;">]     终止符： [0.]
+</span>8     奖励： [0.]     动作： [ 0.993 -0.424 -0.48  -0.127  0.341  0.458<span style="color: #000000;">]     终止符： [0.]
+</span>9     奖励： [0.]     动作： [ 0.486  0.229 -0.494 -0.417 -0.93   0.258<span style="color: #000000;">]     终止符： [0.]
+</span>10     奖励： [0.]     动作： [ 0.505 -0.009 -0.047 -0.004  0.64  -0.223<span style="color: #000000;">]     终止符： [0.]
+</span>11     奖励： [0.]     动作： [ 0.103  0.038  0.757 -0.764 -0.852  0.023<span style="color: #000000;">]     终止符： [0.]
+</span>12     奖励： [0.]     动作： [-0.385 -0.62   0.126  0.046  0.135  0.871<span style="color: #000000;">]     终止符： [0.]
+</span>13     奖励： [0.]     动作： [-0.661 -0.92   0.128  0.705  0.841  0.32<span style="color: #000000;"> ]     终止符： [0.]
+</span>14     奖励： [0.]     动作： [ 0.515  0.011 -0.085 -0.863  0.69  -0.899<span style="color: #000000;">]     终止符： [0.]
+</span>15     奖励： [0.]     动作： [-0.16   0.08   0.342 -0.675  0.873  0.13<span style="color: #000000;"> ]     终止符： [0.]
+</span>16     奖励： [0.]     动作： [-0.221 -0.102  0.862 -0.151  0.938  0.122<span style="color: #000000;">]     终止符： [0.]
+</span>17     奖励： [0.]     动作： [ 0.915  0.735 -0.297  0.357  0.613  0.363<span style="color: #000000;">]     终止符： [0.]
+</span>18     奖励： [0.]     动作： [ 0.752 -0.251 -0.505 -0.525  0.76   0.026<span style="color: #000000;">]     终止符： [0.]
+</span>19     奖励： [0.]     动作： [-0.907  0.056  0.108 -0.921 -0.164 -0.508<span style="color: #000000;">]     终止符： [0.]
+</span>20     奖励： [0.]     动作： [-0.522 -0.065 -0.66  -0.229  0.88   0.583<span style="color: #000000;">]     终止符： [0.]
+</span>21     奖励： [0.]     动作： [-0.011 -0.137  0.209  0.014 -0.079  0.236<span style="color: #000000;">]     终止符： [0.]
+</span>22     奖励： [0.]     动作： [-0.663  0.654 -0.068 -0.728  0.537 -0.359<span style="color: #000000;">]     终止符： [0.]
+</span>23     奖励： [0.]     动作： [-0.602 -0.122 -0.313 -0.798  0.354 -0.558<span style="color: #000000;">]     终止符： [0.]
+</span>24     奖励： [0.]     动作： [-0.667  0.071  0.508 -0.219 -0.007  0.041<span style="color: #000000;">]     终止符： [0.]
+</span>25     奖励： [0.]     动作： [ 0.993  0.028 -0.229  0.809  0.502  0.281<span style="color: #000000;">]     终止符： [0.]
+</span>26     奖励： [0.]     动作： [ 0.335  0.411 -0.902 -0.487 -0.564  0.109<span style="color: #000000;">]     终止符： [0.]
+</span>27     奖励： [0.]     动作： [-0.509 -0.607  0.294 -0.391  0.997  0.134<span style="color: #000000;">]     终止符： [0.]
+</span>28     奖励： [0.]     动作： [ 0.312  0.554  0.741 -0.098 -0.257 -0.768<span style="color: #000000;">]     终止符： [0.]
+</span>29     奖励： [0.]     动作： [-0.855 -0.576 -0.122 -0.714 -0.436 -0.335<span style="color: #000000;">]     终止符： [0.]
+</span>30     奖励： [0.]     动作： [ 0.797  0.024 -0.432 -0.378 -0.555  0.935<span style="color: #000000;">]     终止符： [0.]
+</span>31     奖励： [0.]     动作： [ 0.768  0.445  0.59  -0.977  0.51   0.796<span style="color: #000000;">]     终止符： [0.]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230412220215457-12536374.png" alt="" width="932" height="383" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230412220224780-581598352.gif" alt="" width="307" height="230" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充另一个npy文件：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">代码：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：object类型数据加载</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">from</span> matplotlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> animation
+</span><span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> DMControlEnv("cheetah","run")</span>
+<span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> save_frames_as_gif(frames, path, index):
+</span><span style="color: #008080;">12</span>     filename = <span style="color: #800000;">'</span><span style="color: #800000;">gym_</span><span style="color: #800000;">'</span>+ index + <span style="color: #800000;">'</span><span style="color: #800000;">_traj.gif</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">13</span>     patch =<span style="color: #000000;"> plt.imshow(frames[0])
+</span><span style="color: #008080;">14</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">15</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> animate(i):
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">        patch.set_data(frames[i])
+</span><span style="color: #008080;">17</span>     anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50, repeat = True, repeat_delay = 10<span style="color: #000000;">)
+</span><span style="color: #008080;">18</span>     anim.save(path + filename, writer=<span style="color: #800000;">'</span><span style="color: #800000;">pillow</span><span style="color: #800000;">'</span>, fps=60<span style="color: #000000;">)
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> anim
+</span><span style="color: #008080;">20</span> 
+<span style="color: #008080;">21</span> num = 32
+<span style="color: #008080;">22</span> dataset = np.load(r<span style="color: #800000;">'</span><span style="color: #800000;">./TrajPool.npy</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">23</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">数据类型：</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">dtype =</span><span style="color: #800000;">'</span><span style="color: #000000;">, dataset.dtype)
+</span><span style="color: #008080;">24</span> <span style="color: #008000;">#</span><span style="color: #008000;"> dtype=object</span>
+<span style="color: #008080;">25</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">每个样本包含的键名称：</span><span style="color: #800000;">'</span><span style="color: #000000;">, dataset.item().keys())
+</span><span style="color: #008080;">26</span> <span style="color: #008000;">#</span><span style="color: #008000;"> dict_keys(['frames', 'actions', 'rewards', 'terminals'])</span>
+<span style="color: #008080;">27</span> observations = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">frames</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (300, 3, 64, 64)</span>
+<span style="color: #008080;">28</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">样本个数：</span><span style="color: #800000;">'</span>, len(observations)) <span style="color: #008000;">#</span><span style="color: #008000;"> 300</span>
+<span style="color: #008080;">29</span> terminals = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">terminals</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (300, 1)</span>
+<span style="color: #008080;">30</span> rewards = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">rewards</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (300, 1)</span>
+<span style="color: #008080;">31</span> actions = dataset.item()[<span style="color: #800000;">'</span><span style="color: #800000;">actions</span><span style="color: #800000;">'</span>] <span style="color: #008000;">#</span><span style="color: #008000;"> (300, 6)</span>
+<span style="color: #008080;">32</span> toPIL =<span style="color: #000000;"> transforms.ToPILImage()
+</span><span style="color: #008080;">33</span> frames =<span style="color: #000000;"> []
+</span><span style="color: #008080;">34</span> fig = plt.figure(figsize=(15, 6<span style="color: #000000;">))
+</span><span style="color: #008080;">35</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">选取前%d个样本：</span><span style="color: #800000;">'</span>%<span style="color: #000000;">num)
+</span><span style="color: #008080;">36</span> <span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(num):
+</span><span style="color: #008080;">37</span>     state = observations[j, :, :, :].transpose((1, 2<span style="color: #000000;">, 0))
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">    frames.append(state.astype(np.uint8))
+</span><span style="color: #008080;">39</span>     pic =<span style="color: #000000;"> toPIL(state.astype(np.uint8))
+</span><span style="color: #008080;">40</span>     plt.subplot(4, num//4, j+1<span style="color: #000000;">)
+</span><span style="color: #008080;">41</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">    plt.imshow(pic)
+</span><span style="color: #008080;">43</span>     <span style="color: #0000ff;">print</span><span style="color: #000000;">(j,
+</span><span style="color: #008080;">44</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t奖励：</span><span style="color: #800000;">'</span>, np.round(rewards[j], 3<span style="color: #000000;">),
+</span><span style="color: #008080;">45</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t动作：</span><span style="color: #800000;">'</span>, np.round(actions[j], 3<span style="color: #000000;">),
+</span><span style="color: #008080;">46</span>           <span style="color: #800000;">'</span><span style="color: #800000;">\t终止符：</span><span style="color: #800000;">'</span><span style="color: #000000;">, terminals[j])
+</span><span style="color: #008080;">47</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">cheetah-run-traj.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">49</span> save_frames_as_gif(frames, path = <span style="color: #800000;">'</span><span style="color: #800000;">./</span><span style="color: #800000;">'</span>, index = <span style="color: #800000;">'</span><span style="color: #800000;">cheetah-run</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/load_npy/object_load_traj.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+数据类型： dtype </span>=<span style="color: #000000;"> object
+每个样本包含的键名称： dict_keys([</span><span style="color: #800000;">'</span><span style="color: #800000;">frames</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">actions</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">rewards</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">terminals</span><span style="color: #800000;">'</span><span style="color: #000000;">])
+样本个数： </span>300<span style="color: #000000;">
+选取前32个样本：
+0     奖励： [0.]     动作： [</span>-0.491 -0.432  0.258 -0.417  0.777 -0.192<span style="color: #000000;">]     终止符： [0.]
+</span>1     奖励： [0.]     动作： [-0.395  0.082 -0.993 -0.983  0.353  0.559<span style="color: #000000;">]     终止符： [0.]
+</span>2     奖励： [0.]     动作： [ 0.655 -0.55  -0.464 -0.59  -0.836 -0.251<span style="color: #000000;">]     终止符： [0.]
+</span>3     奖励： [0.]     动作： [-0.312  0.005 -0.037 -0.916  0.555  0.06<span style="color: #000000;"> ]     终止符： [0.]
+</span>4     奖励： [0.]     动作： [ 0.495 -0.105 -0.743  0.734 -0.603 -0.588<span style="color: #000000;">]     终止符： [0.]
+</span>5     奖励： [0.]     动作： [-0.064  0.105  0.172  0.498 -0.984 -0.174<span style="color: #000000;">]     终止符： [0.]
+</span>6     奖励： [0.]     动作： [ 0.652  0.64  -0.743  0.108  0.663 -0.094<span style="color: #000000;">]     终止符： [0.]
+</span>7     奖励： [0.]     动作： [-0.12   0.795  0.422  0.401  0.829  0.094<span style="color: #000000;">]     终止符： [0.]
+</span>8<span style="color: #000000;">     奖励： [0.]     动作： [0. 0. 0. 0. 0. 0.]     终止符： [0.]
+</span>9<span style="color: #000000;">     奖励： [0.]     动作： [0. 0. 0. 0. 0. 0.]     终止符： [0.]
+</span>10<span style="color: #000000;">     奖励： [0.]     动作： [0. 0. 0. 0. 0. 0.]     终止符： [0.]
+</span>11     奖励： [0.]     动作： [-0.246 -0.135  0.181 -0.473  0.584 -0.166<span style="color: #000000;">]     终止符： [0.]
+</span>12     奖励： [0.]     动作： [ 0.052 -0.931  0.894  0.028 -0.669  0.218<span style="color: #000000;">]     终止符： [0.]
+</span>13     奖励： [0.]     动作： [ 0.974  0.133 -0.692 -0.208  0.065 -0.746<span style="color: #000000;">]     终止符： [0.]
+</span>14     奖励： [0.]     动作： [ 0.834 -0.767  0.423 -0.127  0.133 -0.662<span style="color: #000000;">]     终止符： [0.]
+</span>15     奖励： [0.]     动作： [-0.893  0.482  0.973  0.219 -0.745  0.335<span style="color: #000000;">]     终止符： [0.]
+</span>16     奖励： [0.]     动作： [ 0.777 -0.479 -0.601  0.209  0.435  0.342<span style="color: #000000;">]     终止符： [0.]
+</span>17     奖励： [0.]     动作： [ 0.936 -0.639  0.932 -0.909 -0.519  0.674<span style="color: #000000;">]     终止符： [0.]
+</span>18     奖励： [0.]     动作： [-0.913  0.719 -0.84  -0.065  0.845  0.524<span style="color: #000000;">]     终止符： [0.]
+</span>19     奖励： [0.]     动作： [-0.156  0.533  0.796 -0.911 -0.99   0.207<span style="color: #000000;">]     终止符： [0.]
+</span>20     奖励： [0.]     动作： [ 0.343  0.445  0.183  0.306  0.884 -0.94<span style="color: #000000;"> ]     终止符： [0.]
+</span>21     奖励： [0.]     动作： [-0.157 -0.648 -0.125 -0.268  0.123  0.771<span style="color: #000000;">]     终止符： [0.]
+</span>22     奖励： [0.]     动作： [ 0.44   0.574 -0.65   0.183 -0.043 -0.823<span style="color: #000000;">]     终止符： [0.]
+</span>23     奖励： [0.]     动作： [ 0.855 -0.087 -0.347 -0.616 -0.843  0.184<span style="color: #000000;">]     终止符： [0.]
+</span>24     奖励： [0.]     动作： [-0.269 -0.191  0.047 -0.363 -0.193 -0.786<span style="color: #000000;">]     终止符： [0.]
+</span>25     奖励： [0.]     动作： [-0.472  0.426  0.367  0.316  0.947  0.675<span style="color: #000000;">]     终止符： [0.]
+</span>26     奖励： [0.]     动作： [-0.058  0.245  0.744 -0.542  0.754  0.616<span style="color: #000000;">]     终止符： [0.]
+</span>27     奖励： [0.]     动作： [-0.429 -0.531  0.737 -0.507 -0.712 -0.692<span style="color: #000000;">]     终止符： [0.]
+</span>28     奖励： [0.]     动作： [-0.251 -0.844  0.539  0.258 -0.111  0.73<span style="color: #000000;"> ]     终止符： [0.]
+</span>29     奖励： [0.03]     动作： [0.54  0.822 0.214 0.598 0.653 0.473<span style="color: #000000;">]     终止符： [0.]
+</span>30     奖励： [0.085]     动作： [-0.365 -0.202 -0.25   0.548  0.461 -0.922<span style="color: #000000;">]     终止符： [0.]
+</span>31     奖励： [0.121]     动作： [ 0.301  0.356 -0.387  0.764  0.333  0.725<span style="color: #000000;">]     终止符： [0.]
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230425190327414-1821391804.png" alt="" width="964" height="394" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230425190336071-830270607.gif" alt="" width="325" height="244" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;">[1]&nbsp;<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/kailugaji/p/15761082.html">Windows下OpenAI gym环境的使用</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;">[2]&nbsp;Liu Q, Zhou Q, Yang R, et al.&nbsp;<a href="http://export.arxiv.org/abs/2302.12003v2" rel="noopener" target="_blank">Robust Representation Learning by Clustering with Bisimulation Metrics for Visual Reinforcement Learning with Distractions</a>[C]. AAAI, 2023.</span></p>

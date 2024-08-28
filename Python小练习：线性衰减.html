@@ -1,0 +1,59 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：线性衰减</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文介绍一种最简单的衰减曲线：线性衰减。给定schedule = [start, end, start_value, end_value]，先前一直保持在start_value水平，从start时刻开始衰减，直至到达end时刻结束，其值为end_value，之后就一直保持在end_value这一水平上不变。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;get_scheduled_value_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：线性衰减</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 7</span> plt.rc(<span style="color: #800000;">'</span><span style="color: #800000;">font</span><span style="color: #800000;">'</span>,family=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Scheduled Exploration Noise</span>
+<span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> linear decay</span>
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> get_scheduled_value(current, schedule):
+</span><span style="color: #008080;">11</span>     start, end, start_value, end_value =<span style="color: #000000;"> schedule
+</span><span style="color: #008080;">12</span>     ratio = (current - start) / (end - start) <span style="color: #008000;">#</span><span style="color: #008000;"> 当前步数在总步数的比例</span>
+<span style="color: #008080;">13</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 总计100步，当前current步</span>
+<span style="color: #008080;">14</span>     ratio = max(0, min(1<span style="color: #000000;">, ratio))
+</span><span style="color: #008080;">15</span>     value = (ratio * (end_value - start_value)) +<span style="color: #000000;"> start_value
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> value
+</span><span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> start = 10 <span style="color: #008000;">#</span><span style="color: #008000;"> 从这时开始衰减</span>
+<span style="color: #008080;">19</span> end = 100 <span style="color: #008000;">#</span><span style="color: #008000;"> the decay horizon</span>
+<span style="color: #008080;">20</span> start_value = 1 <span style="color: #008000;">#</span><span style="color: #008000;"> 从1衰减到0.1</span>
+<span style="color: #008080;">21</span> end_value = 0.1
+<span style="color: #008080;">22</span> schedule =<span style="color: #000000;"> [start, end, start_value, end_value]
+</span><span style="color: #008080;">23</span> exploration_noise =<span style="color: #000000;"> []
+</span><span style="color: #008080;">24</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(int(end - start)+1<span style="color: #000000;">):
+</span><span style="color: #008080;">25</span>     value = get_scheduled_value(start +<span style="color: #000000;"> i, schedule)
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">    exploration_noise.append(value)
+</span><span style="color: #008080;">27</span> 
+<span style="color: #008080;">28</span> <span style="color: #008000;">#</span><span style="color: #008000;"> --------------------画图------------------------</span>
+<span style="color: #008080;">29</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 手动设置横纵坐标范围</span>
+<span style="color: #008080;">30</span> plt.xlim([0, end*1.3<span style="color: #000000;">])
+</span><span style="color: #008080;">31</span> plt.ylim([0, start_value + 0.1<span style="color: #000000;">])
+</span><span style="color: #008080;">32</span> my_time = np.arange(start, end+1<span style="color: #000000;">)
+</span><span style="color: #008080;">33</span> exploration_noise =<span style="color: #000000;"> np.array(exploration_noise)
+</span><span style="color: #008080;">34</span> plt.plot([0, start], [start_value, start_value], color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">35</span> plt.plot(my_time, exploration_noise, color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">36</span> plt.plot([end, end*1.3], [end_value, end_value], color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">37</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 画3条不起眼的虚线</span>
+<span style="color: #008080;">38</span> plt.plot([0, end*1.3], [exploration_noise[-1], exploration_noise[-1]], color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span>, alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">39</span> plt.text(end - end/3, exploration_noise[-1] + 0.03, <span style="color: #800000;">"</span><span style="color: #800000;">y = %.2f</span><span style="color: #800000;">"</span> %exploration_noise[-1], fontdict={<span style="color: #800000;">'</span><span style="color: #800000;">size</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">12</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">color</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">})
+</span><span style="color: #008080;">40</span> plt.plot([start, start], [0, start_value + 0.1], color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span>, alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">41</span> plt.text(start + 0.5, start_value - 0.8, <span style="color: #800000;">"</span><span style="color: #800000;">x = %d</span><span style="color: #800000;">"</span> %start, fontdict={<span style="color: #800000;">'</span><span style="color: #800000;">size</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">12</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">color</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">})
+</span><span style="color: #008080;">42</span> plt.plot([end, end], [0, start_value + 0.1], color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span>, ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span>, alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">43</span> plt.text(end + 0.5, start_value - 0.8, <span style="color: #800000;">"</span><span style="color: #800000;">x = %d</span><span style="color: #800000;">"</span> %end, fontdict={<span style="color: #800000;">'</span><span style="color: #800000;">size</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">12</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">color</span><span style="color: #800000;">'</span>: <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">})
+</span><span style="color: #008080;">44</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 横纵坐标轴</span>
+<span style="color: #008080;">45</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">Timestep</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">46</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">Linear Decay</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">plt.tight_layout()
+</span><span style="color: #008080;">48</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Linear Decay.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, dpi=500<span style="color: #000000;">)
+</span><span style="color: #008080;">49</span> plt.show()</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230330080755991-1945078333.png" alt="" width="611" height="454" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1]&nbsp;Yarats D, Fergus R, Lazaric A, et al. <a href="https://arxiv.org/abs/2107.09645" target="_blank">Mastering visual continuous control: Improved data-augmented reinforcement learning</a>[J]. arXiv preprint arXiv:2107.09645, 2021.</span></p>

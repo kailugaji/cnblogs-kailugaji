@@ -1,0 +1,61 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：绘制散点图并添加基线</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;plot_scatter_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python绘制散点图</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 6</span> plt.rc(<span style="color: #800000;">'</span><span style="color: #800000;">font</span><span style="color: #800000;">'</span>,family=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> plot_scatter(x, y, baseline, label):
+</span><span style="color: #008080;">10</span>     min_x, max_x =<span style="color: #000000;"> x.min(), x.max()
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    plt.scatter(x, y,
+</span><span style="color: #008080;">12</span>                 s = 5, <span style="color: #008000;">#</span><span style="color: #008000;"> 点的大小</span>
+<span style="color: #008080;">13</span>                 color = <span style="color: #800000;">'</span><span style="color: #800000;">red</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">14</span>                 marker=<span style="color: #800000;">'</span><span style="color: #800000;">.</span><span style="color: #800000;">'</span>, <span style="color: #008000;">#</span><span style="color: #008000;"> 默认'o'</span>
+<span style="color: #008080;">15</span>                 label =<span style="color: #000000;"> label)
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------绘制散点图</span><span style="color: #800000;">'</span>, label, <span style="color: #800000;">'</span><span style="color: #800000;">------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">17</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 绘制额外的虚线baseline</span>
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">if</span> baseline == <span style="color: #800000;">'</span><span style="color: #800000;">no</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">19</span>         <span style="color: #0000ff;">pass</span>
+<span style="color: #008080;">20</span>     <span style="color: #0000ff;">elif</span> baseline == <span style="color: #800000;">'</span><span style="color: #800000;">y=x</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">21</span>         plt.plot([min_x, max_x], [min_x, max_x], <span style="color: #008000;">#</span><span style="color: #008000;"> x: [min_x, max_x], y: [min_x, max_x]</span>
+<span style="color: #008080;">22</span>                  color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">23</span>                  ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">24</span>                  label =<span style="color: #000000;"> baseline,
+</span><span style="color: #008080;">25</span>                  alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">26</span>     <span style="color: #0000ff;">elif</span> baseline == <span style="color: #800000;">'</span><span style="color: #800000;">y=0</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+</span><span style="color: #008080;">27</span>         plt.plot([min_x, max_x], [0, 0], <span style="color: #008000;">#</span><span style="color: #008000;"> x: [min_x, max_x], y: [0, 0]</span>
+<span style="color: #008080;">28</span>                  color = <span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">29</span>                  ls = <span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">30</span>                  label =<span style="color: #000000;"> baseline,
+</span><span style="color: #008080;">31</span>                  alpha = 0.3<span style="color: #000000;">)
+</span><span style="color: #008080;">32</span>     <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">33</span>         <span style="color: #0000ff;">raise</span><span style="color: #000000;"> NotImplementedError
+</span><span style="color: #008080;">34</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------绘制基准线</span><span style="color: #800000;">'</span>, baseline, <span style="color: #800000;">'</span><span style="color: #800000;">------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">35</span>     plt.grid(ls=<span style="color: #800000;">'</span><span style="color: #800000;">--</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">36</span> 
+<span style="color: #008080;">37</span> x = np.linspace(-1, 1, 150, endpoint=<span style="color: #000000;">True)
+</span><span style="color: #008080;">38</span> y =<span style="color: #000000;"> np.sin(x)
+</span><span style="color: #008080;">39</span> label = <span style="color: #800000;">'</span><span style="color: #800000;">y=sin(x)</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">40</span> baseline = <span style="color: #800000;">'</span><span style="color: #800000;">y=x</span><span style="color: #800000;">'</span>
+<span style="color: #008080;">41</span> <span style="color: #000000;">plot_scatter(x, y, baseline, label)
+</span><span style="color: #008080;">42</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 添加x轴和y轴标签</span>
+<span style="color: #008080;">43</span> plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">x</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">44</span> plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">y</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">plt.legend()
+</span><span style="color: #008080;">46</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Scatter Diagram.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, dpi=600<span style="color: #000000;">)
+</span><span style="color: #008080;">47</span> plt.show()</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Scatter/plot_scatter_test.py</span><span style="color: #800000;">"</span>
+------绘制散点图 y=sin(x) ------
+------绘制基准线 y=x ------<span style="color: #000000;">
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230323104848364-1529913832.png" alt="" width="575" height="429" style="display: block; margin-left: auto; margin-right: auto;" /></p>

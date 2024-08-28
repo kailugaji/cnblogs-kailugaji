@@ -1,0 +1,237 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：Sinkhorn-Knopp算法</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">本文介绍Sinkhorn-Knopp算法的Python实现，通过参考并修改两种不同的实现方法，来真正弄懂算法原理。详细的原理部分可参考文末给出的参考文献。</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">公式为：$P = diag(u)\exp \left( {\frac{{ - S}}{\varepsilon }} \right)diag(v)$。输入S，输出P，其中u与v是renormalization向量，eps用来控制P的平滑性。通常情况下，</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">S与P对应的值成反比，S某一元素越大，相应的P值越小。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1.&nbsp;sinkhorn_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;">  2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;">  3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;">  4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Sinkhorn-Knopp算法(以方阵为例)</span>
+<span style="color: #008080;">  5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 对于一个n*n方阵</span>
+<span style="color: #008080;">  6</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 1) 先逐行做归一化：将第一行的每个元素除以第一行所有元素之和，得到新的"第一行"，每行都做相同的操作</span>
+<span style="color: #008080;">  7</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 2) 再逐列做归一化，操作同上</span>
+<span style="color: #008080;">  8</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 重复以上的两步1)与2)，最终可以收敛到一个行和为1，列和也为1的双随机矩阵。</span>
+<span style="color: #008080;">  9</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> time
+</span><span style="color: #008080;"> 12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> seaborn as sns
+</span><span style="color: #008080;"> 13</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 14</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法1：</span>
+<span style="color: #008080;"> 15</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 16</span> <span style="color: #800000;">    https://github.com/miralab-ustc/rl-cbm
+</span><span style="color: #008080;"> 17</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 18</span> <span style="color: #008000;">#</span><span style="color: #008000;"> numpy转换成tensor</span>
+<span style="color: #008080;"> 19</span> <span style="color: #0000ff;">def</span> sinkhorn(scores, eps = 5, n_iter = 3<span style="color: #000000;">):
+</span><span style="color: #008080;"> 20</span>     <span style="color: #0000ff;">def</span> remove_infs(x): <span style="color: #008000;">#</span><span style="color: #008000;"> 替换掉数据里面的INF与0</span>
+<span style="color: #008080;"> 21</span>         mm = x[torch.isfinite(x)].max().item() <span style="color: #008000;">#</span><span style="color: #008000;"> m是x的最大值</span>
+<span style="color: #008080;"> 22</span>         x[torch.isinf(x)] = mm <span style="color: #008000;">#</span><span style="color: #008000;"> 用最大值替换掉数据里面的INF</span>
+<span style="color: #008080;"> 23</span>         x[x==0] = 1e-38 <span style="color: #008000;">#</span><span style="color: #008000;"> 将数据里面的0元素替换为1e-38</span>
+<span style="color: #008080;"> 24</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> x
+</span><span style="color: #008080;"> 25</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 若以(2, 8)为例</span>
+<span style="color: #008080;"> 26</span>     scores =<span style="color: #000000;"> torch.tensor(scores)
+</span><span style="color: #008080;"> 27</span>     t0 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 28</span>     n, m = scores.shape <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([2, 8])</span>
+<span style="color: #008080;"> 29</span>     scores1 = scores.view(n*m) <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([16])</span>
+<span style="color: #008080;"> 30</span>     Q = torch.softmax(-scores1/eps, dim=0) <span style="color: #008000;">#</span><span style="color: #008000;"> softmax</span>
+<span style="color: #008080;"> 31</span>     Q = remove_infs(Q).view(n,m).T <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([8, 2])</span>
+<span style="color: #008080;"> 32</span>     r, c = torch.ones(n), torch.ones(m) * (n /<span style="color: #000000;"> m)
+</span><span style="color: #008080;"> 33</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 确保sum(r)=sum(c)</span>
+<span style="color: #008080;"> 34</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 对应地P的行和为r，列和为c</span>
+<span style="color: #008080;"> 35</span>     <span style="color: #0000ff;">for</span> _ <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(n_iter):
+</span><span style="color: #008080;"> 36</span>         u = (c/torch.sum(Q, dim=1)) <span style="color: #008000;">#</span><span style="color: #008000;"> torch.sum(Q, dim=1)按列求和，得到1行8列的数torch.Size([8])</span>
+<span style="color: #008080;"> 37</span>         Q *= remove_infs(u).unsqueeze(1) <span style="color: #008000;">#</span><span style="color: #008000;">  torch.Size([8, 2])</span>
+<span style="color: #008080;"> 38</span>         v = (r/torch.sum(Q,dim=0)) <span style="color: #008000;">#</span><span style="color: #008000;"> torch.sum(Q,dim=0)按行求和，得到torch.Size([2])</span>
+<span style="color: #008080;"> 39</span>         Q *= remove_infs(v).unsqueeze(0) <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([8, 2])</span>
+<span style="color: #008080;"> 40</span>     bsum = torch.sum(Q, dim=0, keepdim=True) <span style="color: #008000;">#</span><span style="color: #008000;"> 按行求和，torch.Size([1, 2])</span>
+<span style="color: #008080;"> 41</span>     Q = Q /<span style="color: #000000;"> remove_infs(bsum)
+</span><span style="color: #008080;"> 42</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> bsum = torch.sum(Q, dim=1, keepdim=True)</span>
+<span style="color: #008080;"> 43</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> Q = Q / remove_infs(bsum)</span>
+<span style="color: #008080;"> 44</span>     P = Q.T <span style="color: #008000;">#</span><span style="color: #008000;"> 转置，torch.Size([2, 8])</span>
+<span style="color: #008080;"> 45</span>     t1 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 46</span>     compute_time = t1 -<span style="color: #000000;"> t0
+</span><span style="color: #008080;"> 47</span>     <span style="color: #0000ff;">assert</span> torch.isnan(P.sum())==<span style="color: #000000;">False
+</span><span style="color: #008080;"> 48</span>     P =<span style="color: #000000;"> np.array(P)
+</span><span style="color: #008080;"> 49</span>     scores =<span style="color: #000000;"> np.array(scores)
+</span><span style="color: #008080;"> 50</span>     dist = np.sum(P *<span style="color: #000000;"> scores)
+</span><span style="color: #008080;"> 51</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> P, dist, compute_time
+</span><span style="color: #008080;"> 52</span> 
+<span style="color: #008080;"> 53</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法2：</span>
+<span style="color: #008080;"> 54</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Sinkhorn-Knopp算法</span>
+<span style="color: #008080;"> 55</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 56</span> <span style="color: #800000;">    https://michielstock.github.io/posts/2017/2017-11-5-OptimalTransport/
+</span><span style="color: #008080;"> 57</span> <span style="color: #800000;">    https://zhuanlan.zhihu.com/p/542379144
+</span><span style="color: #008080;"> 58</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 59</span> <span style="color: #008000;">#</span><span style="color: #008000;"> numpy</span>
+<span style="color: #008080;"> 60</span> <span style="color: #0000ff;">def</span> compute_optimal_transport(scores, eps = 5, n_iter = 3<span style="color: #000000;">):
+</span><span style="color: #008080;"> 61</span>     <span style="color: #800000;">"""</span>
+<span style="color: #008080;"> 62</span> <span style="color: #800000;">    Computes the optimal transport matrix and Sinkhorn distance using the
+</span><span style="color: #008080;"> 63</span> <span style="color: #800000;">    Sinkhorn-Knopp algorithm
+</span><span style="color: #008080;"> 64</span> <span style="color: #800000;">    Inputs:
+</span><span style="color: #008080;"> 65</span> <span style="color: #800000;">        - scores : cost matrix (n * m)
+</span><span style="color: #008080;"> 66</span> <span style="color: #800000;">        - r : vector of marginals (n, )
+</span><span style="color: #008080;"> 67</span> <span style="color: #800000;">        - c : vector of marginals (m, )
+</span><span style="color: #008080;"> 68</span> <span style="color: #800000;">        - eps : strength of the entropic regularization
+</span><span style="color: #008080;"> 69</span> <span style="color: #800000;">        - epsilon : convergence parameter
+</span><span style="color: #008080;"> 70</span> <span style="color: #800000;">    Outputs:
+</span><span style="color: #008080;"> 71</span> <span style="color: #800000;">        - P : optimal transport matrix (n x m)
+</span><span style="color: #008080;"> 72</span> <span style="color: #800000;">        - dist : Sinkhorn distance
+</span><span style="color: #008080;"> 73</span>     <span style="color: #800000;">"""</span>
+<span style="color: #008080;"> 74</span>     t0 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 75</span>     n, m =<span style="color: #000000;"> scores.shape
+</span><span style="color: #008080;"> 76</span>     r = np.ones(n)  <span style="color: #008000;">#</span><span style="color: #008000;"> P矩阵列和为r</span>
+<span style="color: #008080;"> 77</span>     c = np.ones(m)*(n/m)  <span style="color: #008000;">#</span><span style="color: #008000;"> P矩阵行和为c</span>
+<span style="color: #008080;"> 78</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 确保：np.sum(r)==np.sum(c)</span>
+<span style="color: #008080;"> 79</span>     P = np.exp(- scores /<span style="color: #000000;"> eps)
+</span><span style="color: #008080;"> 80</span>     P /=<span style="color: #000000;"> P.sum()
+</span><span style="color: #008080;"> 81</span>     u =<span style="color: #000000;"> np.zeros(n)
+</span><span style="color: #008080;"> 82</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> normalize this matrix</span>
+<span style="color: #008080;"> 83</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> while np.max(np.abs(u - P.sum(1))) &gt; epsilon:</span>
+<span style="color: #008080;"> 84</span>     <span style="color: #0000ff;">for</span> _ <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(n_iter):
+</span><span style="color: #008080;"> 85</span>         u = P.sum(1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 86</span>         P *= (r / u).reshape((-1, 1)) <span style="color: #008000;">#</span><span style="color: #008000;"> 行归r化</span>
+<span style="color: #008080;"> 87</span>         P *= (c / P.sum(0)).reshape((1, -1)) <span style="color: #008000;">#</span><span style="color: #008000;"> 列归c化</span>
+<span style="color: #008080;"> 88</span>     t1 =<span style="color: #000000;"> time.time()
+</span><span style="color: #008080;"> 89</span>     compute_time = t1 -<span style="color: #000000;"> t0
+</span><span style="color: #008080;"> 90</span>     dist = np.sum(P *<span style="color: #000000;"> scores)
+</span><span style="color: #008080;"> 91</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> P, dist, compute_time
+</span><span style="color: #008080;"> 92</span> 
+<span style="color: #008080;"> 93</span> np.random.seed(1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 94</span> n = 5 <span style="color: #008000;">#</span><span style="color: #008000;"> 行数</span>
+<span style="color: #008080;"> 95</span> m = 5 <span style="color: #008000;">#</span><span style="color: #008000;"> 列数</span>
+<span style="color: #008080;"> 96</span> num = 3 <span style="color: #008000;">#</span><span style="color: #008000;"> 保留小数位数</span>
+<span style="color: #008080;"> 97</span> n_iter = 100 <span style="color: #008000;">#</span><span style="color: #008000;"> 迭代次数</span>
+<span style="color: #008080;"> 98</span> eps = 0.5
+<span style="color: #008080;"> 99</span> scores = np.random.rand(n ,m) <span style="color: #008000;">#</span><span style="color: #008000;"> cost matrix</span>
+<span style="color: #008080;">100</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">原始数据：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(scores, num))
+</span><span style="color: #008080;">101</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">102</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法1：</span>
+<span style="color: #008080;">103</span> P, dist, compute_time_1 = sinkhorn(scores, eps = eps, n_iter =<span style="color: #000000;"> n_iter)
+</span><span style="color: #008080;">104</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1. 处理后的结果：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(P, num))
+</span><span style="color: #008080;">105</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1. 行和：\n</span><span style="color: #800000;">'</span>, np.sum(P, axis =<span style="color: #000000;"> 0))
+</span><span style="color: #008080;">106</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1. 列和：\n</span><span style="color: #800000;">'</span>, np.sum(P, axis = 1<span style="color: #000000;">))
+</span><span style="color: #008080;">107</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1. Sinkhorn距离：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(dist, num))
+</span><span style="color: #008080;">108</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">1. 计算时间：</span><span style="color: #800000;">'</span>, np.around(compute_time_1, 8), <span style="color: #800000;">'</span><span style="color: #800000;">秒</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">109</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">------------------------------------------------</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">110</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方法2：</span>
+<span style="color: #008080;">111</span> P, dist, compute_time_2 = compute_optimal_transport(scores, eps = eps, n_iter =<span style="color: #000000;"> n_iter)
+</span><span style="color: #008080;">112</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2. 处理后的结果：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(P, num))
+</span><span style="color: #008080;">113</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2. 行和：\n</span><span style="color: #800000;">'</span>, np.sum(P, axis =<span style="color: #000000;"> 0))
+</span><span style="color: #008080;">114</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2. 列和：\n</span><span style="color: #800000;">'</span>, np.sum(P, axis = 1<span style="color: #000000;">))
+</span><span style="color: #008080;">115</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2. Sinkhorn距离：</span><span style="color: #800000;">'</span><span style="color: #000000;">, np.around(dist, num))
+</span><span style="color: #008080;">116</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">2. 计算时间：</span><span style="color: #800000;">'</span>, np.around(compute_time_2, 8), <span style="color: #800000;">'</span><span style="color: #800000;">秒</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">117</span> <span style="color: #0000ff;">if</span> True<span style="color: #000000;">:
+</span><span style="color: #008080;">118</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 绘制热力图</span>
+<span style="color: #008080;">119</span>     fig, ax = plt.subplots(1, 2, figsize=(15, 7<span style="color: #000000;">))
+</span><span style="color: #008080;">120</span>     <span style="color: #0000ff;">for</span> axs <span style="color: #0000ff;">in</span><span style="color: #000000;"> ax:
+</span><span style="color: #008080;">121</span>         axs.tick_params(labelsize=15<span style="color: #000000;">)
+</span><span style="color: #008080;">122</span>     sns.set(font_scale=1.5, font=<span style="color: #800000;">'</span><span style="color: #800000;">Times New Roman</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">123</span>     sns.heatmap(scores, ax=ax[0], cmap = <span style="color: #800000;">'</span><span style="color: #800000;">Blues</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">124</span>     sns.heatmap(P, ax=ax[1], cmap = <span style="color: #800000;">'</span><span style="color: #800000;">Blues</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">125</span>     plt.rcParams[<span style="color: #800000;">'</span><span style="color: #800000;">font.sans-serif</span><span style="color: #800000;">'</span>] = [<span style="color: #800000;">'</span><span style="color: #800000;">KaiTI</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #008080;">126</span>     plt.rcParams[<span style="color: #800000;">'</span><span style="color: #800000;">axes.unicode_minus</span><span style="color: #800000;">'</span>] =<span style="color: #000000;"> False
+</span><span style="color: #008080;">127</span>     ax[0].set_title(<span style="color: #800000;">"</span><span style="color: #800000;">原始数据</span><span style="color: #800000;">"</span>, fontsize=20<span style="color: #000000;">)
+</span><span style="color: #008080;">128</span>     ax[1].set_title(<span style="color: #800000;">"</span><span style="color: #800000;">处理后的数据</span><span style="color: #800000;">"</span>, fontsize=20<span style="color: #000000;">)
+</span><span style="color: #008080;">129</span> <span style="color: #000000;">    plt.tight_layout()
+</span><span style="color: #008080;">130</span>     plt.savefig(<span style="color: #800000;">"</span><span style="color: #800000;">confusion_matrix.png</span><span style="color: #800000;">"</span>, dpi = 500<span style="color: #000000;">)
+</span><span style="color: #008080;">131</span>     plt.show()</pre>
+</div>
+<h2>2. 结果</h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Sinkhorn-Knopp算法/sinkhorn_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+原始数据：
+ [[</span>0.417 0.72  0.    0.302 0.147<span style="color: #000000;">]
+ [</span>0.092 0.186 0.346 0.397 0.539<span style="color: #000000;">]
+ [</span>0.419 0.685 0.204 0.878 0.027<span style="color: #000000;">]
+ [</span>0.67  0.417 0.559 0.14  0.198<span style="color: #000000;">]
+ [</span>0.801 0.968 0.313 0.692 0.876<span style="color: #000000;">]]
+</span>------------------------------------------------
+1<span style="color: #000000;">. 处理后的结果：
+ [[</span>0.178 0.121 0.263 0.214 0.225<span style="color: #000000;">]
+ [</span>0.308 0.318 0.119 0.161 0.093<span style="color: #000000;">]
+ [</span>0.212 0.155 0.209 0.081 0.342<span style="color: #000000;">]
+ [</span>0.117 0.242 0.094 0.324 0.222<span style="color: #000000;">]
+ [</span>0.185 0.164 0.314 0.22  0.117<span style="color: #000000;">]]
+</span>1<span style="color: #000000;">. 行和：
+ [</span>1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>1<span style="color: #000000;">. 列和：
+ [</span>1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>1. Sinkhorn距离： 1.802
+1. 计算时间： 0.01741338<span style="color: #000000;"> 秒
+</span>------------------------------------------------
+2<span style="color: #000000;">. 处理后的结果：
+ [[</span>0.178 0.121 0.263 0.214 0.225<span style="color: #000000;">]
+ [</span>0.308 0.318 0.119 0.161 0.093<span style="color: #000000;">]
+ [</span>0.212 0.155 0.209 0.081 0.342<span style="color: #000000;">]
+ [</span>0.117 0.242 0.094 0.324 0.222<span style="color: #000000;">]
+ [</span>0.185 0.164 0.314 0.22  0.117<span style="color: #000000;">]]
+</span>2<span style="color: #000000;">. 行和：
+ [</span>1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>2<span style="color: #000000;">. 列和：
+ [</span>1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>2. Sinkhorn距离： 1.802
+2. 计算时间： 0.00100136<span style="color: #000000;"> 秒
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">热力图：</span></p>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230325105954555-147981517.png" alt="" width="913" height="426" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-size: 16px;">当&nbsp;<span class="cnblogs_code">n=10, m=5</span>&nbsp;时，结果为</span></p>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/sinkhorn_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+原始数据：
+ [[</span>0.417 0.72  0.    0.302 0.147<span style="color: #000000;">]
+ [</span>0.092 0.186 0.346 0.397 0.539<span style="color: #000000;">]
+ [</span>0.419 0.685 0.204 0.878 0.027<span style="color: #000000;">]
+ [</span>0.67  0.417 0.559 0.14  0.198<span style="color: #000000;">]
+ [</span>0.801 0.968 0.313 0.692 0.876<span style="color: #000000;">]
+ [</span>0.895 0.085 0.039 0.17  0.878<span style="color: #000000;">]
+ [</span>0.098 0.421 0.958 0.533 0.692<span style="color: #000000;">]
+ [</span>0.316 0.687 0.835 0.018 0.75<span style="color: #000000;"> ]
+ [</span>0.989 0.748 0.28  0.789 0.103<span style="color: #000000;">]
+ [</span>0.448 0.909 0.294 0.288 0.13<span style="color: #000000;"> ]]
+</span>------------------------------------------------
+1<span style="color: #000000;">. 处理后的结果：
+ [[</span>0.17  0.111 0.299 0.183 0.237<span style="color: #000000;">]
+ [</span>0.308 0.306 0.141 0.143 0.102<span style="color: #000000;">]
+ [</span>0.2   0.141 0.234 0.068 0.356<span style="color: #000000;">]
+ [</span>0.118 0.234 0.112 0.29  0.246<span style="color: #000000;">]
+ [</span>0.177 0.152 0.358 0.188 0.124<span style="color: #000000;">]
+ [</span>0.063 0.385 0.268 0.231 0.053<span style="color: #000000;">]
+ [</span>0.422 0.265 0.058 0.151 0.104<span style="color: #000000;">]
+ [</span>0.268 0.153 0.072 0.415 0.091<span style="color: #000000;">]
+ [</span>0.082 0.16  0.259 0.105 0.393<span style="color: #000000;">]
+ [</span>0.191 0.091 0.199 0.225 0.293<span style="color: #000000;">]]
+</span>1<span style="color: #000000;">. 行和：
+ [</span>2. 2. 2. 2. 2<span style="color: #000000;">.]
+</span>1<span style="color: #000000;">. 列和：
+ [</span>1. 1. 1. 1. 1. 1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>1. Sinkhorn距离： 3.356
+1. 计算时间： 0.02233005<span style="color: #000000;"> 秒
+</span>------------------------------------------------
+2<span style="color: #000000;">. 处理后的结果：
+ [[</span>0.17  0.111 0.299 0.183 0.237<span style="color: #000000;">]
+ [</span>0.308 0.306 0.141 0.143 0.102<span style="color: #000000;">]
+ [</span>0.2   0.141 0.234 0.068 0.356<span style="color: #000000;">]
+ [</span>0.118 0.234 0.112 0.29  0.246<span style="color: #000000;">]
+ [</span>0.177 0.152 0.358 0.188 0.124<span style="color: #000000;">]
+ [</span>0.063 0.385 0.268 0.231 0.053<span style="color: #000000;">]
+ [</span>0.422 0.265 0.058 0.151 0.104<span style="color: #000000;">]
+ [</span>0.268 0.153 0.072 0.415 0.091<span style="color: #000000;">]
+ [</span>0.082 0.16  0.259 0.105 0.393<span style="color: #000000;">]
+ [</span>0.191 0.091 0.199 0.225 0.293<span style="color: #000000;">]]
+</span>2<span style="color: #000000;">. 行和：
+ [</span>2. 2. 2. 2. 2<span style="color: #000000;">.]
+</span>2<span style="color: #000000;">. 列和：
+ [</span>1. 1. 1. 1. 1. 1. 1. 1. 1. 1<span style="color: #000000;">.]
+</span>2. Sinkhorn距离： 3.356
+2. 计算时间： 0.00100446<span style="color: #000000;"> 秒
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">热力图：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;"><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230404194103268-1952906067.png" alt="" width="905" height="422" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">从热力图中也可以看出左边颜色深的块到了右边对应位置，颜色就成了浅色，说明S与P成反比。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 参考文献</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[1] Cuturi M. <a href="https://papers.nips.cc/paper_files/paper/2013/file/af21d0c97db2e27e13572cbf59eb343d-Paper.pdf" target="_blank">Sinkhorn distances: Lightspeed computation of optimal transport</a>[C]. NIPS, 2013.</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[2] Liu Q, Zhou Q, Yang R, et al. <a href="http://export.arxiv.org/abs/2302.12003v2" target="_blank">Robust Representation Learning by Clustering with Bisimulation Metrics for Visual Reinforcement Learning with Distractions</a>[C]. AAAI, 2023.</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[3] Michiel Stock, Notes on Optimal Transport, <a href="https://michielstock.github.io/posts/2017/2017-11-5-OptimalTransport/" target="_blank">https://michielstock.github.io/posts/2017/2017-11-5-OptimalTransport/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">[4]</span><span style="font-size: 16px;"><span style="font-family: 'comic sans ms', sans-serif;"><span style="font-family: 'comic sans ms', sans-serif;">&nbsp;</span></span><span style="font-family: 'comic sans ms', sans-serif;"><a href="https://zhuanlan.zhihu.com/p/392968782" target="_blank">最优传输问题（Optimal Transport Problem）</a> -&nbsp;&nbsp;套娃的套娃 - 知乎</span></span></p>
+<p><span style="font-size: 16px;"><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2023.cnblogs.com/blog/1027447/202305/1027447-20230505164222017-410511849.png" alt="" width="807" height="1820" style="display: block; margin-left: auto; margin-right: auto;" /></span></span></p>

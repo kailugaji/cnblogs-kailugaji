@@ -1,0 +1,218 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：数据增广Random Shift</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">DrQ-v2（Mastering visual continuous control: Improved data-augmented reinforcement learning）中提到一种新的数据增广方式Random Shift，下面以图像增广为例，来看看该增广算子的实现原理。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">首先在Python源码的目录下新建一个img的文件夹，里面存放待增广的图片，jpg格式，然后运行image_aug.py，增广前后的对比图保存在和源码同一目录下。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230321081835571-920591377.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. image_aug.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">  1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;">  2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;">  3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;">  4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 批量对图像进行增广（增广算子为随机平移）</span>
+<span style="color: #008080;">  5</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;">  6</span> <span style="color: #800000;">增广算子来源于DrQ-v2：
+</span><span style="color: #008080;">  7</span> <span style="color: #800000;">    Yarats D, Fergus R, Lazaric A, et al.
+</span><span style="color: #008080;">  8</span> <span style="color: #800000;">    Mastering visual continuous control: Improved data-augmented reinforcement learning[J].
+</span><span style="color: #008080;">  9</span> <span style="color: #800000;">    arXiv preprint arXiv:2107.09645, 2021.
+</span><span style="color: #008080;"> 10</span> <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 11</span> 
+<span style="color: #008080;"> 12</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span><span style="color: #008080;"> 13</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> imageio
+</span><span style="color: #008080;"> 14</span> <span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #008080;"> 15</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 16</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 17</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 18</span> <span style="color: #0000ff;">from</span> torch <span style="color: #0000ff;">import</span><span style="color: #000000;"> nn
+</span><span style="color: #008080;"> 19</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn.functional as F
+</span><span style="color: #008080;"> 20</span> <span style="color: #0000ff;">from</span> pylab <span style="color: #0000ff;">import</span> *
+<span style="color: #008080;"> 21</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;"> 22</span> 
+<span style="color: #008080;"> 23</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Random Shift</span>
+<span style="color: #008080;"> 24</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 尺寸为 A &times; B 的图像每条边填充 pad 个像素（通过重复边界像素），然后随机裁剪回原始 A &times; B 尺寸</span>
+<span style="color: #008080;"> 25</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> RandomShiftsAug(nn.Module):
+</span><span style="color: #008080;"> 26</span>     <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 27</span> <span style="color: #800000;">        https://github.com/facebookresearch/drqv2/blob/main/drqv2.py
+</span><span style="color: #008080;"> 28</span>     <span style="color: #800000;">'''</span>
+<span style="color: #008080;"> 29</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span>(self, pad=4,aug=<span style="color: #000000;">True):
+</span><span style="color: #008080;"> 30</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> pad: padding 填充</span>
+<span style="color: #008080;"> 31</span>         super().<span style="color: #800080;">__init__</span><span style="color: #000000;">()
+</span><span style="color: #008080;"> 32</span>         self.pad =<span style="color: #000000;"> pad
+</span><span style="color: #008080;"> 33</span>         self.aug =<span style="color: #000000;"> aug
+</span><span style="color: #008080;"> 34</span> 
+<span style="color: #008080;"> 35</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> forward(self, x):
+</span><span style="color: #008080;"> 36</span>         <span style="color: #0000ff;">if</span><span style="color: #000000;"> self.aug:
+</span><span style="color: #008080;"> 37</span>             n, _, h, w =<span style="color: #000000;"> x.size()
+</span><span style="color: #008080;"> 38</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> n,c,h,w分别表示batch数，通道数，高，宽</span>
+<span style="color: #008080;"> 39</span>             padding = tuple([self.pad] * 4<span style="color: #000000;">)
+</span><span style="color: #008080;"> 40</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 分别对前，后做多少位的padding操作</span>
+<span style="color: #008080;"> 41</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 例如tuple([4] * 4)=&gt; (4, 4, 4, 4)，上下左右四个方位都做pad的填充</span>
+<span style="color: #008080;"> 42</span>             x = F.pad(x, padding, <span style="color: #800000;">'</span><span style="color: #800000;">replicate</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;"> 43</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 对高维tensor的形状补齐操作</span>
+<span style="color: #008080;"> 44</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> replicate​​​：使用tensor自身边界值补齐指定的维度。对于数据​​012​​​，结果可以为​​0001222​</span>
+<span style="color: #008080;"> 45</span>             eps = 1.0 / (w + 2 *<span style="color: #000000;"> self.pad)
+</span><span style="color: #008080;"> 46</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 若w=84, pad=4, 则w + 2 * self.pad=92, eps=0.010869565217391304</span>
+<span style="color: #008080;"> 47</span>             arange = torch.linspace(-1.0 + eps, <span style="color: #008000;">#</span><span style="color: #008000;"> 区间左侧</span>
+<span style="color: #008080;"> 48</span>                                     1.0 - eps, <span style="color: #008000;">#</span><span style="color: #008000;"> 区间右侧</span>
+<span style="color: #008080;"> 49</span>                                     w + 2 * self.pad, <span style="color: #008000;">#</span><span style="color: #008000;"> 92个点</span>
+<span style="color: #008080;"> 50</span>                                     device=<span style="color: #000000;">x.device,
+</span><span style="color: #008080;"> 51</span>                                     dtype=<span style="color: #000000;">x.dtype)[:w]
+</span><span style="color: #008080;"> 52</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 线性间距向量</span>
+<span style="color: #008080;"> 53</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> torch.linspace(start, end, steps=100, out=None) &rarr; Tensor</span>
+<span style="color: #008080;"> 54</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 返回一个1维张量，包含在区间start和end上均匀间隔的step个点</span>
+<span style="color: #008080;"> 55</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 输出张量的长度由steps决定</span>
+<span style="color: #008080;"> 56</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 例如：生成0到10的5个数构成的等差数列</span>
+<span style="color: #008080;"> 57</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> b = torch.linspace(0,10,steps=5)</span>
+<span style="color: #008080;"> 58</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> tensor([ 0.0000,  2.5000,  5.0000,  7.5000, 10.0000])</span>
+<span style="color: #008080;"> 59</span>             eps_h = 1.0 / (h + 2 * self.pad) <span style="color: #008000;">#</span><span style="color: #008000;"> 若h=84, pad=4, 则eps_h=0.010869565217391304</span>
+<span style="color: #008080;"> 60</span>             arange = arange.unsqueeze(0).repeat(h, 1).unsqueeze(2<span style="color: #000000;">)
+</span><span style="color: #008080;"> 61</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第一个维度</span>
+<span style="color: #008080;"> 62</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 重复h行</span>
+<span style="color: #008080;"> 63</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第三个维度</span>
+<span style="color: #008080;"> 64</span>             arange_w = torch.linspace(-1.0 +<span style="color: #000000;"> eps_h,
+</span><span style="color: #008080;"> 65</span>                                     1.0 -<span style="color: #000000;"> eps_h,
+</span><span style="color: #008080;"> 66</span>                                     h + 2 *<span style="color: #000000;"> self.pad,
+</span><span style="color: #008080;"> 67</span>                                     device=<span style="color: #000000;">x.device,
+</span><span style="color: #008080;"> 68</span>                                     dtype=<span style="color: #000000;">x.dtype)[:h]
+</span><span style="color: #008080;"> 69</span>             arange_w = arange_w.unsqueeze(1).repeat(1, w).unsqueeze(2<span style="color: #000000;">)
+</span><span style="color: #008080;"> 70</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第二个维度</span>
+<span style="color: #008080;"> 71</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 重复w列</span>
+<span style="color: #008080;"> 72</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第三个维度</span>
+<span style="color: #008080;"> 73</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> arange_w = arange_w.unsqueeze(0).repeat(w, 1).unsqueeze(2)</span>
+<span style="color: #008080;"> 74</span>             base_grid = torch.cat([arange, arange_w], dim=2<span style="color: #000000;">)
+</span><span style="color: #008080;"> 75</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 将两个张量按第三个维度拼接在一起</span>
+<span style="color: #008080;"> 76</span>             base_grid = base_grid.unsqueeze(0).repeat(n, 1, 1, 1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 77</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> n个数据，重复n次操作</span>
+<span style="color: #008080;"> 78</span> 
+<span style="color: #008080;"> 79</span>             shift =<span style="color: #000000;"> torch.randint(0,
+</span><span style="color: #008080;"> 80</span>                                 2 * self.pad + 1, <span style="color: #008000;">#</span><span style="color: #008000;"> pad=4, 值为9</span>
+<span style="color: #008080;"> 81</span>                                 size=(n, 1, 1, 2<span style="color: #000000;">),
+</span><span style="color: #008080;"> 82</span>                                 device=<span style="color: #000000;">x.device,
+</span><span style="color: #008080;"> 83</span>                                 dtype=<span style="color: #000000;">x.dtype)
+</span><span style="color: #008080;"> 84</span>             shift[:,:,:,0] *= 2.0 / (w + 2 *<span style="color: #000000;"> self.pad)
+</span><span style="color: #008080;"> 85</span>             shift[:,:,:,1] *= 2.0 / (h + 2 *<span style="color: #000000;"> self.pad)
+</span><span style="color: #008080;"> 86</span>             grid = base_grid +<span style="color: #000000;"> shift
+</span><span style="color: #008080;"> 87</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 随机平移</span>
+<span style="color: #008080;"> 88</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 在 random shift 之后还使用了 bilinear interpolation</span>
+<span style="color: #008080;"> 89</span>             <span style="color: #0000ff;">return</span> F.grid_sample(x, <span style="color: #008000;">#</span><span style="color: #008000;"> x.shape: torch.Size([1, 3, 420, 720])</span>
+<span style="color: #008080;"> 90</span>                                 grid, <span style="color: #008000;">#</span><span style="color: #008000;"> grid.shape: torch.Size([1, 300, 600, 2])</span>
+<span style="color: #008080;"> 91</span>                                 padding_mode=<span style="color: #800000;">'</span><span style="color: #800000;">zeros</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;"> 92</span>                                 align_corners=<span style="color: #000000;">False)
+</span><span style="color: #008080;"> 93</span>             <span style="color: #008000;">#</span><span style="color: #008000;"> 输出： torch.Size([1, 3, 300, 600])</span>
+<span style="color: #008080;"> 94</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 应用双线性插值，把输入的tensor转换为指定大小</span>
+<span style="color: #008080;"> 95</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 参考：https://betheme.net/qianduan/43027.html?action=onClick</span>
+<span style="color: #008080;"> 96</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 给定维度为(N,C,Hin,Win) 的input，维度为(N,Hout,Wout,2) 的grid</span>
+<span style="color: #008080;"> 97</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 则该函数output的维度为(N,C,Hout,Wout)</span>
+<span style="color: #008080;"> 98</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> padding_mode表示当grid中的坐标位置超出边界时像素值的填充方式</span>
+<span style="color: #008080;"> 99</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果为zeros，则表示一旦grid坐标超出边界，则用0去填充输出特征图的相应位置元素</span>
+<span style="color: #008080;">100</span>         <span style="color: #0000ff;">else</span><span style="color: #000000;">:
+</span><span style="color: #008080;">101</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;"> x
+</span><span style="color: #008080;">102</span> 
+<span style="color: #008080;">103</span> path = <span style="color: #800000;">"</span><span style="color: #800000;">./img</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 打开存放图像的文件夹</span>
+<span style="color: #008080;">104</span> dirs = os.listdir(path) <span style="color: #008000;">#</span><span style="color: #008000;"> ['1.jpg', '2.jpg', '3.jpg']</span>
+<span style="color: #008080;">105</span> len_dir = len(dirs) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir张图片</span>
+<span style="color: #008080;">106</span> count=<span style="color: #000000;">0
+</span><span style="color: #008080;">107</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 文件夹的每一幅图像都执行增广操作</span>
+<span style="color: #008080;">108</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> dirs:
+</span><span style="color: #008080;">109</span>     image_pad = imageio.imread(os.path.join(path,i)) <span style="color: #008000;">#</span><span style="color: #008000;"> i: 'xxx.jpg'</span>
+<span style="color: #008080;">110</span>     image_pad = Image.fromarray(image_pad).resize((600, 300)) <span style="color: #008000;">#</span><span style="color: #008000;"> 重新调整图像尺寸</span>
+<span style="color: #008080;">111</span>     transf = transforms.ToTensor() <span style="color: #008000;">#</span><span style="color: #008000;"> 将原始数据形式(图像)转换成tensor</span>
+<span style="color: #008080;">112</span>     outs = transf(image_pad) <span style="color: #008000;">#</span><span style="color: #008000;"> tensor数据格式是torch(C,H,W)</span>
+<span style="color: #008080;">113</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([3, 300, 600]) 和resize里面的正好相反</span>
+<span style="color: #008080;">114</span>     outs = outs.unsqueeze(0)  <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第一个维度 torch.Size([1, 3, 300, 600])</span>
+<span style="color: #008080;">115</span>     shift = RandomShiftsAug(pad=60<span style="color: #000000;">)
+</span><span style="color: #008080;">116</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> Random Shift</span>
+<span style="color: #008080;">117</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 图像每个边填充pad，然后再随机裁剪成600*300</span>
+<span style="color: #008080;">118</span>     outs_1 =<span style="color: #000000;"> shift(outs)
+</span><span style="color: #008080;">119</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> outs.shape: torch.Size([1, 3, 300, 600])</span>
+<span style="color: #008080;">120</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> outs_1.shape: torch.Size([1, 3, 300, 600])</span>
+<span style="color: #008080;">121</span>     outs_1 = outs_1.numpy()  <span style="color: #008000;">#</span><span style="color: #008000;"> tensor转换成numpy</span>
+<span style="color: #008080;">122</span>     outs_1 = np.transpose(outs_1[0], [1, 2, 0]) <span style="color: #008000;">#</span><span style="color: #008000;"> 取出第1幅图像(3, 300, 600)</span>
+<span style="color: #008080;">123</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 交换维度，把第一个维度放在最后，变成(300, 600, 3)</span>
+<span style="color: #008080;">124</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 展示图片</span>
+<span style="color: #008080;">125</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 原图</span>
+<span style="color: #008080;">126</span>     temp1 = int(2*count+1) <span style="color: #008000;">#</span><span style="color: #008000;"> 竖着排</span>
+<span style="color: #008080;">127</span>     plt.subplot(len_dir, 2, temp1) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir行，2列，第temp1个图片</span>
+<span style="color: #008080;">128</span> <span style="color: #000000;">    plt.imshow(image_pad)
+</span><span style="color: #008080;">129</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">130</span>     plt.rcParams[<span style="color: #800000;">'</span><span style="color: #800000;">font.sans-serif</span><span style="color: #800000;">'</span>] = [<span style="color: #800000;">'</span><span style="color: #800000;">KaiTI</span><span style="color: #800000;">'</span><span style="color: #000000;">]
+</span><span style="color: #008080;">131</span>     plt.rcParams[<span style="color: #800000;">'</span><span style="color: #800000;">axes.unicode_minus</span><span style="color: #800000;">'</span>] =<span style="color: #000000;"> False
+</span><span style="color: #008080;">132</span>     <span style="color: #0000ff;">if</span> count ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">133</span>         plt.title(<span style="color: #800000;">"</span><span style="color: #800000;">增广前</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">134</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 增广后</span>
+<span style="color: #008080;">135</span>     plt.subplot(len_dir, 2, temp1+1<span style="color: #000000;">)
+</span><span style="color: #008080;">136</span> <span style="color: #000000;">    plt.imshow(outs_1)
+</span><span style="color: #008080;">137</span>     <span style="color: #0000ff;">if</span> count ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">138</span>         plt.title(<span style="color: #800000;">"</span><span style="color: #800000;">增广后</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">139</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">140</span>     plt.subplots_adjust(wspace=0.05, hspace=0.05<span style="color: #000000;">)
+</span><span style="color: #008080;">141</span>     count = count + 1
+<span style="color: #008080;">142</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---正在处理第%d张图片---</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> count)
+</span><span style="color: #008080;">143</span> 
+<span style="color: #008080;">144</span> <span style="color: #008000;">#</span><span style="color: #008000;"> plt.tight_layout()</span>
+<span style="color: #008080;">145</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Aug_image.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=1500<span style="color: #000000;">)
+</span><span style="color: #008080;">146</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">147</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-*-^_^-*-图像处理完成-*-^_^-*-</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif;"><img src="https://img2023.cnblogs.com/blog/1027447/202303/1027447-20230321081514829-2052987771.png" alt="" width="804" height="642" style="display: block; margin-left: auto; margin-right: auto;" /></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">补充：DrQ（Image augmentation is all you need: Regularizing deep reinforcement learning from pixels）里面关于Random Shift的实现：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span><span style="color: #008080;"> 2</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> imageio.v2 as imageio
+</span><span style="color: #008080;"> 3</span> <span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #008080;"> 4</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #008080;"> 5</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">from</span> torch <span style="color: #0000ff;">import</span><span style="color: #000000;"> nn
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn.functional as F
+</span><span style="color: #008080;"> 9</span> <span style="color: #0000ff;">from</span> pylab <span style="color: #0000ff;">import</span> *
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> kornia
+</span><span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span> pad = 60
+<span style="color: #008080;">14</span> path = <span style="color: #800000;">"</span><span style="color: #800000;">./img</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 打开存放图像的文件夹</span>
+<span style="color: #008080;">15</span> dirs = os.listdir(path) <span style="color: #008000;">#</span><span style="color: #008000;"> ['1.jpg', '2.jpg', '3.jpg']</span>
+<span style="color: #008080;">16</span> len_dir = len(dirs) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir张图片</span>
+<span style="color: #008080;">17</span> count=<span style="color: #000000;">0
+</span><span style="color: #008080;">18</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 文件夹的每一幅图像都执行增广操作</span>
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> dirs:
+</span><span style="color: #008080;">20</span>     image_pad = imageio.imread(os.path.join(path,i)) <span style="color: #008000;">#</span><span style="color: #008000;"> i: 'xxx.jpg'</span>
+<span style="color: #008080;">21</span>     image_pad = Image.fromarray(image_pad).resize((600, 300)) <span style="color: #008000;">#</span><span style="color: #008000;"> 重新调整图像尺寸</span>
+<span style="color: #008080;">22</span>     transf = transforms.ToTensor() <span style="color: #008000;">#</span><span style="color: #008000;"> 将原始数据形式(图像)转换成tensor</span>
+<span style="color: #008080;">23</span>     outs = transf(image_pad) <span style="color: #008000;">#</span><span style="color: #008000;"> tensor数据格式是torch(C,H,W)</span>
+<span style="color: #008080;">24</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> torch.Size([3, 300, 600]) 和resize里面的正好相反</span>
+<span style="color: #008080;">25</span>     outs = outs.unsqueeze(0)  <span style="color: #008000;">#</span><span style="color: #008000;"> 扩充第一个维度 torch.Size([1, 3, 300, 600])</span>
+<span style="color: #008080;">26</span>     shift =<span style="color: #000000;"> nn.Sequential(nn.ReplicationPad2d(pad),
+</span><span style="color: #008080;">27</span>                           kornia.augmentation.RandomCrop((300, 600<span style="color: #000000;">)))
+</span><span style="color: #008080;">28</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> Random Shift</span>
+<span style="color: #008080;">29</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 图像每个边填充pad，然后再随机裁剪成600*300</span>
+<span style="color: #008080;">30</span>     outs_1 =<span style="color: #000000;"> shift(outs)
+</span><span style="color: #008080;">31</span>     outs_1 = outs_1.numpy()  <span style="color: #008000;">#</span><span style="color: #008000;"> tensor转换成numpy</span>
+<span style="color: #008080;">32</span>     outs_1 = np.transpose(outs_1[0], [1, 2, 0]) <span style="color: #008000;">#</span><span style="color: #008000;"> 取出第1幅图像(3, 300, 600)</span>
+<span style="color: #008080;">33</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 交换维度，把第一个维度放在最后，变成(300, 600, 3)</span>
+<span style="color: #008080;">34</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 展示图片</span>
+<span style="color: #008080;">35</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 原图</span>
+<span style="color: #008080;">36</span>     temp1 = int(2*count+1) <span style="color: #008000;">#</span><span style="color: #008000;"> 竖着排</span>
+<span style="color: #008080;">37</span>     plt.subplot(len_dir, 2, temp1) <span style="color: #008000;">#</span><span style="color: #008000;"> len_dir行，2列，第temp1个图片</span>
+<span style="color: #008080;">38</span> <span style="color: #000000;">    plt.imshow(image_pad)
+</span><span style="color: #008080;">39</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">40</span>     <span style="color: #0000ff;">if</span> count ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">41</span>         plt.title(<span style="color: #800000;">"</span><span style="color: #800000;">Before</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">42</span>     <span style="color: #008000;">#</span><span style="color: #008000;"> 增广后</span>
+<span style="color: #008080;">43</span>     plt.subplot(len_dir, 2, temp1+1<span style="color: #000000;">)
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">    plt.imshow(outs_1)
+</span><span style="color: #008080;">45</span>     <span style="color: #0000ff;">if</span> count ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">46</span>         plt.title(<span style="color: #800000;">"</span><span style="color: #800000;">After</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008080;">47</span>     plt.axis(<span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #008080;">48</span>     plt.subplots_adjust(wspace=0.05, hspace=0.05<span style="color: #000000;">)
+</span><span style="color: #008080;">49</span>     count = count + 1
+<span style="color: #008080;">50</span>     <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">---正在处理第%d张图片---</span><span style="color: #800000;">'</span> %<span style="color: #000000;"> count)
+</span><span style="color: #008080;">51</span> 
+<span style="color: #008080;">52</span> <span style="color: #008000;">#</span><span style="color: #008000;"> plt.tight_layout()</span>
+<span style="color: #008080;">53</span> plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">Aug_image2.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span>, pad_inches=0.0, dpi=1500<span style="color: #000000;">)
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">plt.show()
+</span><span style="color: #008080;">55</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">-*-^_^-*-图像处理完成-*-^_^-*-</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'comic sans ms', sans-serif;">结果：</span></p>
+<p><img src="https://img2023.cnblogs.com/blog/1027447/202304/1027447-20230404152927090-789543296.png" alt="" width="790" height="625" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">参考：<a href="https://betheme.net/dashuju/39882.html?action=onClick" target="_blank">关于torch.nn.functional.grid_sample函数的说明（F.grid_sample）</a></span></p>

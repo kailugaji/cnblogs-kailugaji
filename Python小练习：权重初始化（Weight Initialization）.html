@@ -1,0 +1,101 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：权重初始化（Weight Initialization）</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">调用Pytorch中的torch.nn.init.xxx实现对模型权重与偏置初始化。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. weight_init_test.py</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #008000;">#</span><span style="color: #008000;"> -*- coding: utf-8 -*-</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Author：凯鲁嘎吉 Coral Gajic</span>
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;"> https://www.cnblogs.com/kailugaji/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Python小练习：权重初始化（Weight Initialization）</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">#</span><span style="color: #008000;"> Custom weight init for Conv2D and Linear layers.</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn.functional as F
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 根据网络层的不同定义不同的初始化方式</span>
+<span style="color: #008080;">10</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 以下是两种不同的初始化方式：</span>
+<span style="color: #008080;">11</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 正态分布+常数</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> weight_init(m):
+</span><span style="color: #008080;">13</span>     <span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(m, nn.Linear):
+</span><span style="color: #008080;">14</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数是 nn.Linear 类型，则执行以下操作：</span>
+<span style="color: #008080;">15</span>         nn.init.xavier_normal_(m.weight) <span style="color: #008000;">#</span><span style="color: #008000;"> 将权重初始化为 Xavier 正态分布</span>
+<span style="color: #008080;">16</span>         nn.init.constant_(m.bias, 0) <span style="color: #008000;">#</span><span style="color: #008000;"> 将权重初始化为常数</span>
+<span style="color: #008080;">17</span>     <span style="color: #0000ff;">elif</span><span style="color: #000000;"> isinstance(m, nn.Conv2d):
+</span><span style="color: #008080;">18</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数是 nn.Conv2d 类型，则执行以下操作：</span>
+<span style="color: #008080;">19</span>         nn.init.kaiming_normal_(m.weight, mode=<span style="color: #800000;">'</span><span style="color: #800000;">fan_out</span><span style="color: #800000;">'</span>, nonlinearity=<span style="color: #800000;">'</span><span style="color: #800000;">relu</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 将权重初始化为正态分布</span>
+<span style="color: #008080;">20</span>     <span style="color: #0000ff;">elif</span><span style="color: #000000;"> isinstance(m, nn.BatchNorm2d):
+</span><span style="color: #008080;">21</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数是 nn.BatchNorm2d 类型，则执行以下操作：</span>
+<span style="color: #008080;">22</span>         nn.init.constant_(m.weight, 1<span style="color: #000000;">)
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">        nn.init.constant_(m.bias, 0)
+</span><span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 正交+常数</span>
+<span style="color: #008080;">26</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> weight_init2(m):
+</span><span style="color: #008080;">27</span>     <span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(m, nn.Linear):
+</span><span style="color: #008080;">28</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数是 nn.Linear 类型，则执行以下操作：</span>
+<span style="color: #008080;">29</span>         nn.init.orthogonal_(m.weight.data) <span style="color: #008000;">#</span><span style="color: #008000;"> 对权重矩阵进行正交化操作，使其具有对称性。</span>
+<span style="color: #008080;">30</span>         <span style="color: #0000ff;">if</span> hasattr(m.bias, <span style="color: #800000;">'</span><span style="color: #800000;">data</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #008080;">31</span>             m.bias.data.fill_(0.0) <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数包含偏置项，则将其填充为零。</span>
+<span style="color: #008080;">32</span>     <span style="color: #0000ff;">elif</span> isinstance(m, nn.Conv2d) <span style="color: #0000ff;">or</span><span style="color: #000000;"> isinstance(m, nn.ConvTranspose2d):
+</span><span style="color: #008080;">33</span>         <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数是 nn.Conv2d 或 nn.ConvTranspose2d 类型，则执行以下操作：</span>
+<span style="color: #008080;">34</span>         gain = nn.init.calculate_gain(<span style="color: #800000;">'</span><span style="color: #800000;">relu</span><span style="color: #800000;">'</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 用于计算激活函数的增益</span>
+<span style="color: #008080;">35</span>         nn.init.orthogonal_(m.weight.data, gain) <span style="color: #008000;">#</span><span style="color: #008000;"> 对权重矩阵进行正交化操作，使其具有对称性。</span>
+<span style="color: #008080;">36</span>         <span style="color: #0000ff;">if</span> hasattr(m.bias, <span style="color: #800000;">'</span><span style="color: #800000;">data</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+</span><span style="color: #008080;">37</span>             m.bias.data.fill_(0.0) <span style="color: #008000;">#</span><span style="color: #008000;"> 如果传入的参数包含偏置项，则将其填充为零。</span>
+<span style="color: #008080;">38</span> 
+<span style="color: #008080;">39</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Net(nn.Module):
+</span><span style="color: #008080;">40</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span>(self, input_size=1<span style="color: #000000;">):
+</span><span style="color: #008080;">41</span>         self.input_size =<span style="color: #000000;"> input_size
+</span><span style="color: #008080;">42</span>         super(Net, self).<span style="color: #800080;">__init__</span><span style="color: #000000;">()
+</span><span style="color: #008080;">43</span>         self.fc1 = nn.Linear(self.input_size, 2<span style="color: #000000;">)
+</span><span style="color: #008080;">44</span>         self.fc2 = nn.Linear(2, 4<span style="color: #000000;">)
+</span><span style="color: #008080;">45</span>         self.fc3 = nn.Linear(4, 2<span style="color: #000000;">)
+</span><span style="color: #008080;">46</span> 
+<span style="color: #008080;">47</span>     <span style="color: #0000ff;">def</span><span style="color: #000000;"> forward(self, x):
+</span><span style="color: #008080;">48</span>         x = x.view(-1<span style="color: #000000;">, self.input_size)
+</span><span style="color: #008080;">49</span>         x =<span style="color: #000000;"> F.relu(self.fc1(x))
+</span><span style="color: #008080;">50</span>         x =<span style="color: #000000;"> F.relu(self.fc2(x))
+</span><span style="color: #008080;">51</span>         x =<span style="color: #000000;"> self.fc3(x)
+</span><span style="color: #008080;">52</span>         <span style="color: #0000ff;">return</span> F.log_softmax(x, dim=1<span style="color: #000000;">)
+</span><span style="color: #008080;">53</span> 
+<span style="color: #008080;">54</span> torch.manual_seed(1<span style="color: #000000;">)
+</span><span style="color: #008080;">55</span> num = 4 <span style="color: #008000;">#</span><span style="color: #008000;"> 输入维度</span>
+<span style="color: #008080;">56</span> x = torch.randn(1<span style="color: #000000;">, num)
+</span><span style="color: #008080;">57</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方式1：</span>
+<span style="color: #008080;">58</span> model = Net(input_size =<span style="color: #000000;"> num)
+</span><span style="color: #008080;">59</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">网络结构：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, model)
+</span><span style="color: #008080;">60</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输入：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, x)
+</span><span style="color: #008080;">61</span> <span style="color: #000000;">model.apply(weight_init)
+</span><span style="color: #008080;">62</span> y =<span style="color: #000000;"> model(x)
+</span><span style="color: #008080;">63</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输出1：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, y.data)
+</span><span style="color: #008080;">64</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">权重1：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, model.fc1.weight.data)
+</span><span style="color: #008080;">65</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 方式2：</span>
+<span style="color: #008080;">66</span> model = Net(input_size =<span style="color: #000000;"> num)
+</span><span style="color: #008080;">67</span> <span style="color: #000000;">model.apply(weight_init2)
+</span><span style="color: #008080;">68</span> y =<span style="color: #000000;"> model(x)
+</span><span style="color: #008080;">69</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">输出2：\n</span><span style="color: #800000;">'</span><span style="color: #000000;">, y.data)
+</span><span style="color: #008080;">70</span> <span style="color: #0000ff;">print</span>(<span style="color: #800000;">'</span><span style="color: #800000;">权重2：\n</span><span style="color: #800000;">'</span>, model.fc1.weight.data)</pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_code">
+<pre>D:\ProgramData\Anaconda3\python.exe <span style="color: #800000;">"</span><span style="color: #800000;">D:/Python code/2023.3 exercise/Neural Network/weight_init_test.py</span><span style="color: #800000;">"</span><span style="color: #000000;">
+网络结构：
+ Net(
+  (fc1): Linear(in_features</span>=4, out_features=2, bias=<span style="color: #000000;">True)
+  (fc2): Linear(in_features</span>=2, out_features=4, bias=<span style="color: #000000;">True)
+  (fc3): Linear(in_features</span>=4, out_features=2, bias=<span style="color: #000000;">True)
+)
+输入：
+ tensor([[</span>0.6614, 0.2669, 0.0617, 0.6213<span style="color: #000000;">]])
+输出1：
+ tensor([[</span>-0.7233, -0.6639<span style="color: #000000;">]])
+权重1：
+ tensor([[ </span>2.0709, -1.0573,  0.9230, -0.7373<span style="color: #000000;">],
+        [ </span>0.1879, -0.2766,  0.7962,  1.4599<span style="color: #000000;">]])
+输出2：
+ tensor([[</span>-0.6951, -0.6912<span style="color: #000000;">]])
+权重2：
+ tensor([[</span>-0.8471, -0.4721,  0.1653,  0.1795<span style="color: #000000;">],
+        [</span>-0.4072,  0.5991, -0.6437,  0.2467<span style="color: #000000;">]])
+
+Process finished with exit code 0</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">完成。</span></p>

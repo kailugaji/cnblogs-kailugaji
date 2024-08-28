@@ -1,0 +1,38 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：打印index为True布尔类型对应数据</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; Python小练习：给定一个矩阵X与index(向量，布尔类型)，按照index打印数据X对应行所在的元素。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. Python程序</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">import numpy as np
+X=np.array([[1,2], [3,4],[5,6],[7,8],[9,10],[11,12],[13,14],[15,16],[17,18],[19,20]])
+IDX=[False, True, False, True, False, False, True, False, True, True] # 布尔类型
+S=X[IDX] # 仅输出IDX为True所在行时X对应行
+Y=X[IDX, 0] # 仅输出IDX为True所在行时X对应行的第0个元素
+Z=X[IDX, 1] # 仅输出IDX为True所在行时X对应行的第1个元素
+print('X =', X)
+print('S =', S)
+print('Y =', Y)
+print('Z =', Z)</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. 结果</span></h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:python;gutter:true;"><span style="font-family: 'comic sans ms', sans-serif;">X = [[ 1  2]
+ [ 3  4]
+ [ 5  6]
+ [ 7  8]
+ [ 9 10]
+ [11 12]
+ [13 14]
+ [15 16]
+ [17 18]
+ [19 20]]
+S = [[ 3  4]
+ [ 7  8]
+ [13 14]
+ [17 18]
+ [19 20]]
+Y = [ 3  7 13 17 19]
+Z = [ 4  8 14 18 20]
+</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">2021-07-28 </span></p>
