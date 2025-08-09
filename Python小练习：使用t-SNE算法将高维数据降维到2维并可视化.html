@@ -1,0 +1,75 @@
+<h1 style="text-align: center;">Python小练习：使用t-SNE算法将高维数据降维并可视化</h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">写一个Python小实例，使用t-SNE算法将高维数据降维到2维并可视化。主要功能是：生成带有3个类别的随机高维数据(50维)、使用t-SNE算法将其降维到2维、可视化降维结果，用不同颜色显示不同类别、保存可视化结果为图片文件。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">Python代码</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Python代码：使用t-SNE算法将高维数据降维到2维并可视化</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 这段代码的主要功能是：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 生成带有3个类别的随机高维数据(50维)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 使用t-SNE算法将其降维到2维</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 可视化降维结果，用不同颜色显示不同类别</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 保存可视化结果为图片文件</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib
+matplotlib.use(</span><span style="color: #800000;">'</span><span style="color: #800000;">TkAgg</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #0000ff;">from</span> sklearn.manifold <span style="color: #0000ff;">import</span> TSNE <span style="color: #008000;">#</span><span style="color: #008000;"> 从sklearn导入t-SNE算法</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 设置随机种子以便结果可复现</span>
+np.random.seed(42<span style="color: #000000;">)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 1. 生成随机高维数据 生成1000个样本，每个样本有50个特征的随机数据。</span>
+n_samples = 1000<span style="color: #000000;">
+n_features </span>= 50<span style="color: #000000;">
+X_high_dim </span>=<span style="color: #000000;"> np.random.randn(n_samples, n_features)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建3个不同的类别，并根据类别对数据进行偏移，使不同类别的数据有所区分。</span>
+labels = np.random.randint(0, 3<span style="color: #000000;">, n_samples)
+</span><span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span> range(3<span style="color: #000000;">):
+    X_high_dim[labels </span>== i] += i * 2
+
+<span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">生成的高维数据形状: {X_high_dim.shape}</span><span style="color: #800000;">"</span>) <span style="color: #008000;">#</span><span style="color: #008000;"> 打印高维数据的形状(1000,50)。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 2. 使用t-SNE降维到2维</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 初始化t-SNE模型，设置：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 降维到2维</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 困惑度为30(控制局部和全局结构的平衡)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 最大迭代300次</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 随机种子42</span>
+tsne = TSNE(n_components=2,  <span style="color: #008000;">#</span><span style="color: #008000;"> 降维到2维</span>
+            perplexity=30,   <span style="color: #008000;">#</span><span style="color: #008000;"> 通常建议值在5-50之间</span>
+            max_iter=300,    <span style="color: #008000;">#</span><span style="color: #008000;"> 使用max_iter替代n_iter</span>
+            random_state=42<span style="color: #000000;">)
+
+X_low_dim </span>=<span style="color: #000000;"> tsne.fit_transform(X_high_dim)
+</span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">降维后的数据形状: {X_low_dim.shape}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 对高维数据执行t-SNE降维，并打印降维后的形状(1000,2)。</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 3. 绘制二维t-SNE图</span>
+plt.figure(figsize=(10, 8)) <span style="color: #008000;">#</span><span style="color: #008000;"> 创建10x8英寸的画布</span>
+scatter = plt.scatter(X_low_dim[:, 0], X_low_dim[:, 1], c=<span style="color: #000000;">labels,
+                     cmap</span>=<span style="color: #800000;">'</span><span style="color: #800000;">viridis</span><span style="color: #800000;">'</span>, alpha=0.7, s=30<span style="color: #000000;">)
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建散点图：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> x,y轴为降维后的两个维度</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 颜色根据标签区分</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 使用viridis颜色映射</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 透明度0.7</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 点大小30</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 添加图例和标题</span>
+plt.legend(*scatter.legend_elements(), title=<span style="color: #800000;">"</span><span style="color: #800000;">Classes</span><span style="color: #800000;">"</span>)  <span style="color: #008000;">#</span><span style="color: #008000;"> 添加图例</span>
+plt.title(<span style="color: #800000;">'</span><span style="color: #800000;">t-SNE Visualization of High-dimensional Random Data</span><span style="color: #800000;">'</span>)  <span style="color: #008000;">#</span><span style="color: #008000;"> 标题</span>
+plt.xlabel(<span style="color: #800000;">'</span><span style="color: #800000;">t-SNE dimension 1</span><span style="color: #800000;">'</span>)  <span style="color: #008000;">#</span><span style="color: #008000;"> x轴标签</span>
+plt.ylabel(<span style="color: #800000;">'</span><span style="color: #800000;">t-SNE dimension 2</span><span style="color: #800000;">'</span>)  <span style="color: #008000;">#</span><span style="color: #008000;"> y轴标签</span>
+plt.colorbar(scatter, label=<span style="color: #800000;">'</span><span style="color: #800000;">Class</span><span style="color: #800000;">'</span>)  <span style="color: #008000;">#</span><span style="color: #008000;"> 添加颜色条</span>
+plt.grid(True, alpha=0.3)  <span style="color: #008000;">#</span><span style="color: #008000;"> 添加半透明网格</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 保存图像到文件并显示</span>
+plt.savefig(<span style="color: #800000;">'</span><span style="color: #800000;">tsne_visualization.png</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+</span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">图像已保存</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+plt.show()</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">可视化结果</span></h2>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621161734536-292483622.png" alt="" width="636" height="509" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>

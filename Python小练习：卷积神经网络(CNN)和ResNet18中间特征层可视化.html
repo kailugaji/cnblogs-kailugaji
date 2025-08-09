@@ -1,0 +1,421 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：卷积神经网络(CNN)和ResNet18中间特征层可视化</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" rel="noopener" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 卷积神经网络(CNN)中间特征层可视化</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">写一个简单的Python程序，实现一个简单的CNN模型，并提供了可视化中间层特征图的功能。主要特点包括：使用hook机制捕获中间层输出、对特征图进行智能可视化处理（处理全相同值的情况）、有序保存各层特征图、完整的图像预处理流程。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 这段代码实现了一个简单的CNN模型，并提供了可视化中间层特征图的功能。</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 主要特点包括：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 使用hook机制捕获中间层输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 对特征图进行智能可视化处理（处理全相同值的情况）</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 有序保存各层特征图</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 完整的图像预处理流程</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> torchvision.transforms as transforms
+</span><span style="color: #0000ff;">from</span> torchvision.utils <span style="color: #0000ff;">import</span><span style="color: #000000;"> save_image
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+</span><span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> random
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 固定所有随机种子，确保可复现性</span>
+<span style="color: #0000ff;">def</span> set_seed(seed=42<span style="color: #000000;">):
+    torch.manual_seed(seed)       </span><span style="color: #008000;">#</span><span style="color: #008000;"> PyTorch CPU随机种子</span>
+    torch.cuda.manual_seed(seed)  <span style="color: #008000;">#</span><span style="color: #008000;"> PyTorch GPU随机种子</span>
+    torch.cuda.manual_seed_all(seed)  <span style="color: #008000;">#</span><span style="color: #008000;"> 如果使用多GPU</span>
+    np.random.seed(seed)          <span style="color: #008000;">#</span><span style="color: #008000;"> NumPy随机种子</span>
+    random.seed(seed)             <span style="color: #008000;">#</span><span style="color: #008000;"> Python随机种子</span>
+    torch.backends.cudnn.deterministic = True  <span style="color: #008000;">#</span><span style="color: #008000;"> 确保CUDA卷积运算确定性</span>
+    torch.backends.cudnn.benchmark = False     <span style="color: #008000;">#</span><span style="color: #008000;"> 关闭cuDNN自动优化</span>
+<span style="color: #000000;">
+set_seed(</span>42)  <span style="color: #008000;">#</span><span style="color: #008000;"> 设置随机种子为42（可改为任意整数）</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 定义一个简单的CNN模型</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> CNN(nn.Module):
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self):
+        super(CNN, self).</span><span style="color: #800080;">__init__</span><span style="color: #000000;">()
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 网络层定义</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> conv1: 第一卷积层，输入通道3(RGB)，输出通道16，3x3卷积核，步长1，填充1</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> relu1: ReLU激活函数</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> pool1: 最大池化层，2x2池化窗口，步长2</span>
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1<span style="color: #000000;">)
+        self.relu1 </span>=<span style="color: #000000;"> nn.ReLU()
+        self.pool1 </span>= nn.MaxPool2d(kernel_size=2, stride=2<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> conv2: 第二卷积层，输入通道16，输出通道32</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> relu2: ReLU激活函数</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> pool2: 最大池化层</span>
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1<span style="color: #000000;">)
+        self.relu2 </span>=<span style="color: #000000;"> nn.ReLU()
+        self.pool2 </span>= nn.MaxPool2d(kernel_size=2, stride=2<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> conv3: 第三卷积层，输入通道32，输出通道64</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> relu3: ReLU激活函数</span>
+        self.conv3 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1<span style="color: #000000;">)
+        self.relu3 </span>=<span style="color: #000000;"> nn.ReLU()
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 用于存储中间层输出的hook 创建一个空字典来存储中间层的特征图</span>
+        self.feature_maps =<span style="color: #000000;"> {}
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 为每一层注册前向hook，用于捕获该层的输出</span>
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> forward(self, x):
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 注册hook来捕获中间层输出</span>
+        hooks =<span style="color: #000000;"> []
+        </span><span style="color: #0000ff;">for</span> name, layer <span style="color: #0000ff;">in</span><span style="color: #000000;"> self.named_children():
+            hook </span>= layer.register_forward_hook( <span style="color: #008000;">#</span><span style="color: #008000;"> register_forward_hook会在每次前向传播后调用指定的函数</span>
+                <span style="color: #0000ff;">lambda</span> module, input, output, name=name: self.feature_maps.<span style="color: #800080;">__setitem__</span><span style="color: #000000;">(name, output)
+            )
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 使用lambda函数将每层的输出存储到feature_maps字典中，以层名作为键</span>
+<span style="color: #000000;">            hooks.append(hook)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 前向传播</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 标准的CNN前向传播流程：卷积&rarr;激活&rarr;池化&rarr;卷积&rarr;激活&rarr;池化&rarr;卷积&rarr;激活</span>
+        x =<span style="color: #000000;"> self.conv1(x)
+        x </span>=<span style="color: #000000;"> self.relu1(x)
+        x </span>=<span style="color: #000000;"> self.pool1(x)
+
+        x </span>=<span style="color: #000000;"> self.conv2(x)
+        x </span>=<span style="color: #000000;"> self.relu2(x)
+        x </span>=<span style="color: #000000;"> self.pool2(x)
+
+        x </span>=<span style="color: #000000;"> self.conv3(x)
+        x </span>=<span style="color: #000000;"> self.relu3(x)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 移除hook 移除所有hook，避免内存泄漏</span>
+        <span style="color: #0000ff;">for</span> hook <span style="color: #0000ff;">in</span><span style="color: #000000;"> hooks:
+            hook.remove()
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> x
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 提供获取特征图的方法</span>
+    <span style="color: #0000ff;">def</span><span style="color: #000000;"> get_feature_maps(self):
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> self.feature_maps
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 定义图像预处理流程：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 调整大小为128x128</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 转换为PyTorch张量</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 使用ImageNet数据集的均值和标准差进行归一化</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> preprocess_image(image_path):
+    transform </span>=<span style="color: #000000;"> transforms.Compose([
+        transforms.Resize((</span>128, 128<span style="color: #000000;">)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean</span>=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225<span style="color: #000000;">])
+    ])
+    image </span>= Image.open(image_path).convert(<span style="color: #800000;">'</span><span style="color: #800000;">RGB</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    image </span>= transform(image).unsqueeze(0)  <span style="color: #008000;">#</span><span style="color: #008000;"> 添加batch维度 unsqueeze(0)添加batch维度(从C&times;H&times;W变为1&times;C&times;H&times;W)</span>
+
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> image
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 可视化并保存特征图（修改后的版本）</span>
+<span style="color: #0000ff;">def</span> visualize_feature_maps(feature_maps, save_dir=<span style="color: #800000;">'</span><span style="color: #800000;">feature_maps</span><span style="color: #800000;">'</span><span style="color: #000000;">):
+    os.makedirs(save_dir, exist_ok</span>=True)  <span style="color: #008000;">#</span><span style="color: #008000;"> 确保目录存在</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 添加层序号计数器</span>
+    layer_idx = 1
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 遍历每层的特征图，获取每层的特征图数量</span>
+    <span style="color: #0000ff;">for</span> layer_name, maps <span style="color: #0000ff;">in</span><span style="color: #000000;"> feature_maps.items():
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取特征图数量</span>
+        num_maps = maps.size(1<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 为每个特征图创建子图</span>
+        plt.figure(figsize=(15, 10<span style="color: #000000;">))
+        plt.suptitle(f</span><span style="color: #800000;">'</span><span style="color: #800000;">Layer: {layer_name}</span><span style="color: #800000;">'</span>, fontsize=16<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建大图，设置标题</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 限制最多显示16个特征图，避免太多</span>
+        display_num = min(16<span style="color: #000000;">, num_maps)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建4x4的子图网格</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 获取第i个特征图，并转换为numpy数组</span>
+        <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(display_num):
+            plt.subplot(</span>4, 4, i + 1<span style="color: #000000;">)
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取单个特征图并转为numpy</span>
+            img =<span style="color: #000000;"> maps[0, i].detach().cpu().numpy()
+
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 如果特征图所有值相同，显示为灰度图并标注"Constant"</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> 否则归一化到[0,1]范围并显示为彩色图</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> 检查特征图是否为全零或所有值相同</span>
+            <span style="color: #0000ff;">if</span> np.all(img == img[0, 0]):  <span style="color: #008000;">#</span><span style="color: #008000;"> 如果所有值相同</span>
+                plt.imshow(img, cmap=<span style="color: #800000;">'</span><span style="color: #800000;">gray</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                plt.title(f</span><span style="color: #800000;">'</span><span style="color: #800000;">Map {i} (Constant)</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+                </span><span style="color: #008000;">#</span><span style="color: #008000;"> 只有最大值不等于最小值时才进行归一化</span>
+                <span style="color: #0000ff;">if</span> img.max() !=<span style="color: #000000;"> img.min():
+                    img </span>= (img - img.min()) / (img.max() -<span style="color: #000000;"> img.min())
+                plt.imshow(img, cmap</span>=<span style="color: #800000;">'</span><span style="color: #800000;">viridis</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                plt.title(f</span><span style="color: #800000;">'</span><span style="color: #800000;">Map {i}</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+            plt.axis(</span><span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 保存图像，文件名前加上序号（如 "1. conv1.png"）</span>
+        save_path = os.path.join(save_dir, f<span style="color: #800000;">'</span><span style="color: #800000;">{layer_idx}. {layer_name}.png</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        plt.savefig(save_path, bbox_inches</span>=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        plt.close()
+
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">'</span><span style="color: #800000;">Saved feature maps for {layer_name} to {save_path}</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        layer_idx </span>+= 1  <span style="color: #008000;">#</span><span style="color: #008000;"> 更新序号</span>
+
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 主函数</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> main():
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 初始化模型</span>
+    model =<span style="color: #000000;"> CNN()
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 加载并预处理图像</span>
+    image_path = <span style="color: #800000;">'</span><span style="color: #800000;">input_image.jpg</span><span style="color: #800000;">'</span>  <span style="color: #008000;">#</span><span style="color: #008000;"> 替换为你的图像路径</span>
+    input_image =<span style="color: #000000;"> preprocess_image(image_path)
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 前向传播</span>
+    _ =<span style="color: #000000;"> model(input_image)
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取特征图</span>
+    feature_maps =<span style="color: #000000;"> model.get_feature_maps()
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 可视化并保存特征图</span>
+<span style="color: #000000;">    visualize_feature_maps(feature_maps)
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">'</span><span style="color: #800000;">__main__</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+    main()</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">输入图像：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155222407-140023895.jpg" alt="" width="268" height="268" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">&nbsp;输出结果：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155325215-942892726.png" alt="" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155458049-1714341041.png" alt="" width="574" height="466" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">1. conv1.png</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155522551-1767834955.png" alt="" width="563" height="457" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">2. relu1.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155540813-2121379688.png" alt="" width="572" height="464" loading="lazy" />&nbsp;</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">3. pool1.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155548015-1806035095.png" alt="" width="584" height="474" loading="lazy" /></div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">4. conv2.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155554111-1238492950.png" alt="" width="591" height="480" loading="lazy" /></div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">5. relu2.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155602026-839013066.png" alt="" width="600" height="487" loading="lazy" />&nbsp;</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">6. pool2.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155607920-1067874201.png" alt="" width="592" height="480" loading="lazy" /></div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">7. conv3.png</span></div>
+<div style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155613598-1268202970.png" alt="" width="585" height="475" loading="lazy" /></div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">8. relu3.png</span></div>
+<p>&nbsp;</p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2.&nbsp;ResNet18中间特征层可视化</span></h2>
+<p><span style="font-size: 18px; font-family: 'comic sans ms', sans-serif;">写一个简单的Python程序，加载预训练的ResNet18模型、对输入图像进行前向传播、捕获所有中间层的输出并将这些输出可视化为特征图保存到本地目录。</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 加载预训练的ResNet18模型</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 对输入图像进行前向传播</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 捕获所有中间层的输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 并将这些输出可视化为特征图保存到本地目录</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> torch
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> torch.nn as nn
+</span><span style="color: #0000ff;">from</span> torchvision <span style="color: #0000ff;">import</span><span style="color: #000000;"> models, transforms
+</span><span style="color: #0000ff;">from</span> PIL <span style="color: #0000ff;">import</span><span style="color: #000000;"> Image
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> matplotlib.pyplot as plt
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> os
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建名为'layer_outputs'的目录用于保存输出结果</span>
+os.makedirs(<span style="color: #800000;">'</span><span style="color: #800000;">layer_outputs</span><span style="color: #800000;">'</span>, exist_ok=<span style="color: #000000;">True)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 定义hook函数来获取中间层输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 这个类用于捕获神经网络的中间层输出</span>
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> LayerActivations:
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span><span style="color: #000000;">(self):
+        self.activations </span>=<span style="color: #000000;"> None
+
+    </span><span style="color: #0000ff;">def</span> <span style="color: #800080;">__call__</span><span style="color: #000000;">(self, module, input, output):
+        self.activations </span>= output.detach()  <span style="color: #008000;">#</span><span style="color: #008000;"> 确保不追踪梯度</span>
+
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 加载预训练模型(这里使用ResNet18作为示例)</span>
+model = models.resnet18(pretrained=<span style="color: #000000;">True)
+model.eval()  </span><span style="color: #008000;">#</span><span style="color: #008000;"> 将模型设为评估模式(关闭dropout等训练专用层)</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 定义图像预处理</span>
+preprocess =<span style="color: #000000;"> transforms.Compose([
+    transforms.Resize(</span>256<span style="color: #000000;">),
+    transforms.CenterCrop(</span>224<span style="color: #000000;">),
+    transforms.ToTensor(),
+    transforms.Normalize(mean</span>=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225<span style="color: #000000;">]),
+])
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 定义图像预处理流程：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 调整大小为256x256</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 中心裁剪为224x224</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 转换为张量</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 使用ImageNet的均值和标准差进行归一化</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 加载输入图像</span>
+image_path = <span style="color: #800000;">'</span><span style="color: #800000;">input_image.jpg</span><span style="color: #800000;">'</span>  <span style="color: #008000;">#</span><span style="color: #008000;"> 替换为你的图片路径</span>
+image =<span style="color: #000000;"> Image.open(image_path)
+input_tensor </span>=<span style="color: #000000;"> preprocess(image)
+input_batch </span>= input_tensor.unsqueeze(0)  <span style="color: #008000;">#</span><span style="color: #008000;"> 创建batch维度 unsqueeze(0)添加batch维度(从3D变为4D张量)</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 注册hook来获取所有中间层</span>
+activation_records =<span style="color: #000000;"> {}
+hooks </span>=<span style="color: #000000;"> []
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 遍历模型的所有层并注册hook</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 遍历模型的所有层</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 对于Sequential容器(如ResNet的layer1-4)，进一步遍历其子层</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 为每个层注册hook，将输出保存到activation_records字典中</span>
+
+<span style="color: #008000;">#</span><span style="color: #008000;"> 遍历模型的所有直接子层(named_children返回层名称和层对象)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 对于ResNet18来说，这些子层包括: conv1, bn1, relu, maxpool, layer1, layer2, layer3, layer4, avgpool, fc</span>
+<span style="color: #0000ff;">for</span> name, layer <span style="color: #0000ff;">in</span><span style="color: #000000;"> model.named_children():
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 检查当前层是否是nn.Sequential容器</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 在ResNet中，layer1-layer4都是Sequential容器，包含多个残差块</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(layer, nn.Sequential):
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 如果是Sequential容器，需要进一步遍历其内部的子层</span>
+        <span style="color: #0000ff;">for</span> sub_name, sub_layer <span style="color: #0000ff;">in</span><span style="color: #000000;"> layer.named_children():
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建完整的层名称，格式为"外层名_内层名"(如"layer1_0")</span>
+            full_name = f<span style="color: #800000;">"</span><span style="color: #800000;">{name}_{sub_name}</span><span style="color: #800000;">"</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> 为该子层创建一个LayerActivations实例，用于捕获其输出</span>
+            activation_records[full_name] =<span style="color: #000000;"> LayerActivations()
+
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 为该子层注册forward hook，并将hook句柄存入hooks列表</span>
+            <span style="color: #008000;">#</span><span style="color: #008000;"> 当该层前向传播时，会自动调用LayerActivations的__call__方法保存输出</span>
+<span style="color: #000000;">            hooks.append(sub_layer.register_forward_hook(activation_records[full_name]))
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 对于非Sequential的单个层(如conv1, bn1等)</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 直接为该层创建LayerActivations实例</span>
+        activation_records[name] =<span style="color: #000000;"> LayerActivations()
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 注册forward hook</span>
+<span style="color: #000000;">        hooks.append(layer.register_forward_hook(activation_records[name]))
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 前向传播</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 禁用梯度计算以节省内存</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 执行前向传播，这会触发所有注册的hook</span>
+<span style="color: #000000;">with torch.no_grad():
+    output </span>=<span style="color: #000000;"> model(input_batch)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 移除所有hook，防止内存泄漏</span>
+<span style="color: #0000ff;">for</span> hook <span style="color: #0000ff;">in</span><span style="color: #000000;"> hooks:
+    hook.remove()
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 可视化每一层的输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 可视化2D特征图(通道、高度、宽度)</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 最多显示64个特征图</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 8列网格布局</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 每个特征图单独归一化显示</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 保存为PNG文件</span>
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> visualize_layer_output(layer_name, activations, input_image, index):
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取该层的输出</span>
+    activations = activations.activations.squeeze(0)  <span style="color: #008000;">#</span><span style="color: #008000;"> 去除batch维度</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 检查激活的形状</span>
+    <span style="color: #0000ff;">if</span> activations.dim() == 1<span style="color: #000000;">:
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">跳过 {layer_name} - 一维输出不适合可视化</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 对于2D特征图 (C, H, W)</span>
+    <span style="color: #0000ff;">if</span> activations.dim() == 3<span style="color: #000000;">:
+        num_feature_maps </span>= min(activations.size(0), 64<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 计算网格大小</span>
+        cols = 8<span style="color: #000000;">
+        rows </span>= (num_feature_maps + cols - 1) //<span style="color: #000000;"> cols
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 创建子图</span>
+        fig, axes = plt.subplots(nrows=rows, ncols=cols, figsize=(16, 2 *<span style="color: #000000;"> rows))
+        fig.suptitle(f</span><span style="color: #800000;">'</span><span style="color: #800000;">Layer: {layer_name} - Shape: {tuple(activations.shape)}</span><span style="color: #800000;">'</span>, fontsize=16<span style="color: #000000;">)
+
+        </span><span style="color: #0000ff;">for</span> i, ax <span style="color: #0000ff;">in</span><span style="color: #000000;"> enumerate(np.array(axes).flat):
+            </span><span style="color: #0000ff;">if</span> i &lt;<span style="color: #000000;"> num_feature_maps:
+                </span><span style="color: #008000;">#</span><span style="color: #008000;"> 获取单个特征图并归一化</span>
+                feature_map =<span style="color: #000000;"> activations[i].numpy()
+                feature_map </span>= (feature_map - feature_map.min()) / (feature_map.max() - feature_map.min() + 1e-8<span style="color: #000000;">)
+
+                </span><span style="color: #008000;">#</span><span style="color: #008000;"> 显示特征图</span>
+                ax.imshow(feature_map, cmap=<span style="color: #800000;">'</span><span style="color: #800000;">viridis</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+                ax.set_title(f</span><span style="color: #800000;">'</span><span style="color: #800000;">FM {i}</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+            ax.axis(</span><span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+
+        plt.tight_layout()
+        plt.savefig(f</span><span style="color: #800000;">'</span><span style="color: #800000;">layer_outputs/{index:1d}. {layer_name}.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        plt.close()
+    </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">跳过 {layer_name} - 不支持的维度 {activations.dim()}D</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 处理并保存每一层的输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 遍历所有记录的层输出</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 调用可视化函数保存结果</span>
+<span style="color: #0000ff;">for</span> idx, (layer_name, record) <span style="color: #0000ff;">in</span> enumerate(activation_records.items(), start=1<span style="color: #000000;">):
+    visualize_layer_output(layer_name, record, image, idx)
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 保存原始输入图像作为参考</span>
+plt.figure(figsize=(8, 8<span style="color: #000000;">))
+plt.imshow(np.array(image))
+plt.title(</span><span style="color: #800000;">'</span><span style="color: #800000;">Original Image</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.axis(</span><span style="color: #800000;">'</span><span style="color: #800000;">off</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.savefig(</span><span style="color: #800000;">'</span><span style="color: #800000;">layer_outputs/0. original_image.png</span><span style="color: #800000;">'</span>, bbox_inches=<span style="color: #800000;">'</span><span style="color: #800000;">tight</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+plt.close()
+
+</span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">所有中间层输出已保存到 layer_outputs 目录</span><span style="color: #800000;">"</span>)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">输入图像：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621155846682-1927423892.jpg" alt="" width="330" height="330" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p>&nbsp;<span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">输出结果：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160010287-1057947278.png" alt="" loading="lazy" /></p>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160250156-935558445.png" alt="" width="690" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">1. conv1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160257558-1143474438.png" alt="" width="684" height="689" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">2. bn1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160306058-1171512904.png" alt="" width="690" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">3. relu.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160313512-1472956690.png" alt="" width="694" height="698" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">4. maxpool.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160322669-865071067.png" alt="" width="695" height="700" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">5. layer1_0.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160330997-1638970176.png" alt="" width="690" height="695" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">6. layer1_1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160336844-1054800187.png" alt="" width="689" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">7. layer2_0.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160344355-1165805141.png" alt="" width="689" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">8. layer2_1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160350778-861586321.png" alt="" width="689" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">9. layer3_0.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160357090-1992531547.png" alt="" width="697" height="702" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">10. layer3_1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160405938-711745189.png" alt="" width="706" height="711" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">11. layer4_0.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160412202-1589337266.png" alt="" width="689" height="694" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">12. layer4_1.png</span></div>
+<div style="text-align: center;">
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202506/1027447-20250621160418556-194601372.png" alt="" width="693" height="697" loading="lazy" /></p>
+</div>
+<div style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">13. avgpool.png</span></div>
+<p>&nbsp;</p>
