@@ -1,0 +1,447 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">Ubuntu常用命令以及配置环境遇到的问题</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">一、Ubuntu常用命令</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 打开Anaconda Prompt</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 打开主目录</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nautilus ~/</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看conda版本</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda -V</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看cuda版本</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nvcc -V</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看cuDNN版本</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看ubuntu版本</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cat /proc/version</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 打开指定路径</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd /home/xxx/xxx/RL</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># ubuntu下载软件</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt-get install vim</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看显存占用和GPU利用率</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nvidia-smi</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">watch -n 1 nvidia-smi</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看CPU使用情况</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">top # 终止按q</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看系统的总内存、已用内存、空闲内存、以及交换空间的使用情况</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">free -h</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看显卡型号</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nvidia-smi -a</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看已安装包</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda list</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 安装包</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda install numpy</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 删除包</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda remove numpy</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 删除索引缓存、锁定文件、未使用的缓存包、tarball 和日志文件</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda clean --all -y</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看当前存放的虚拟环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda env list</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 创建python虚拟环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda create -n pytorch python=3.8</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 激活虚拟环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda activate tensorflow</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda activate pytorch</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 关闭虚拟环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda deactivate</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 删除虚拟环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda remove -n tensorflow --all</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda remove -n pytorch --all</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 按照env.yml创建环境，并安装相应软件</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda env create -f env.yml</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sh install_envs.sh</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 导出/导入环境配置（复制别人的环境）</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda env export &gt; env.yml</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda env create -f env.yml</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 导出/导入所有依赖库（复制别人的依赖库）</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip freeze &gt; requirements.txt</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install -r requirements.txt</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 同一设备下复制环境</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda create --name newEnv --clone oldEnv</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 修改conda环境名称</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda create --name newEnv（新环境名称） --clone oldEnv（旧环境名称）</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda remove -n oldEnv（旧环境名称）--all</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 离线安装本地目录下的包</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd /home/xxx/xxx/dm_control</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install -e .</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd ../dmc2gym</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install -e .</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd ../../..</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 安装tensorflow（GPU版本，用的2.8.0）</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install tensorflow==2.8.0</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">###pip install tensorflow -i https://pypi.tuna.tsinghua.edu.cn/simple</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">###conda install --channel https://mirrors.ustc.edu.cn/anaconda/pkgs/main/ tensorflow-gpu==2.8.0</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 安装pytorch(GPU版本，python版本为3.8)</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">https://download.pytorch.org/whl/torch_stable.html</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">离线先下载好torch与torchvision，然后</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd /home/xxx/下载/</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install torch-1.13.1+cu116-cp38-cp38-linux_x86_64.whl</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install torchvision-0.14.1+cu116-cp38-cp38-linux_x86_64.whl</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install torchaudio-0.13.1+cu116-cp38-cp38-linux_x86_64.whl</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">或者用这个版本</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install torch-2.0.1+cu117-cp38-cp38-linux_x86_64.whl</span><br /><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install torchvision-0.15.2+cu117-cp38-cp38-linux_x86_64.whl</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 安装jaxlib(GPU版本)</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">https://storage.googleapis.com/jax-releases/jax_cuda_releases.html</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">同样先下载到本地，然后执行</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install jaxlib-0.4.7+cuda11.cudnn82-cp38-cp38-manylinux2014_x86_64.whl</span></p>
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 查看Mujoco是否安装成功</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd ~/.mujoco/mujoco-2.3.2/bin</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">./simulate ../model/humanoid/humanoid.xml</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 去掉Ubuntu文件夹锁</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">先进到当前目录，然后执行</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo chown -R xxx filename</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo chown -R xxx .</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">其中xxx为Ubuntu用户名，filename为待解锁的文件夹名称</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">第二行命令表示解锁当前目录下的所有文件夹与文件</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 多张显卡，选用指定显卡</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">device=torch.device("cuda:1" if args.cuda else "cpu")</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 去除requirement.txt中的版本号，只保留包名</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sed 's/[=&lt;&gt;!~]=.*//' requirements.txt &gt; requirements_no_version.txt</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># 添加环境变量</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">gedit ~/ .bashrc</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export xxx</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">source ~/ .bashrc</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">例如：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export LD_LIBRARY_PATH=~/.mujoco/mujoco-2.3.2/bin</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export MUJOCO_KEY_PATH=~/.mujoco${MUJOCO_KEY_PATH}</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export MJLIB_PATH=/home/xxx/.mujoco/mujoco-2.3.2/lib/libmujoco.so.2.3.2</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so.2.1.0</span></p>
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># SSH远程连接(同一网段，参考</span><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><a id="cb_post_title_url" class="postTitle2 vertical-middle" title="发布于 2024-12-04 19:56" href="https://www.cnblogs.com/tianwuyvlianshui/p/18587069">ssh远程连接linux服务器</a></span><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">)</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt-get install openssh-server &nbsp;#安装SSH服务</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">service ssh start &nbsp;#启动SSH，出问题可以前面加sudo</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">systemctl enable&nbsp; #启用SSH服务，出问题可以前面加sudo</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">ifconfig&nbsp; #查看ip地址</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">ssh 用户名@IP地址 ##主机控制，例如ssh xxx@192.168.1.11</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">## 其他额外命令</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">ps -e | grep ssh&nbsp; #检查是否成功启动ssh（查看ssh线程是否运行）</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">eval ssh-agent&nbsp; #确保出现ssh-agent ，若无ssh-agent，执行下列代码</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">netstat -lntup | grep ssh &nbsp;#查看ssh端口</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">systemctl stop sshd&nbsp;&nbsp;&nbsp;&nbsp; #停止sshd服务</span></p>
+
+
+
+</blockquote>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">二、一些错误以及解决方案</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>AttributeError: 'dict' object has no attribute 'env_specs' </span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>换版本，pip install gym==0.25.2, 我用的是gym==0.22.0这个版本</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>安装gym==0.19.0时出错error: subprocess-exited-with-error以及ModuleNotFoundError: No module named 'gym.envs.atari'</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>pip install setuptools==65.5.0 pip==21，pip install gym==0.19.0</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>ModuleNotFoundError: No module named 'numpy.exceptions'</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>pip install numpy==1.26.4 scipy==1.11.4 --force-reinstall</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>AttributeError: module 'ml_dtypes' has no attribute 'float8_e4m3b11'</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>pip install ml_dtypes==0.2.0</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>安装mujoco_py并测试时提示Cython.Compiler.Errors.CompileError</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>pip uninstall cython</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">pip install cython==0.29.21</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>undefined symbol: __glewBindBuffer</span></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">解决：</span></strong></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt-get install libglfw3</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">apt-cache search glew</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt-get install libglew-dev</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt-get install libglew2.1</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">同时添加环境变量</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo gedit ~/.bashrc</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">source ~/.bashrc</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>GLEW initalization error: Missing GL version</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>sudo apt-get install -y libglew-dev</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">如果还失败的话，在终端先输入unset LD_PRELOAD再执行python程序。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>RuntimeError: Failed to initialize OpenGL</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>先输入unset LD_PRELOAD再执行python程序。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>复现别人的代码，各种版本不兼容问题</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>我自己的经验，仅供参考。不直接按照原文作者给出的requirement.txt或者env.yml文件下载相应版本的依赖库，因为涉及到某些库的GPU版本，不同的电脑版本不同，得选择适合自己电脑的。所以，首先，按照作者给的requirement.txt或者env.yml文件的版本号新建环境，用作者指定的python版本，并按照指定版本号安装<strong>某些关键</strong>依赖库，如gym、dm-control、mujoco、mujoco-py；其次，根据自己的硬件条件安装适合自己电脑的pytorch、TensorFlow、jaxlib等GPU版本；然后，直接运行程序，缺啥下载啥，直接pip install xxx，先别指定版本号，等后面哪个不兼容再替换成作者给的版本号。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">xxx requires xxx&lt;3.20,&gt;=3.9.2, but you have xxx 5.29.5 which is incompatible.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>要么按照要求安装相应版本，要么直接忽略依赖pip install xxx==0.xxx.0 --no-deps</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>PackageNotFoundError: Packages missing in current channels</span></p>
+<p><strong><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">解决：</span></strong></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">anaconda search -t conda kornia</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">anaconda show forklift/kornia</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">conda install --channel https://conda.anaconda.org/forklift kornia</span></p>
+
+
+
+
+
+
+
+
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>TensorBoard打不开，错误代码：ERR_CONNECTION_REFUSED</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>关闭WiFi</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>bash: ./hello : 权限不够</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>chmod a+x hello</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>python matplotlib保存图片不全的解决办法</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>plt.savefig('example.png')变成plt.savefig('example.png', dpi=600, bbox_inches='tight')</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>nvidia-smi出错，错误原因$ nvidia-smi</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>解决办法一：安装必要的内核头文件</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">如果之前是正常的，重启后出现这个错误，很可能是Ubuntu内核版本升级造成的。让我们重新安装内核头文件。</span></p>
+<blockquote>
+<pre class="brush:python;gutter:false;"><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo apt install linux-headers-`uname -r`
+#or
+$ sudo apt install linux-headers-$(uname -r)</span></pre>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">然后输入nvidia-smi，输出可能正常。如果仍然错误，请继续使用以下方法。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">解决办法二：使用 DKMS 重新安装内核的 NVIDIA 驱动程序</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">有时，重新启动计算机后，NVIDIA SMI会显示NVIDIA驱动程序丢失，这是由于Linux内核升级，以前的NVIDIA驱动程序与连接不匹配。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">DKMS（Dynamic Kernel Module System）可以在内核变化后自动编译模块，并适应新的内核。它允许离散内核模块更新，而无需修改整个内核。使用 dkms 重新安装内核的相应驱动程序：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo apt install dkms</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo dkms install -m nvidia -v 470.182.03</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ dkms status nvidia</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nvidia/470.182.03, 5.15.0-88-generic, x86_64: installed</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">注意：上述命令行中的 470.182.03 是 NVIDIA 的版本号。当您不知道它时，请输入 /usr/src 目录，您将看到带有后缀的 nvidia 文件夹。或者，使用以下命令进行查询。</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ ls /usr/src | grep nvidia</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">nvidia-470.182.03</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">再次输入 nvidia smi 时，正确输出。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">解决办法三：安装NVIDIA驱动程序</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">第 1 步：在安装驱动程序之前，请确保更新软件包存储库。运行以下命令：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo apt update</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo apt upgrade</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">第 2 步：搜索 Nvidia 驱动程序，运行以下命令。输出显示适用于 GPU 的可用驱动程序列表。</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ apt search nvidia-driver</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">第 3 步：从可用 GPU 驱动程序列表中选择要安装的驱动程序。最合适的是经过最新测试的专有版本。</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">$ sudo apt install nvidia-driver-470</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">在本教程中，我们安装了 nvidia-driver-470，这是该 GPU 最新测试的专有驱动程序。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">第 4 步：使用以下命令重新启动计算机：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"># sudo reboot</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">再次输入 nvidia smi 时，正确输出。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">解决办法四：</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">1. sudo apt-get install dkms</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">2. sudo apt-get install nvidia-driver-550</span></p>
+</blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">但是在进行第二步之前，不知道自己服务器nvidia-driver的版本号，可以采用命令来查找一下ubuntu-drivers devices</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">外加一条：禁止内核自动更新：sudo gedit /etc/apt/apt.conf.d/10periodic，将双引号中的&ldquo;1&rdquo;全部置&ldquo;0&rdquo;即可，修改后保存</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>dpkg: 处理软件包 cgmanager (--configure)时出错：子进程已安装 post-installation 脚本返回错误状态 1，由于已经达到 MaxReports 限制，没有写入 apport 报告。dpkg: 处理软件包 pulseaudio (--configure)时出错：依赖关系问题 - 仍未被配置</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>由于所有用apt安装的软件会将解包信息放到 var/lib/dpkg/info/ 路径下, 所以我们只要重新生成一下info的内容就好了</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">cd var/lib/dpkg/ &nbsp;# 切路径</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo mv info info.bak # 将原有的info更名</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo mkdir info # 重建新的info</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo apt update &amp;&amp; sudo apt -f install # update一下, 并且安装所有的依赖</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo mv info.bak/* info/ # 把info.bak中的文件全部移动到 info 中</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo -rf info.bak # 删掉 info.bak</span></p>
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>Ubuntu文件夹点击不了</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>1. 在命令行输入：killall nautilus</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">2. 尝试重新启动 GNOME Shell</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">使用 Alt + F2 打开运行命令的对话框</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">输入 r 然后按回车（重启Shell）</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>Ubuntu系统Todesk网络异常</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>对其进行初始化操作</span></p>
+<blockquote>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo systemctl stop todeskd.service</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo mv /opt/todesk/config/config.ini /opt/todesk/config/config.ini.bak</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">sudo systemctl start todeskd.service</span></p>
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>error: command 'swig' failed: No such file or directory</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>sudo apt-get install swig</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>Ubuntu 里qq最小化消失，在后台运行但前台看不到</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>按快捷键Ctrl+Alt+Z</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>在Ubuntu下登录qq的时候显示&ldquo;您已登录xxxxx，不能重复登录&rdquo;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>先按快捷键Ctrl+Alt+Z，看看能不能弹出qq；不行的话，终端输入ps -e，找到qq对应的PID，然后杀死，例如我查到自己有两个qq进程，终端输入kill 17676</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>wandb: W&amp;B API key is configured. Use `wandb login --relogin` to force relogin</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>可以配置也可以先关闭，这里选择关闭，os.environ["WANDB_MODE"] = "offline"或者wandb.init(mode="offline")</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">在线查看命令：wandb sync /home/xxx/wandb/offline-run-20250909_090918-evmcgt33</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">正常需要一些配置：</span></p>
+<blockquote>
+<p><span style="font-size: 18px; font-family: 'comic sans ms', sans-serif;">os.environ["WANDB_API_KEY"] = 'API KEY'&nbsp;(换成自己的Key)</span></p>
+<p><span style="font-size: 18px; font-family: 'comic sans ms', sans-serif;">os.environ["WANDB_MODE"] = "online"</span></p>
+<p><span style="font-size: 18px; font-family: 'comic sans ms', sans-serif;">os.environ["HTTP_PROXY"] = "Proxy"&nbsp; (换成自己的网址链接)</span></p>
+<p><span style="font-size: 18px; font-family: 'comic sans ms', sans-serif;">os.environ["HTTPS_PROXY"] = "Proxy"&nbsp;&nbsp;(换成自己的网址链接)</span></p>
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>Windows右击文件夹一直转圈</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>卸载百度网盘</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>Windows内存占用率高，但是找不到内存消耗大的程序</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong> 1、在传统界面按Win键+ R键，在搜索框中输入msconfig，按回车键。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">2、点击&rdquo;服务&rdquo;选项，选择&rdquo;隐藏所有的微软服务&rdquo;，然后点击全部禁用。(如果可选)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">3、点击&rdquo;启动&rdquo;选项,，点击&rdquo;打开任务管理器&rdquo;，然后禁用全部启动项并确定。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">然后如何从干净模式状态回复到正常模式：</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">a. 按Win+R 打开运行窗口，在搜索框中输入msconfig，按回车键。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">b. 在&ldquo;常规&rdquo;选项，单击&ldquo;正常启动 - 加载所有设备驱动程序和服务&rdquo;。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">c. 单击&ldquo;确定&rdquo;。当提示您重新启动计算机时，单击&ldquo;重新启动&rdquo;。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>问题：</strong>实验室没网解决方案(仅适用于我的实验室)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;"><strong>解决：</strong>神秘代码：10.97.1.10</span></p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">如果后续遇到其他问题也会持续更新。</span></p>
