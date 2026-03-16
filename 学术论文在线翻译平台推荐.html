@@ -1,0 +1,69 @@
+<h1 style="text-align: center;"><span style="font-family: 'comic sans ms', sans-serif;">学术论文在线翻译平台推荐</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 随着人工智能与自然语言处理技术的快速发展，学术论文的跨语言阅读需求日益增长。尤其对于非英语母语的研究者而言，将英文论文准确、高效地翻译为中文，已成为科研工作中不可或缺的一环。当前主流的学术论文翻译路径主要分为两类：基于LaTeX源码的翻译（适用于<a href="https://arxiv.org/" target="_blank">arXiv</a>等平台）和基于PDF文档的OCR+翻译（适用于本地文献）。本文将系统梳理当前可用的在线翻译工具，分析其功能特点、适用场景及局限性，为科研工作者提供实用参考。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">一、学术论文翻译的技术路径</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 目前，学术论文翻译主要依赖以下两种技术路线：</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1. LaTeX源码翻译</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 适用于arXiv等开放获取平台，其论文通常附带完整的LaTeX源码。通过提取源码中的文本内容，利用大语言模型进行语义翻译，再重新编译生成排版一致的中文PDF。该方法能较好保留数学公式、图表编号及参考文献结构，是当前精度最高的翻译方式。</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2. PDF文档OCR翻译</span></h3>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 针对本地存储或无源码的PDF文献，需先通过光学字符识别（OCR）提取文本内容，再进行翻译。尽管通用文本识别已较为成熟，但数学公式、特殊符号、复杂排版的识别仍是技术难点，直接影响最终翻译质量与可读性。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">二、主流在线翻译平台推荐</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 本文整理了多个可实现学术论文翻译的在线平台，涵盖LaTeX转PDF和PDF直译两种主流方式，为研究者提供参考。需要注意的是，此类在线服务的稳定性可能存在波动，如需更可靠的使用体验，可考虑本地化部署相应模型，但其实现通常需依赖大语言模型API的支持。以下为目前了解到的部分学术论文翻译平台：</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">1. ChinArXiv论文翻译器(不稳定)</span></h3>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">网址：<a href="https://chinarxiv.chatpaper.top/">https://chinarxiv.chatpaper.top/</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">开源地址：<a href="https://github.com/kaixindelele/chinarxiv" target="_blank">https://github.com/kaixindelele/chinarxiv</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">简介：基于学术版GPT（https://github.com/binary-husky/gpt_academic）构建，专注于arXiv论文翻译功能。用户输入arXiv论文ID或完整链接后可获取翻译并编译完成的中文PDF。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">类型：LaTeX转PDF（适用于arXiv论文）</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">特点：仅支持arXiv论文翻译，返回中文PDF。其原理是通过翻译LaTeX源码并重新编译生成PDF。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">优点：免登录、免费、无需自行配置API。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">缺点：翻译成功率有限。对单文件.tex源码支持较好，但对多文件组成的LaTeX项目编译成功率较低。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">适用人群：快速获取arXiv论文中文翻译版的初级研究者，不追求深度编辑。</span></li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202509/1027447-20250911102651309-2032891645.png" alt="image" width="785" height="379" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163215284-1478579849.png" alt="原论文" width="697" height="350" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="color: #ff6600;">举个例子，上面是原论文</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163309415-1440449754.png" alt="chinaarxiv 1" width="697" height="323" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163335863-1304750456.png" alt="chinaarxiv 2" width="693" height="422" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;">&nbsp;<span style="color: #ff6600;">ChinArXiv翻译结果(由于采用latex排版，因此位置会变化)</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">2. 幻觉翻译(arxiv论文翻译强推！！！)</span></h3>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">网址：<a href="https://hjfy.top/">https://hjfy.top/</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">简介：基于大模型的文档翻译工具，支持arXiv论文与普通PDF翻译。其中arXiv论文通过LaTeX源码翻译实现完美排版，公式保持一致；PDF翻译则采用OCR技术处理。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">类型：LaTeX转PDF（适用于arXiv论文） &amp; PDF直译</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">特点：支持返回翻译后的中文LaTeX源码和PDF，方便后续编辑。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">优点：免费、无需自行配置API，LaTeX翻译质量较高，支持源码输出。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">缺点：需登录，PDF直译效果一般，存在部分内容未翻译、公式编译错误等问题，且译文仅支持在线预览无法下载。arXiv翻译每人每日限100篇，PDF直译每日限10篇。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">适用人群：希望获得可编辑LaTeX源码的中高级用户；对PDF直译仅作内容速览之用。</span></li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202509/1027447-20250911102732012-265306140.png" alt="image" width="726" height="196" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163515083-244791049.png" alt="幻觉翻译1" width="697" height="317" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163534252-785065180.png" alt="幻觉翻译2" width="681" height="378" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;">&nbsp;<span style="color: #ff6600;">幻觉翻译翻译结果(由于采用latex排版，因此位置会变化)</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">3. PDFMathTranslate(pdf文件翻译强推！！！)</span></h3>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">网址：<a href="https://pdf2zh.com/" target="_blank">https://pdf2zh.com/</a>&nbsp;</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">开源地址：<a href="https://github.com/Byaidu/PDFMathTranslate" target="_blank">https://github.com/Byaidu/PDFMathTranslate</a>(推荐！本地部署超级简单，使用python3.12，部署完成后无需&ldquo;魔法&rdquo;也能访问)</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">简介：专注于提供高精度、自动化的PDF翻译解决方案，尤其适用于含数学公式的文献。结合OCR、公式识别与机器翻译技术，力求在准确性与版式保持之间实现平衡。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">类型：PDF直译</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">特点：输出为中文PDF，数学公式翻译与还原效果较好。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">优点：免登录、免费、无需自行配置API。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">缺点：访问需&ldquo;魔法&rdquo;，仅输出PDF版式，算法类内容可能出现排版错乱。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">适用人群：需处理大量含公式PDF文献的研究者，重视公式准确性与离线可用性。</span></li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202509/1027447-20250911102806778-517966808.png" alt="image" width="652" height="313" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163629138-259732935.png" alt="PDFMathTranslate翻译" width="735" height="359" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /><span style="color: #ff6600;">PDFMathTranslate翻译结果</span></p>
+<h3><span style="font-family: 'comic sans ms', sans-serif;">4. 国产大模型类AI阅读工具&mdash;&mdash;以腾讯元宝为例(在线查看推荐)</span></h3>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">网址：<a href="https://yuanbao.tencent.com/chat/naQivTmsDa">https://yuanbao.tencent.com/chat/naQivTmsDa</a></span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">简介：目前多家国产大模型提供全文翻译与AI阅读功能，其中腾讯元宝表现较为突出。除支持PDF翻译外，还可进行核心要点总结、海报生成和内容问答，公式识别与显示效果良好。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">类型：PDF直译</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">特点：在线翻译查看体验良好，公式渲染准确，支持交互式阅读。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">优点：免费、无需自行配置API、功能丰富。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">缺点：需登录，在线预览效果优于下载结果&mdash;&mdash;离线PDF中的公式仍以LaTeX代码形式呈现，未渲染为数学符号。</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">适用人群：追求高效阅读、内容提炼与互动问答的科研人员；适合组会汇报、文献速读场景。</span></li>
+</ul>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202509/1027447-20250911102851574-1559439105.png" alt="image" width="691" height="329" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202510/1027447-20251011163728213-912138703.png" alt="腾讯元宝翻译" width="695" height="293" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p style="text-align: center;"><span style="color: #ff6600;">腾讯元宝翻译结果(核心公式没显示)</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 16px;">&nbsp; &nbsp; &nbsp; &nbsp; 学术论文翻译工具的涌现，显著降低了非英语研究者的阅读门槛，有力促进了全球科研成果的无障碍传播。尽管当前工具在公式识别、长文档一致性以及术语准确性等方面仍有改进空间，但其便捷性和实用性已足以满足日常科研需求。合理选择工具并理解其技术边界，将有助于最大化提升科研效率。值得注意的是，目前多数此类工具仍属于实验性项目，存在服务中断的风险。建议技术能力较强的用户考虑本地部署开源模型（例如结合GPT Academic与LaTeX编译环境），以实现更自主、可控的翻译流程。</span></p>
