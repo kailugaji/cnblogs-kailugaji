@@ -1,0 +1,390 @@
+<h1 style="text-align: center;" align="center"><span style="font-family: 'comic sans ms', sans-serif;">Python小练习：从多文件夹提取指定列并整合</span></h1>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">作者：凯鲁嘎吉 - 博客园&nbsp;<a href="http://www.cnblogs.com/kailugaji/" target="_blank">http://www.cnblogs.com/kailugaji/</a></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">1. 问题陈述</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">这是一个懒人创造世界的一个例子。在科研实验、机器学习项目或自动化测试中，我们经常会遇到这样的场景：一个主文件夹下有多个子文件夹，每个子文件夹中都有类似结构的CSV文件，我们需要从中提取特定列的数据，然后将所有数据整合到一个Excel文件中进行对比分析。</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">想象一下这样一个典型的工作流：</span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">有5个不同的实验设置，每个设置在独立的文件夹中运行</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">每个实验生成一个progress_eval.csv文件记录进度与实验结果</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">你需要从每个文件中提取"accuracy"这一列</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">最后将所有数据放在一个Excel表格中对比，并进行后续处理(如取平均值、标准差、标准误)</span></li>
+</ul>
+<p><span style="font-size: 18px;"><span style="font-family: 'comic sans ms', sans-serif;">传统的手动操作需要：逐个打开5个CSV文件 &rarr; 找到目标列 &rarr; 复制数据 &rarr; 粘贴到Excel &rarr; 调整格式&nbsp;&rarr; 用Excel函数(如AVERAGE()、STDEV.S())处理数据... 这个过程不仅耗时，而且容易出错。</span><span style="font-family: 'comic sans ms', sans-serif;">本文使用Python来一键完成这个繁琐的过程！</span></span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">2. Python代码</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">这个脚本主要包含以下几个核心功能：</span></p>
+<ul>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">批量提取数据：从指定数量的子文件夹中提取CSV文件的特定列</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">智能列匹配：支持按列名或列索引提取数据</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">数据对齐：自动将不同长度的数据对齐到相同行数</span></li>
+<li><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">交互式操作：提供友好的命令行交互界面</span></li>
+</ul>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> Python代码：从多文件夹提取指定列并整合</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 这段代码的主要功能是：</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 从多个实验文件夹中批量提取指定CSV文件的特定列数据，</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 并自动对齐整合为统一的Excel表格，便于后续分析比较</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">from</span> pathlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> Path
+</span><span style="color: #0000ff;">from</span> typing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Optional, Union
+
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> extract_data(
+        base_path: str,
+        num_folders: int,
+        column_spec: Union[str, int],
+        csv_name: str </span>= <span style="color: #800000;">"</span><span style="color: #800000;">progress_eval.csv</span><span style="color: #800000;">"</span><span style="color: #000000;">
+) </span>-&gt;<span style="color: #000000;"> None:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">
+    从文件夹中提取指定CSV文件的列数据
+
+    参数:
+        base_path: 主文件夹路径
+        num_folders: 处理的子文件夹数量
+        column_spec: 列名(str)或列索引(int)
+        csv_name: 已有的需要处理的CSV文件名
+    </span><span style="color: #800000;">"""</span><span style="color: #000000;">
+    path </span>=<span style="color: #000000;"> Path(base_path)
+    </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> path.exists():
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">文件夹 {base_path} 不存在</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 获取子文件夹</span>
+    folders = sorted([f <span style="color: #0000ff;">for</span> f <span style="color: #0000ff;">in</span> path.iterdir() <span style="color: #0000ff;">if</span><span style="color: #000000;"> f.is_dir()])[:num_folders]
+    </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> folders:
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">未找到子文件夹</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+
+    data </span>=<span style="color: #000000;"> {}
+    </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">处理 {csv_name} 文件：</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+    </span><span style="color: #0000ff;">for</span> folder <span style="color: #0000ff;">in</span><span style="color: #000000;"> folders:
+        csv_file </span>= folder /<span style="color: #000000;"> csv_name
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">  {folder.name}</span><span style="color: #800000;">"</span>, end=<span style="color: #800000;">""</span><span style="color: #000000;">)
+
+        </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> csv_file.exists():
+            </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;"> -&gt; 文件不存在</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">continue</span>
+
+        <span style="color: #0000ff;">try</span><span style="color: #000000;">:
+            df </span>=<span style="color: #000000;"> pd.read_csv(csv_file)
+            col </span>=<span style="color: #000000;"> _get_column(df, column_spec)
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> col:
+                data[folder.name] </span>=<span style="color: #000000;"> df[col]
+                </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;"> -&gt; 提取 {len(df)} 行</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+            </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;"> -&gt; 错误: {e}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+    </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> data:
+        </span><span style="color: #0000ff;">print</span>(<span style="color: #800000;">"</span><span style="color: #800000;">没有提取到数据</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 对齐并保存数据</span>
+    aligned_df =<span style="color: #000000;"> _align_to_max(data)
+    output_file </span>= f<span style="color: #800000;">"</span><span style="color: #800000;">{path.name}_seed{num_folders}_{_col_str(column_spec)}.xlsx</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 可以自行改输出的表格文件名</span>
+    aligned_df.to_excel(output_file, index=<span style="color: #000000;">False)
+    </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">\n数据已保存到 {output_file}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+    </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">包含 {len(aligned_df.columns)} 列, {len(aligned_df)} 行</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+
+</span><span style="color: #0000ff;">def</span> _get_column(df: pd.DataFrame, spec: Union[str, int]) -&gt;<span style="color: #000000;"> Optional[str]:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">获取目标列名</span><span style="color: #800000;">"""</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(spec, str):
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 精确匹配</span>
+        <span style="color: #0000ff;">if</span> spec <span style="color: #0000ff;">in</span><span style="color: #000000;"> df.columns:
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> spec
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 模糊匹配</span>
+        matches = [col <span style="color: #0000ff;">for</span> col <span style="color: #0000ff;">in</span> df.columns <span style="color: #0000ff;">if</span> spec.lower() <span style="color: #0000ff;">in</span><span style="color: #000000;"> col.lower()]
+        </span><span style="color: #0000ff;">return</span> matches[0] <span style="color: #0000ff;">if</span> matches <span style="color: #0000ff;">else</span><span style="color: #000000;"> None
+
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(spec, int):
+        </span><span style="color: #0000ff;">return</span> df.columns[spec] <span style="color: #0000ff;">if</span> 0 &lt;= spec &lt; len(df.columns) <span style="color: #0000ff;">else</span><span style="color: #000000;"> None
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> None
+
+
+</span><span style="color: #0000ff;">def</span> _align_to_max(data: dict) -&gt;<span style="color: #000000;"> pd.DataFrame:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">对齐数据到最大行数</span><span style="color: #800000;">"""</span><span style="color: #000000;">
+    max_len </span>= max(len(d) <span style="color: #0000ff;">for</span> d <span style="color: #0000ff;">in</span><span style="color: #000000;"> data.values())
+
+    aligned_data </span>=<span style="color: #000000;"> {}
+    </span><span style="color: #0000ff;">for</span> name, series <span style="color: #0000ff;">in</span><span style="color: #000000;"> data.items():
+        </span><span style="color: #0000ff;">if</span> len(series) &lt;<span style="color: #000000;"> max_len:
+            </span><span style="color: #008000;">#</span><span style="color: #008000;"> 明确指定dtype为object，避免警告</span>
+            padding = pd.Series([None] * (max_len - len(series)), dtype=<span style="color: #000000;">object)
+            aligned_data[name] </span>= pd.concat([series, padding], ignore_index=<span style="color: #000000;">True)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            aligned_data[name] </span>= series.reset_index(drop=<span style="color: #000000;">True)
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> pd.DataFrame(aligned_data)
+
+
+</span><span style="color: #0000ff;">def</span> _col_str(spec: Union[str, int]) -&gt;<span style="color: #000000;"> str:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">生成列标识字符串</span><span style="color: #800000;">"""</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> isinstance(spec, str):
+        </span><span style="color: #0000ff;">return</span> spec.replace(<span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">_</span><span style="color: #800000;">'</span>).replace(<span style="color: #800000;">'</span><span style="color: #800000;">\\</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">_</span><span style="color: #800000;">'</span>)[:20<span style="color: #000000;">]
+    </span><span style="color: #0000ff;">return</span> f<span style="color: #800000;">"</span><span style="color: #800000;">col{spec}</span><span style="color: #800000;">"</span>
+
+
+<span style="color: #0000ff;">def</span><span style="color: #000000;"> show_columns(
+        base_path: str,
+        folder_idx: int </span>=<span style="color: #000000;"> 0,
+        csv_name: str </span>= <span style="color: #800000;">"</span><span style="color: #800000;">progress_eval.csv</span><span style="color: #800000;">"</span><span style="color: #000000;">
+) </span>-&gt;<span style="color: #000000;"> None:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">显示列信息</span><span style="color: #800000;">"""</span><span style="color: #000000;">
+    path </span>=<span style="color: #000000;"> Path(base_path)
+    folders </span>= sorted([f <span style="color: #0000ff;">for</span> f <span style="color: #0000ff;">in</span> path.iterdir() <span style="color: #0000ff;">if</span><span style="color: #000000;"> f.is_dir()])
+
+    </span><span style="color: #0000ff;">if</span> folder_idx &lt;<span style="color: #000000;"> len(folders):
+        csv_file </span>= folders[folder_idx] /<span style="color: #000000;"> csv_name
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> csv_file.exists():
+            df </span>=<span style="color: #000000;"> pd.read_csv(csv_file)
+            </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">\n{folders[folder_idx].name} 的列信息 ({csv_name}):</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">for</span> i, col <span style="color: #0000ff;">in</span><span style="color: #000000;"> enumerate(df.columns):
+                </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">  [{i}] {col}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">文件 {csv_name} 不存在</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+
+</span><span style="color: #0000ff;">def</span><span style="color: #000000;"> select_column_interactive(
+        base_path: str,
+        folder_idx: int </span>=<span style="color: #000000;"> 0,
+        csv_name: str </span>= <span style="color: #800000;">"</span><span style="color: #800000;">progress_eval.csv</span><span style="color: #800000;">"</span><span style="color: #000000;">
+) </span>-&gt;<span style="color: #000000;"> Optional[Union[str, int]]:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">交互式选择列</span><span style="color: #800000;">"""</span><span style="color: #000000;">
+    show_columns(base_path, folder_idx, csv_name)
+
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> True:
+        choice </span>= input(<span style="color: #800000;">"</span><span style="color: #800000;">\n输入列名/索引 (q退出): </span><span style="color: #800000;">"</span><span style="color: #000000;">).strip()
+        </span><span style="color: #0000ff;">if</span> choice.lower() == <span style="color: #800000;">'</span><span style="color: #800000;">q</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> None
+
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> choice.isdigit():
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> int(choice)
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> choice
+
+
+</span><span style="color: #008000;">#</span><span style="color: #008000;"> 使用示例</span>
+<span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">"</span><span style="color: #800000;">__main__</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+    base_path </span>= <span style="color: #800000;">"</span><span style="color: #800000;">Algorithm</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 主文件夹</span>
+    num_folders = 5 <span style="color: #008000;">#</span><span style="color: #008000;"> 子文件夹的个数(前num_folders个子文件夹)</span>
+    csv_name = <span style="color: #800000;">"</span><span style="color: #800000;">progress_eval.csv</span><span style="color: #800000;">"</span> <span style="color: #008000;">#</span><span style="color: #008000;"> 已有的需要处理的CSV文件名</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 显示列信息</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> show_columns(base_path, 0, csv_name)</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 交互式选择</span>
+    selected =<span style="color: #000000;"> select_column_interactive(base_path, 0, csv_name)
+    </span><span style="color: #0000ff;">if</span> selected <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> None:
+        extract_data(base_path, num_folders, selected, csv_name)
+
+    </span><span style="color: #008000;">#</span><span style="color: #008000;"> 或直接指定</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> extract_data(base_path, num_folders, 3, csv_name)</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> extract_data(base_path, num_folders, "acc", csv_name)</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> extract_data(base_path, num_folders, "accuracy", csv_name)</span></pre>
+</div>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">3. 使用实例</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">假设我们有一个名为Algorithm的文件夹，结构如下：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">Algorithm/
+├── seed1/
+│   └── progress_eval.csv
+├── seed2/
+│   └── progress_eval.csv
+├── ...
+└── seed5/
+└── progress_eval.csv</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">每个CSV文件包含类似的数据列：&nbsp;<span class="cnblogs_code">epoch, train_loss, val_loss, accuracy, learning_rate, total_time</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">Algorithm文件夹：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202601/1027447-20260113112355938-1228628671.png" alt="image" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">每个子文件夹：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202601/1027447-20260113111231199-1734001171.png" alt="image" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">&nbsp;每个CSV文件内容(随便举的例子)：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202601/1027447-20260113111801871-1818584290.png" alt="image" width="648" height="364" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">先显示所有列信息：&nbsp;<span class="cnblogs_code">show_columns(base_path, 0, csv_name)</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">seed0 的列信息 (progress_eval.csv):
+  [0] epoch
+  [</span>1<span style="color: #000000;">] train_loss
+  [</span>2<span style="color: #000000;">] val_loss
+  [</span>3<span style="color: #000000;">] accuracy
+  [</span>4<span style="color: #000000;">] learning_rate
+  [</span>5] total_time</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">示例1：交互式使用</span></p>
+<div class="cnblogs_code">
+<pre>selected =<span style="color: #000000;"> select_column_interactive(base_path, 0, csv_name)
+    </span><span style="color: #0000ff;">if</span> selected <span style="color: #0000ff;">is</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> None:
+        extract_data(base_path, num_folders, selected, csv_name)</span></pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">键入3，得到：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">seed0 的列信息 (progress_eval.csv):
+  [0] epoch
+  [</span>1<span style="color: #000000;">] train_loss
+  [</span>2<span style="color: #000000;">] val_loss
+  [</span>3<span style="color: #000000;">] accuracy
+  [</span>4<span style="color: #000000;">] learning_rate
+  [</span>5<span style="color: #000000;">] total_time
+
+输入列名</span>/索引 (q退出): 3<span style="color: #000000;">
+处理 progress_eval.csv 文件：
+  seed0 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed1 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed2 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed3 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed4 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+
+数据已保存到 Algorithm_seed5_col3.xlsx
+包含 </span>5 列, 11 行</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">键入acc，得到：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">seed0 的列信息 (progress_eval.csv):
+  [0] epoch
+  [</span>1<span style="color: #000000;">] train_loss
+  [</span>2<span style="color: #000000;">] val_loss
+  [</span>3<span style="color: #000000;">] accuracy
+  [</span>4<span style="color: #000000;">] learning_rate
+  [</span>5<span style="color: #000000;">] total_time
+
+输入列名</span>/<span style="color: #000000;">索引 (q退出): acc
+处理 progress_eval.csv 文件：
+  seed0 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed1 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed2 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed3 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed4 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+
+数据已保存到 Algorithm_seed5_acc.xlsx
+包含 </span>5 列, 11 行</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">示例2：直接指定</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">（1）&nbsp;<span class="cnblogs_code">extract_data(base_path, num_folders, 3, csv_name)</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">得到：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">处理 progress_eval.csv 文件：
+  seed0 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed1 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed2 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed3 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed4 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+
+数据已保存到 Algorithm_seed5_col3.xlsx
+包含 </span>5 列, 11 行</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">（2）&nbsp;<span class="cnblogs_code">extract_data(base_path, num_folders, <span style="color: #800000;">"</span><span style="color: #800000;">acc</span><span style="color: #800000;">"</span>, csv_name)</span>&nbsp;或者&nbsp;<span class="cnblogs_code">extract_data(base_path, num_folders, <span style="color: #800000;">"</span><span style="color: #800000;">accuracy</span><span style="color: #800000;">"</span>, csv_name)</span>&nbsp;</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">得到：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">处理 progress_eval.csv 文件：
+  seed0 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed1 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed2 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed3 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+  seed4 </span>-&gt; 提取 11<span style="color: #000000;"> 行
+
+数据已保存到 Algorithm_seed5_acc.xlsx
+包含 </span>5 列, 11 行</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">得到的Excel表格内容就是将seed子文件夹下面的CSV中的精度那一列整合到一个表格中：</span></p>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202601/1027447-20260113111615580-1243362630.png" alt="image" width="577" height="413" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">4. 将上述得到的Excel表格每一列取平均值、标准差、标准误（可选）</span></h2>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">#</span><span style="color: #008000;"> 在上述基础上计算生成的Excel文件的前n列的平均值、标准差、标准误差</span><span style="color: #008000;">
+#</span><span style="color: #008000;"> 作者：凯鲁嘎吉 - 博客园 http://www.cnblogs.com/kailugaji/</span>
+
+<span style="color: #0000ff;">import</span><span style="color: #000000;"> pandas as pd
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> numpy as np
+</span><span style="color: #0000ff;">from</span> pathlib <span style="color: #0000ff;">import</span><span style="color: #000000;"> Path
+
+
+</span><span style="color: #0000ff;">def</span> add_statistics_columns(excel_file: str, num_columns: int, output_suffix: str = <span style="color: #800000;">"</span><span style="color: #800000;">_with_stats</span><span style="color: #800000;">"</span>) -&gt;<span style="color: #000000;"> None:
+    </span><span style="color: #800000;">"""</span><span style="color: #800000;">
+    处理Excel文件，计算前num_columns列的均值、标准差和标准误
+
+    参数:
+        excel_file: Excel文件路径
+        num_columns: 计算前几列的统计量
+        output_suffix: 输出文件名的后缀
+    </span><span style="color: #800000;">"""</span>
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 检查文件是否存在</span>
+    file_path =<span style="color: #000000;"> Path(excel_file)
+    </span><span style="color: #0000ff;">if</span> <span style="color: #0000ff;">not</span><span style="color: #000000;"> file_path.exists():
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">错误: 文件 {excel_file} 不存在</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 检查文件格式</span>
+    <span style="color: #0000ff;">if</span> file_path.suffix.lower() <span style="color: #0000ff;">not</span> <span style="color: #0000ff;">in</span> [<span style="color: #800000;">'</span><span style="color: #800000;">.xlsx</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">.xls</span><span style="color: #800000;">'</span><span style="color: #000000;">]:
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">错误: {excel_file} 不是Excel文件</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span>
+
+    <span style="color: #0000ff;">try</span><span style="color: #000000;">:
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 读取Excel文件</span>
+        df =<span style="color: #000000;"> pd.read_excel(excel_file)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 检查列数是否足够</span>
+        <span style="color: #0000ff;">if</span> len(df.columns) &lt;<span style="color: #000000;"> num_columns:
+            </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">错误: 表格只有 {len(df.columns)} 列，无法计算前 {num_columns} 列的统计量</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span>
+
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 计算前num_columns列的统计量</span>
+        columns_to_analyze =<span style="color: #000000;"> df.columns[:num_columns]
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 计算均值</span>
+        df[<span style="color: #800000;">'</span><span style="color: #800000;">mean</span><span style="color: #800000;">'</span>] = df[columns_to_analyze].mean(axis=1, skipna=<span style="color: #000000;">True)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 计算标准差</span>
+        df[<span style="color: #800000;">'</span><span style="color: #800000;">std</span><span style="color: #800000;">'</span>] = df[columns_to_analyze].std(axis=1, skipna=<span style="color: #000000;">True)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 计算标准误（标准差除以根号n）</span>
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 先计算每行的有效数据个数（排除NaN）</span>
+        valid_counts = df[columns_to_analyze].count(axis=1<span style="color: #000000;">)
+        df[</span><span style="color: #800000;">'</span><span style="color: #800000;">sem</span><span style="color: #800000;">'</span>] = df[<span style="color: #800000;">'</span><span style="color: #800000;">std</span><span style="color: #800000;">'</span>] /<span style="color: #000000;"> np.sqrt(valid_counts)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 可选：格式化显示，保留4位小数</span>
+        df[<span style="color: #800000;">'</span><span style="color: #800000;">mean</span><span style="color: #800000;">'</span>] = df[<span style="color: #800000;">'</span><span style="color: #800000;">mean</span><span style="color: #800000;">'</span>].round(4<span style="color: #000000;">)
+        df[</span><span style="color: #800000;">'</span><span style="color: #800000;">std</span><span style="color: #800000;">'</span>] = df[<span style="color: #800000;">'</span><span style="color: #800000;">std</span><span style="color: #800000;">'</span>].round(4<span style="color: #000000;">)
+        df[</span><span style="color: #800000;">'</span><span style="color: #800000;">sem</span><span style="color: #800000;">'</span>] = df[<span style="color: #800000;">'</span><span style="color: #800000;">sem</span><span style="color: #800000;">'</span>].round(4<span style="color: #000000;">)
+
+        </span><span style="color: #008000;">#</span><span style="color: #008000;"> 生成输出文件名</span>
+        stem =<span style="color: #000000;"> file_path.stem
+        suffix </span>=<span style="color: #000000;"> file_path.suffix
+        output_file </span>= f<span style="color: #800000;">"</span><span style="color: #800000;">{stem}{output_suffix}{suffix}</span><span style="color: #800000;">"</span>
+
+        <span style="color: #008000;">#</span><span style="color: #008000;"> 保存到新文件</span>
+        df.to_excel(output_file, index=<span style="color: #000000;">False)
+
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">原始文件: {excel_file}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">处理后的文件: {output_file}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">已添加三列统计量：mean（均值）、std（标准差）、sem（标准误）</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">处理了 {len(df)} 行数据</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+    </span><span style="color: #0000ff;">except</span><span style="color: #000000;"> Exception as e:
+        </span><span style="color: #0000ff;">print</span>(f<span style="color: #800000;">"</span><span style="color: #800000;">处理文件时发生错误: {e}</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+
+</span><span style="color: #0000ff;">if</span> <span style="color: #800080;">__name__</span> == <span style="color: #800000;">"</span><span style="color: #800000;">__main__</span><span style="color: #800000;">"</span><span style="color: #000000;">:
+    excel_file </span>= <span style="color: #800000;">"</span><span style="color: #800000;">Algorithm_seed5_acc.xlsx</span><span style="color: #800000;">"</span>  <span style="color: #008000;">#</span><span style="color: #008000;"> 需要处理的Excel文件名</span>
+    num_columns = 5  <span style="color: #008000;">#</span><span style="color: #008000;"> 计算前num_columns列的统计量</span>
+
+    <span style="color: #008000;">#</span><span style="color: #008000;"> 调用处理函数</span>
+    add_statistics_columns(excel_file, num_columns)</pre>
+</div>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">结果：</span></p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">原始文件: Algorithm_seed5_acc.xlsx
+处理后的文件: Algorithm_seed5_acc_with_stats.xlsx
+已添加三列统计量：mean（均值）、std（标准差）、sem（标准误）
+处理了 </span>11 行数据</pre>
+</div>
+<p><img src="https://img2024.cnblogs.com/blog/1027447/202601/1027447-20260113163926198-1452264667.png" alt="image" width="696" height="327" loading="lazy" style="display: block; margin-left: auto; margin-right: auto;" /></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">&nbsp;得到的新Excel文件在原先基础上多了三列：平均值、标准差、标准误。</span></p>
+<h2><span style="font-family: 'comic sans ms', sans-serif;">5. 实际应用场景</span></h2>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">（1）机器学习实验分析</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">当你在不同随机种子下运行实验时，这个工具可以帮助你：比较不同随机种子的训练曲线、提取关键指标进行统计分析、生成整齐的数据表格用于论文图表</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">（2）科学研究数据整理</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">处理重复实验数据时，可以：批量提取实验测量值、统一数据格式、准备数据用于进一步统计分析</span></p>
+<p><span style="font-family: 'comic sans ms', sans-serif; font-size: 18px;">这个脚本是一个实用的数据提取工具，特别适合需要处理多个相似数据文件的场景。通过自动化繁琐的文件操作，它能够：大幅提高数据处理效率、减少人为错误、提供一致的输出格式、支持灵活的列选择方式。</span></p>
